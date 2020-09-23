@@ -4,10 +4,11 @@ import java.util.Objects;
 
 public class Book {
     private String title;
-    private String isbn;
+    private final String isbn;
     private String publisher;
     private int year;
     private Author author;
+    private int authorId;
 
     public Book(String title, String isbn, String publisher, int year, Author author) {
         this.title = title;
@@ -15,6 +16,14 @@ public class Book {
         this.publisher = publisher;
         this.year = year;
         this.author = author;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     public String getTitle() {

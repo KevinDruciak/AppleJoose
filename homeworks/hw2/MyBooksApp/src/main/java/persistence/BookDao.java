@@ -3,35 +3,35 @@ package persistence;
 import exception.DaoException;
 import model.Author;
 import model.Book;
+
 import java.util.List;
 
-public interface AuthorDao {
-
+public interface BookDao {
     /**
-     * Adds author to database
+     * Adds book to corresponding author already in database
      * Returns authorId if successful
      * Throws DaoException if no connection can be established with database
-     */
-    int add(Author author) throws DaoException;
+    */
+    int add(Book book) throws DaoException;
 
     /**
-     * Lists all authors in database
-     * Returns list of authors if successful
+     * Lists all books in database
+     * Returns list of books if successful
      * Throws DaoException if no connection can be established with database
      */
-    List<Author> listAll();
+    List<Book> listAll() throws DaoException;
 
     /**
-     * Deletes authors from database and all corresponding books
+     * Deletes book from database
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
      */
-    boolean delete(Author author) throws DaoException;
+    boolean delete(Book book) throws DaoException;
 
     /**
-     * Updates author in database
+     * Updates book in database
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
      */
-    boolean update(Author author) throws DaoException;
+    boolean update(Book book) throws DaoException;
 }
