@@ -13,7 +13,6 @@ public class Sql2oAuthorDao implements AuthorDao {
         this.sql2o = sql2o;
     }
 
-
     @Override
     public int add(Author author) throws DaoException {
         try (Connection con = sql2o.open()) {
@@ -23,17 +22,44 @@ public class Sql2oAuthorDao implements AuthorDao {
                     .bind(author)
                     .executeUpdate().getKey();
             author.setId(id);
+
             return id;
         }
     }
 
     @Override
-    public List<Author> listAll() {
+    public List<Author> listAll() throws DaoException {
         String sql = "SELECT * FROM Authors";
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql).executeAndFetch(Author.class);
         }
     }
 
+    @Override
+    public boolean delete(Author author) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            String sql = "DELETE FROM Authors WHERE name = :name";
+            con.createQuery(sql)
+                    .addParameter("name", author.getName())
+                    .executeUpdate();
 
+            return true;
+        }
+    }
+
+    @Override
+    public boolean update(Author author) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            String sql = "UPDATE Authors " +
+                    "SET numOfBooks = :numOfBooks, nationality = :nationality"+
+                    " WHERE name = :name";
+            con.createQuery(sql)
+                    .addParameter("numOfBooks", author.getNumOfBooks())
+                    .addParameter("nationality", author.getNationality())
+                    .addParameter("name", author.getName())
+                    .executeUpdate();
+
+            return true;
+        }
+    }
 }

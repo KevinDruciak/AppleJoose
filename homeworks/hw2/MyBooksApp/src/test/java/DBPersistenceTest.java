@@ -76,7 +76,4 @@ public class DBPersistenceTest {
         ResultSet rs = st.executeQuery(sql);
         assertTrue(rs.next());
     }
-
-
-
 }
