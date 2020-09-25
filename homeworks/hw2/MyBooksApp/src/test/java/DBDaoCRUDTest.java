@@ -44,13 +44,15 @@ public class DBDaoCRUDTest {
     public void beforeEachTest() throws SQLException {
         String sql = "DROP TABLE IF EXISTS Authors";
         st.execute(sql);
+        sql = "DROP TABLE IF EXISTS Books";
+        st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Authors (id INTEGER PRIMARY KEY, name VARCHAR(100) NOT NULL UNIQUE," +
                 " numOfBooks INTEGER, nationality VARCHAR(30));";
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Books (id INTEGER PRIMARY KEY, title VARCHAR(200) NOT NULL," +
-                " isbn VARCHAR(14) NOT NULL UNIQUE, publisher VARCHAR(14), year INTEGER, author VARCHAR(14) NOT NULL UNIQUE," +
+                " isbn VARCHAR(14) NOT NULL UNIQUE, publisher VARCHAR(14), year INTEGER," +
                 " authorId INTEGER NOT NULL, FOREIGN KEY(authorId) REFERENCES Authors(id)" +
                 " ON UPDATE CASCADE ON DELETE CASCADE);";
         st.execute(sql);
@@ -176,7 +178,7 @@ public class DBDaoCRUDTest {
         Author author = new Author ("John Smith", 10, "Earth");
         int aID = sqlAuthor.add(author);
 
-        Book a = new Book("Title1", "ISBN1", "Publisher1", 2020, author);
+        Book a = new Book("Title1", "ISBN1", "Publisher1", 2020, author.getId() );
         int authorIDa = sqlBook.add(a);
 
         System.out.println(aID);

@@ -10,19 +10,20 @@ public class Book {
     private Author author;
     private int authorId;
 
-    public Book(String title, String isbn, String publisher, int year, Author author) {
+    public Book(String title, String isbn, String publisher, int year, int authorId) {
         this.title = title;
         this.isbn = isbn;
         this.publisher = publisher;
         this.year = year;
-        this.author = author;
+        //this.author = author;
+        this.authorId = authorId;
     }
 
     public int getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(int authorId) {
+    public void setId(int authorId) {
         this.authorId = authorId;
     }
 
@@ -57,7 +58,7 @@ public class Book {
                 ", isbn='" + isbn + '\'' +
                 ", publisher='" + publisher + '\'' +
                 ", year=" + year +
-                ", author=" + author +
+                ", author=" + authorId +
                 '}';
     }
 
@@ -70,11 +71,11 @@ public class Book {
                 Objects.equals(title, book.title) &&
                 Objects.equals(isbn, book.isbn) &&
                 Objects.equals(publisher, book.publisher) &&
-                Objects.equals(author, book.author);
+                Objects.equals(authorId, book.authorId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, isbn, publisher, year, author);
+        return Objects.hash(title, isbn, publisher, year, authorId);
     }
 }
