@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="DBDaoCRUDTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-09-25T04:14:43" hostname="DESKTOP-AS4GVC7" time="0.164">
+<testsuite name="DBDaoCRUDTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2020-09-25T05:19:57" hostname="DESKTOP-AS4GVC7" time="0.778">
   <properties/>
-  <testcase name="testAuthorREAD" classname="DBDaoCRUDTest" time="0.164"/>
-  <system-out><![CDATA[]]></system-out>
+  <testcase name="testBookREAD" classname="DBDaoCRUDTest" time="0.148"/>
+  <testcase name="testAuthorCREATE" classname="DBDaoCRUDTest" time="0.068"/>
+  <testcase name="testAuthorDELETE" classname="DBDaoCRUDTest" time="0.103"/>
+  <testcase name="testBookCREATE" classname="DBDaoCRUDTest" time="0.093"/>
+  <testcase name="testBookDELETE" classname="DBDaoCRUDTest" time="0.111"/>
+  <testcase name="testAuthorUPDATE" classname="DBDaoCRUDTest" time="0.097"/>
+  <testcase name="testBookUPDATE" classname="DBDaoCRUDTest" time="0.069"/>
+  <testcase name="testAuthorREAD" classname="DBDaoCRUDTest" time="0.087"/>
+  <system-out><![CDATA[1
+2
+3
+]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

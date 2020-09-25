@@ -16,44 +16,14 @@ public class Sql2oBookDao implements BookDao {
 
     @Override
     public int add(Book book) throws DaoException {
-//        try (Connection con = sql2o.open()) {
-//            String query = "SELECT DISTINCT name FROM " +
-//                    "Authors WHERE name = :authorName";
-//            List<Author> temp = con.createQuery(query)
-//                    .addParameter("authorName", book.getAuthor().getName())
-//                    .executeAndFetch(Author.class);
-//            Author author = temp.get(0);
-//
-//            String temp1 = author.getName();
-//            String temp2 = book.getAuthor().getName();
-//
-//            int authorId;
-//            if (!temp1.equals(temp2)) {
-//                System.out.println("unequal author names test");
-//                return -1;
-//            } else {
-//                authorId = author.getId();
-//                book.setAuthorId(authorId);
-//            }
-//
-//            String sql = "INSERT INTO Books (title, isbn, publisher, year, " +
-//                    "author, authorID) VALUES (:title, :isbn, :publisher, :year, " +
-//                    ":author, :authorID)";
-//            Book bookEntry = (Book) con.createQuery(sql)
-//                    .bind(book)
-//                    .executeAndFetch(Book.class);
-//
-//            return authorId;
-//        }
-
         try (Connection con = sql2o.open()) {
             String query = "INSERT INTO Books (id, title, isbn, publisher, year, authorId)" +
                     "VALUES (NULL, :title, :isbn, :publisher, :year, :authorId)";
-            int id = (int) con.createQuery(query, true)
+           int id = (int) con.createQuery(query, true)
                     .bind(book)
                     .executeUpdate().getKey();
-            book.setId(id);
-            return id;
+           book.setId(id);
+           return book.getAuthorId();
         }
         catch (Sql2oException ex) {
             throw new DaoException();
@@ -85,13 +55,12 @@ public class Sql2oBookDao implements BookDao {
         try (Connection con = sql2o.open()){
             String sql = "UPDATE Books " +
                     "SET title = :title, publisher = :publisher, year = :year," +
-                    " author = :author, authorId = :authorId " +
+                    "authorId = :authorId " +
                     "WHERE isbn = :isbn";
             con.createQuery(sql)
                     .addParameter("title", book.getTitle())
                     .addParameter("publisher", book.getPublisher())
                     .addParameter("year", book.getYear())
-                    .addParameter("author", book.getAuthor())
                     .addParameter("authorId", book.getAuthorId())
                     .addParameter("isbn", book.getIsbn())
                     .executeUpdate();

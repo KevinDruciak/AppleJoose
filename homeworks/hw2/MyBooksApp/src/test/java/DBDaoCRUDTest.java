@@ -29,13 +29,13 @@ public class DBDaoCRUDTest {
 
         // create data source
         SQLiteDataSource ds = new SQLiteDataSource(config);
-        ds.setUrl("jdbc:sqlite:test.db");
+        ds.setUrl("jdbc:sqlite:MyBooksApp.db");
         Sql2o sql2o = new Sql2o(ds);
 
         sqlAuthor = new Sql2oAuthorDao(sql2o);
         sqlBook = new Sql2oBookDao(sql2o);
 
-        String URI = "jdbc:sqlite:./test.db";
+        String URI = "jdbc:sqlite:./MyBooksApp.db";
         Connection conn = DriverManager.getConnection(URI);
         st = conn.createStatement();
     }
@@ -53,7 +53,7 @@ public class DBDaoCRUDTest {
 
         sql = "CREATE TABLE IF NOT EXISTS Books (id INTEGER PRIMARY KEY, title VARCHAR(200) NOT NULL," +
                 " isbn VARCHAR(14) NOT NULL UNIQUE, publisher VARCHAR(14), year INTEGER," +
-                " authorId INTEGER NOT NULL, FOREIGN KEY(authorId) REFERENCES Authors(id)" +
+                " authorId INTEGER, FOREIGN KEY(authorId) REFERENCES Authors(id)" +
                 " ON UPDATE CASCADE ON DELETE CASCADE);";
         st.execute(sql);
     }
@@ -181,8 +181,118 @@ public class DBDaoCRUDTest {
         Book a = new Book("Title1", "ISBN1", "Publisher1", 2020, author.getId() );
         int authorIDa = sqlBook.add(a);
 
-        System.out.println(aID);
-        System.out.println(authorIDa);
+        Book b = new Book("Title2", "ISBN2", "Publisher2", 2021, author.getId() );
+        int authorIDb = sqlBook.add(b);
+
         Assert.assertEquals(aID, authorIDa);
+        Assert.assertEquals(aID, authorIDb);
+
+
+        Author author2 = new Author ("John Smith2", 12, "Earth2");
+        int bID = sqlAuthor.add(author2);
+
+        Book c = new Book("Title2", "ISBN3", "Publisher2", 2021, author2.getId() );
+        int authorIDc = sqlBook.add(c);
+
+        Assert.assertEquals(bID, authorIDc);
+
+
+        Assert.assertTrue(sqlBook.listAll().contains(a));
+        Assert.assertTrue(sqlBook.listAll().contains(b));
+        Assert.assertTrue(sqlBook.listAll().contains(c));
     }
+
+    @Test
+    public void testBookREAD() {
+
+        Author auth = new Author ("John Smith", 10, "Earth");
+        sqlAuthor.add(auth);
+
+        Book a = new Book("Title1", "ISBN1", "Publisher1", 2020, auth.getId() );
+        sqlBook.add(a);
+
+        Book b = new Book("Title2", "ISBN2", "Publisher2", 2021, auth.getId() );
+        sqlBook.add(b);
+
+        Book c = new Book("Title3", "ISBN3", "Publisher3", 2022, auth.getId() );
+        sqlBook.add(c);
+
+        List<Book> bookList = sqlBook.listAll();
+
+        Assert.assertTrue(bookList.contains(a));
+        Assert.assertTrue(bookList.contains(b));
+        Assert.assertTrue(bookList.contains(c));
+
+        Assert.assertEquals("[Book{title='Title1', isbn='ISBN1', publisher='Publisher1', year=2020, author=1}," +
+                " Book{title='Title2', isbn='ISBN2', publisher='Publisher2', year=2021, author=1}," +
+                " Book{title='Title3', isbn='ISBN3', publisher='Publisher3', year=2022, author=1}]",
+                bookList.toString());
+        Assert.assertEquals(3, bookList.size());
+    }
+    @Test
+    public void testBookUPDATE() {
+        Author auth = new Author ("John Smith", 10, "Earth");
+        sqlAuthor.add(auth);
+
+        Book a = new Book("Title1", "ISBN1", "Publisher1", 2020, auth.getId() );
+        int authorIDa = sqlBook.add(a);
+        Book aUPDATED = new Book("Title2", "ISBN1", "Publisher2", 2021, auth.getId() );
+        boolean updateA = sqlBook.update(aUPDATED);
+
+        Assert.assertTrue(updateA);
+        Assert.assertNotEquals(a, aUPDATED);
+
+        List<Book> bookList = sqlBook.listAll();
+
+        Assert.assertEquals("[Book{title='Title2', isbn='ISBN1', publisher='Publisher2', year=2021, author=1}]"
+                , bookList.toString());
+        Assert.assertEquals(1, bookList.size());
+    }
+
+    @Test
+    public void testBookDELETE() {
+        Author auth = new Author ("John Smith", 10, "Earth");
+        sqlAuthor.add(auth);
+
+        Book a = new Book("Title1", "ISBN1", "Publisher1", 2020, auth.getId() );
+        Book b = new Book("Title2", "ISBN2", "Publisher1", 2020, auth.getId() );
+        Book c = new Book("Title3", "ISBN3", "Publisher1", 2020, auth.getId() );
+
+        sqlBook.add(a);
+        sqlBook.add(b);
+        sqlBook.add(c);
+
+        List<Book> bookList = sqlBook.listAll();
+
+        Assert.assertTrue(bookList.contains(a));
+        Assert.assertTrue(bookList.contains(b));
+        Assert.assertTrue(bookList.contains(c));
+        Assert.assertEquals(3, bookList.size());
+
+        boolean deleteA = sqlBook.delete(a);
+        Assert.assertTrue(deleteA);
+        bookList = sqlBook.listAll();
+        Assert.assertFalse(bookList.contains(a));
+        Assert.assertTrue(bookList.contains(b));
+        Assert.assertTrue(bookList.contains(c));
+        Assert.assertEquals(2, bookList.size());
+
+        boolean deleteB = sqlBook.delete(b);
+        Assert.assertTrue(deleteB);
+        bookList = sqlBook.listAll();
+        Assert.assertFalse(bookList.contains(a));
+        Assert.assertFalse(bookList.contains(b));
+        Assert.assertTrue(bookList.contains(c));
+        Assert.assertEquals(1, bookList.size());
+
+        boolean deleteC = sqlBook.delete(c);
+        Assert.assertTrue(deleteC);
+        bookList = sqlBook.listAll();
+        Assert.assertFalse(bookList.contains(a));
+        Assert.assertFalse(bookList.contains(b));
+        Assert.assertFalse(bookList.contains(c));
+        Assert.assertEquals(0, bookList.size());
+    }
+
+
 }
