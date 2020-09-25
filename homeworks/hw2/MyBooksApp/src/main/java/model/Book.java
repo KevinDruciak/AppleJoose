@@ -7,15 +7,16 @@ public class Book {
     private final String isbn;
     private String publisher;
     private int year;
-    private Author author;
     private int authorId;
+    private int id;
 
-    public Book(String title, String isbn, String publisher, int year, Author author) {
+
+    public Book(String title, String isbn, String publisher, int year, int authorId) {
         this.title = title;
         this.isbn = isbn;
         this.publisher = publisher;
         this.year = year;
-        this.author = author;
+        this.authorId = authorId;
     }
 
     public int getAuthorId() {
@@ -24,6 +25,14 @@ public class Book {
 
     public void setAuthorId(int authorId) {
         this.authorId = authorId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -42,9 +51,9 @@ public class Book {
         return year;
     }
 
-    public Author getAuthor() {
-        return author;
-    }
+//    public Author getAuthor() {
+//        return author;
+//    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -57,7 +66,7 @@ public class Book {
                 ", isbn='" + isbn + '\'' +
                 ", publisher='" + publisher + '\'' +
                 ", year=" + year +
-                ", author=" + author +
+                ", author=" + authorId +
                 '}';
     }
 
@@ -70,11 +79,11 @@ public class Book {
                 Objects.equals(title, book.title) &&
                 Objects.equals(isbn, book.isbn) &&
                 Objects.equals(publisher, book.publisher) &&
-                Objects.equals(author, book.author);
+                Objects.equals(authorId, book.authorId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, isbn, publisher, year, author);
+        return Objects.hash(title, isbn, publisher, year, authorId);
     }
 }
