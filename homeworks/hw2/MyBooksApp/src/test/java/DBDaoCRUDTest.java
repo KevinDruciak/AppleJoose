@@ -50,7 +50,7 @@ public class DBDaoCRUDTest {
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Books (id INTEGER PRIMARY KEY, title VARCHAR(200) NOT NULL," +
-                " isbn VARCHAR(14) NOT NULL UNIQUE, publisher VARCHAR(14), year INTEGER," +
+                " isbn VARCHAR(14) NOT NULL UNIQUE, publisher VARCHAR(14), year INTEGER, author VARCHAR(14) NOT NULL UNIQUE," +
                 " authorId INTEGER NOT NULL, FOREIGN KEY(authorId) REFERENCES Authors(id)" +
                 " ON UPDATE CASCADE ON DELETE CASCADE);";
         st.execute(sql);
@@ -169,5 +169,18 @@ public class DBDaoCRUDTest {
         Assert.assertFalse(authorList.contains(b));
         Assert.assertFalse(authorList.contains(c));
         Assert.assertEquals(0, authorList.size());
+    }
+
+    @Test
+    public void testBookCREATE() {
+        Author author = new Author ("John Smith", 10, "Earth");
+        int aID = sqlAuthor.add(author);
+
+        Book a = new Book("Title1", "ISBN1", "Publisher1", 2020, author);
+        int authorIDa = sqlBook.add(a);
+
+        System.out.println(aID);
+        System.out.println(authorIDa);
+        Assert.assertEquals(aID, authorIDa);
     }
 }

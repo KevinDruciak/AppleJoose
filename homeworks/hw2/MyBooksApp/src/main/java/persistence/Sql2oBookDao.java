@@ -17,14 +17,19 @@ public class Sql2oBookDao implements BookDao {
     @Override
     public int add(Book book) throws DaoException {
         try (Connection con = sql2o.open()) {
-            String query = "SELECT id, name, numOfBooks, nationality FROM " +
+            String query = "SELECT DISTINCT name FROM " +
                     "Authors WHERE name = :authorName";
-            Author author = (Author) con.createQuery(query)
+            List<Author> temp = con.createQuery(query)
                     .addParameter("authorName", book.getAuthor().getName())
                     .executeAndFetch(Author.class);
+            Author author = temp.get(0);
+
+            String temp1 = author.getName();
+            String temp2 = book.getAuthor().getName();
 
             int authorId;
-            if (!author.equals(book.getAuthor())) {
+            if (!temp1.equals(temp2)) {
+                System.out.println("unequal author names test");
                 return -1;
             } else {
                 authorId = author.getId();
@@ -32,13 +37,13 @@ public class Sql2oBookDao implements BookDao {
             }
 
             String sql = "INSERT INTO Books (title, isbn, publisher, year, " +
-                    "author, authorId) VALUES (:title, :isbn, :publisher, :year, " +
-                    ":author, :authorId)";
+                    "author, authorID) VALUES (:title, :isbn, :publisher, :year, " +
+                    ":author, :authorID)";
             Book bookEntry = (Book) con.createQuery(sql)
                     .bind(book)
                     .executeAndFetch(Book.class);
 
-            return bookEntry.getAuthorId();
+            return authorId;
         }
     }
 
