@@ -1,9 +1,6 @@
 import model.Author;
 import model.Book;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,7 +17,6 @@ import persistence.Sql2oBookDao;
 public class DBDaoCRUDTest {
 
     private static Statement st;
-
     private static Sql2oAuthorDao sqlAuthor;
     private static Sql2oBookDao sqlBook;
 
@@ -42,14 +38,14 @@ public class DBDaoCRUDTest {
         String URI = "jdbc:sqlite:./test.db";
         Connection conn = DriverManager.getConnection(URI);
         st = conn.createStatement();
-        String sql = "DROP TABLE IF EXISTS Authors";
-        st.execute(sql);
     }
 
     @Before
     public void beforeEachTest() throws SQLException {
+        String sql = "DROP TABLE IF EXISTS Authors";
+        st.execute(sql);
 
-        String sql = "CREATE TABLE IF NOT EXISTS Authors (id INTEGER PRIMARY KEY, name VARCHAR(100) NOT NULL UNIQUE," +
+        sql = "CREATE TABLE IF NOT EXISTS Authors (id INTEGER PRIMARY KEY, name VARCHAR(100) NOT NULL UNIQUE," +
                 " numOfBooks INTEGER, nationality VARCHAR(30));";
         st.execute(sql);
 
@@ -58,7 +54,6 @@ public class DBDaoCRUDTest {
                 " authorId INTEGER NOT NULL, FOREIGN KEY(authorId) REFERENCES Authors(id)" +
                 " ON UPDATE CASCADE ON DELETE CASCADE);";
         st.execute(sql);
-
     }
 
     @Test
