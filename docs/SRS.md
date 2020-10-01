@@ -21,7 +21,7 @@
 > List the (functional) requirements that software needs to have in order to solve the problem stated above. It is useful to write the requirements in form of User Stories and group them into those that are essential (must have), and those which are non-essential (but nice to have).
 
 ### Must have
->> 1. As a news reader, I want a quick report about my recent news history so that I can see any patterns about my news habits.
+>> 1. As a news reader, I want a short summary about my recent news history so that I can see any patterns about my news habits.
 >> 2. As a news reader, I want a concise report about the biases of my news sources so that I can understand how my news sources may be influencing my own personal views on certain issues.
 >> 3. As a new reader, I want to know how extreme my personal news habits have been so that I can explore different sources to get a more holistic perspective on any given issue.
 
