@@ -1,0 +1,5 @@
+#comment
+#Wed Sep 30 01:18:32 EDT 2020
+name=J.D Salinger
+numOfBooks=8
+nationality=American
