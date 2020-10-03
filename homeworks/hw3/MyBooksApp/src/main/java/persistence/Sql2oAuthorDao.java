@@ -38,15 +38,16 @@ public class Sql2oAuthorDao implements AuthorDao {
     }
 
     @Override
-    public boolean delete(Author author) throws DaoException {
+    public boolean delete(String name) throws DaoException {
         try (Connection con = sql2o.open()) {
             String sql = "DELETE FROM Authors WHERE name = :name";
             con.createQuery(sql)
-                    .addParameter("name", author.getName())
+                    .addParameter("name", name)
                     .executeUpdate();
-
-            return true;
+        } catch (DaoException e) {
+            throw new DaoException();
         }
+        return true;
     }
 
     @Override

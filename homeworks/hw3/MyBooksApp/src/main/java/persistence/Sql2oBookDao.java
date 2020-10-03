@@ -41,11 +41,11 @@ public class Sql2oBookDao implements BookDao {
     }
 
     @Override
-    public boolean delete(Book book) throws DaoException {
+    public boolean delete(int isbn) throws DaoException {
         try (Connection con = sql2o.open()){
             String sql = "DELETE FROM Books WHERE isbn = :isbn";
             con.createQuery(sql)
-                    .addParameter("isbn", book.getIsbn())
+                    .addParameter("isbn", isbn)
                     .executeUpdate();
 
             return true;

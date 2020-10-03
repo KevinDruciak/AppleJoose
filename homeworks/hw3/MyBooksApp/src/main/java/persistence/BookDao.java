@@ -25,7 +25,7 @@ public interface BookDao {
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
      */
-    boolean delete(Book book) throws DaoException;
+    boolean delete(int isbn) throws DaoException;
 
     /**
      * Updates book in database

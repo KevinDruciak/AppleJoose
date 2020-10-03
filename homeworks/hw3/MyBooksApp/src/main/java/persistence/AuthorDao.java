@@ -26,12 +26,12 @@ public interface AuthorDao {
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
      */
-    boolean delete(Author author) throws DaoException;
+    boolean delete(String name) throws DaoException;
 
-    /**
-     * Updates author in database
-     * If sql query is successfully executed, true is returned
-     * If something goes wrong with query execution, DaoException is thrown.
-     */
+        /**
+         * Updates author in database
+         * If sql query is successfully executed, true is returned
+         * If something goes wrong with query execution, DaoException is thrown.
+         */
     boolean update(Author author) throws DaoException;
 }
