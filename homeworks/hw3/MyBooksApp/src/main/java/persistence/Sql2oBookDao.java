@@ -6,10 +6,10 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class Sql2oBookDao implements BookDao {
+
     private final Sql2o sql2o;
 
     public Sql2oBookDao(Sql2o sql2o) {
@@ -21,11 +21,11 @@ public class Sql2oBookDao implements BookDao {
         try (Connection con = sql2o.open()) {
             String query = "INSERT INTO Books (id, title, isbn, publisher, year, authorId)" +
                     "VALUES (NULL, :title, :isbn, :publisher, :year, :authorId)";
-            int id = (int) con.createQuery(query, true)
+           int id = (int) con.createQuery(query, true)
                     .bind(book)
                     .executeUpdate().getKey();
-            book.setId(id);
-            return id;
+           book.setId(id);
+           return book.getAuthorId();
         }
         catch (Sql2oException ex) {
             throw new DaoException();
@@ -38,16 +38,32 @@ public class Sql2oBookDao implements BookDao {
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql).executeAndFetch(Book.class);
         }
-        catch (Sql2oException ex) {
-            throw new DaoException();
-        }
     }
-    // TODO: Add "delete" method from hw2 here; feel free to add more methods
+
     @Override
     public boolean delete(Book book) throws DaoException {
         try (Connection con = sql2o.open()){
             String sql = "DELETE FROM Books WHERE isbn = :isbn";
             con.createQuery(sql)
+                    .addParameter("isbn", book.getIsbn())
+                    .executeUpdate();
+
+            return true;
+        }
+    }
+
+    @Override
+    public boolean update(Book book) throws DaoException {
+        try (Connection con = sql2o.open()){
+            String sql = "UPDATE Books " +
+                    "SET title = :title, publisher = :publisher, year = :year," +
+                    "authorId = :authorId " +
+                    "WHERE isbn = :isbn";
+            con.createQuery(sql)
+                    .addParameter("title", book.getTitle())
+                    .addParameter("publisher", book.getPublisher())
+                    .addParameter("year", book.getYear())
+                    .addParameter("authorId", book.getAuthorId())
                     .addParameter("isbn", book.getIsbn())
                     .executeUpdate();
 

@@ -2,8 +2,10 @@ package persistence;
 
 import exception.DaoException;
 import model.Author;
+import org.sql2o.Connection;
+import org.sql2o.Sql2o;
+
 import java.util.List;
-import org.sql2o.*;
 
 public class Sql2oAuthorDao implements AuthorDao {
 
@@ -12,7 +14,6 @@ public class Sql2oAuthorDao implements AuthorDao {
     public Sql2oAuthorDao(Sql2o sql2o) {
         this.sql2o = sql2o;
     }
-
 
     @Override
     public int add(Author author) throws DaoException {
@@ -23,25 +24,19 @@ public class Sql2oAuthorDao implements AuthorDao {
                     .bind(author)
                     .executeUpdate().getKey();
             author.setId(id);
+
             return id;
-        }
-        catch (Sql2oException ex) {
-            throw new DaoException();
         }
     }
 
     @Override
-    public List<Author> listAll() {
+    public List<Author> listAll() throws DaoException {
         String sql = "SELECT * FROM Authors";
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql).executeAndFetch(Author.class);
         }
-        catch (Sql2oException ex) {
-            throw new DaoException();
-        }
     }
 
-    // TODO: Add "delete" method from hw2 here; feel free to add more methods
     @Override
     public boolean delete(Author author) throws DaoException {
         try (Connection con = sql2o.open()) {
@@ -54,5 +49,19 @@ public class Sql2oAuthorDao implements AuthorDao {
         }
     }
 
+    @Override
+    public boolean update(Author author) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            String sql = "UPDATE Authors " +
+                    "SET numOfBooks = :numOfBooks, nationality = :nationality"+
+                    " WHERE name = :name";
+            con.createQuery(sql)
+                    .addParameter("numOfBooks", author.getNumOfBooks())
+                    .addParameter("nationality", author.getNationality())
+                    .addParameter("name", author.getName())
+                    .executeUpdate();
 
+            return true;
+        }
+    }
 }
