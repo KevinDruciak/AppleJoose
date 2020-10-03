@@ -55,7 +55,7 @@ public class Server {
 
         // TODO: add your new endpoints here
 
-        get("/book", (req, res) -> {
+        get("/books", (req, res) -> {
 
             Sql2oBookDao sql2oBook = new Sql2oBookDao(getSql2o());
             String results = new Gson().toJson(sql2oBook.listAll());
