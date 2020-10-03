@@ -5,6 +5,8 @@ import org.sql2o.Sql2o;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
 import persistence.Sql2oAuthorDao;
+import persistence.Sql2oBookDao;
+
 import static spark.Spark.*;
 
 public class Server {
@@ -24,7 +26,7 @@ public class Server {
 
     public static void main(String[] args)  {
         // set port number
-        final int PORT_NUM = 7000;
+        final int PORT_NUM = 420;
         port(PORT_NUM);
 
         // root route; show a simple message!
@@ -52,5 +54,15 @@ public class Server {
         });
 
         // TODO: add your new endpoints here
+
+        get("/book", (req, res) -> {
+
+            Sql2oBookDao sql2oBook = new Sql2oBookDao(getSql2o());
+            String results = new Gson().toJson(sql2oBook.listAll());
+            res.type("application/json");
+            res.status(200);
+            return results;
+
+        });
     }
 }
