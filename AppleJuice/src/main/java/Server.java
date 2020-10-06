@@ -10,17 +10,10 @@ import persistence.Sql2oArticleDao;
 import persistence.Sql2oUserDao;
 import persistence.Sql2oStatisticsDao;
 
-import java.sql.Connection;
-import java.sql.Statement;
 
 import static spark.Spark.*;
 
 public class Server {
-    static OkHttpClient client;
-
-    static String URI;
-    static Connection conn;
-    static Statement st;
 
     private static Sql2o getSql2o() {
         // set on foreign keys
