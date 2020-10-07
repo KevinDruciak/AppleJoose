@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="RESTAPITest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-10-03T05:20:07" hostname="DESKTOP-AS4GVC7" time="0.234">
+<testsuite name="RESTAPITest" tests="6" skipped="0" failures="0" errors="0" timestamp="2020-10-05T16:14:48" hostname="DESKTOP-AS4GVC7" time="0.992">
   <properties/>
-  <testcase name="testDeleteAuthor" classname="RESTAPITest" time="0.234"/>
-  <system-out><![CDATA[]]></system-out>
+  <testcase name="testAddBook" classname="RESTAPITest" time="0.556"/>
+  <testcase name="testListAuthors" classname="RESTAPITest" time="0.054"/>
+  <testcase name="testListBooks" classname="RESTAPITest" time="0.05"/>
+  <testcase name="testDeleteAuthor" classname="RESTAPITest" time="0.126"/>
+  <testcase name="testAddAuthor" classname="RESTAPITest" time="0.092"/>
+  <testcase name="testDeleteBook" classname="RESTAPITest" time="0.113"/>
+  <system-out><![CDATA[[{"id":1,"title":"Desert","isbn":"123","publisher":"JHU","year":2020,"authorId":1}]
+[{"id":1,"title":"Desert","isbn":"123","publisher":"JHU","year":2020,"authorId":1}]
+[]
+]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

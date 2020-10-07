@@ -23,18 +23,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="65d9d39c-4a16-4f9d-9fd6-cac93b5b8616" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.3/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/fileContent/fileContent.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.3/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/Server.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/2020-fall-group-apple-jOOSE.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/APITests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/APITests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/6.3/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/MyBooksApp.db" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/MyBooksApp.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/classes/java/main/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/classes/java/main/Server.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/reports/tests/test/classes/RESTAPITest.html" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/reports/tests/test/classes/RESTAPITest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/reports/tests/test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/reports/tests/test/packages/default-package.html" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/reports/tests/test/packages/default-package.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/test-results/test/TEST-RESTAPITest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/test-results/test/TEST-RESTAPITest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/test-results/test/binary/output.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/test-results/test/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/test-results/test/binary/output.bin.idx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp/build/test-results/test/binary/results.bin" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +55,13 @@
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -65,20 +82,15 @@
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="sqlite" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp" />
     <property name="show.migrate.to.gradle.popup" value="false" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
   <component name="RunManager">
-    <configuration name="Server" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="Server" />
-      <module name="AppleJuice.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -86,6 +98,13 @@
         </value>
       </option>
       <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Server" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Server" />
+      <module name="AppleJuice.main" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -116,12 +135,17 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="127" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601984839402">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="320" y="127" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.877@0.23.1440.877" timestamp="1601984839402" />
+    <state x="1220" y="274" key="FileChooserDialogImpl" timestamp="1602027671683">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1220" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1602027671683" />
     <state width="1398" height="231" key="GridCell.Tab.0.bottom" timestamp="1601984862964">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
