@@ -13,3 +13,12 @@ Iteration 1 Notes:
 key API implementation and client side functionality. However, most of the server/database side of 
 the project is complete and should be already have most of the functions we will need for the rest of 
 this project already implemented.
+
+Work Done:
+
+Kevin/Simon/Joao 
+ * Object Classes, Dao Interface and Sql2o Classes
+ * Main.java and Server.java
+ * initial extension implementation
+ * DBPersistanceTest.java and APITests.java
+ 
