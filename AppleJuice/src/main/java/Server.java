@@ -66,7 +66,6 @@ public class Server {
 
         //addarticle route; add a new article
         post("/addarticle", (req, res) -> {
-
             //TODO: REPLACE TEMPORARY MANUAL INFO WITH API CALLS
             String url = req.queryParams("userName");
             String title = req.queryParams("title");
@@ -93,5 +92,23 @@ public class Server {
             res.type("application/json");
             return new Gson().toJson(url);
         });
+
+        get("/stats", (req, res) -> {
+            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(getSql2o());
+            String results = new Gson().toJson(sql2oStatsDao.listAll());
+            res.type("application/json");
+            res.status(200);
+            return results;
+        });
+
+        post("/addstats", (req, res) -> {
+            int userID = Integer.parseInt(req.queryParams("userID"));
+            Statistics stats = new Statistics(userID);
+            new Sql2oStatisticsDao(getSql2o()).add(stats);
+            res.status(201);
+            res.type("application/json");
+            return new Gson().toJson(stats.toString());
+        });
+
     }
 }
