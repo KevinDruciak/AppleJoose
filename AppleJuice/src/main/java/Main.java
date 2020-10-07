@@ -19,7 +19,7 @@ public class Main {
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER, biasRating INTEGER, " +
-                "biasNAME VARCHAR(100), favNewsSources VARCHAR(100), favTopic VARCHAR(50), " +
+                "biasNAME VARCHAR(100), favNewsSource VARCHAR(100), favTopic VARCHAR(50), " +
                 "recentArticles VARCHAR(1000), execSummary VARCHAR(1000), " +
                 "userID INTEGER NOT NULL, FOREIGN KEY(userID) REFERENCES Users(userID) " +
                 "ON UPDATE CASCADE ON DELETE CASCADE)";

@@ -52,16 +52,16 @@ public class User {
     public void setUserName(String userName) { this.userName = userName; }
 
     public void updateUserStats() {
-        userStats.updateBiasRating();
+        userStats.updateBiasRating(this.userHistory);
         userStats.updateBiasName();
-        userStats.updateFavNewsSource();
-        userStats.updateFavTopic();
-        userStats.updateRecentArticles();
+        userStats.updateFavNewsSource(this.userHistory);
+        userStats.updateFavTopic(this.userHistory);
+        userStats.updateRecentArticles(this.userHistory);
         userStats.updateExecSummary();
     }
 
     public void updateUserHistory() {
-        //TODO: Call extension api to scan user history, get new News articles,
+        //TODO: Call extension API to scan user history, get new News articles,
         // create new Article objects, and add them to userHistory list
     }
 

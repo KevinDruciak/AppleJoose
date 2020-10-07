@@ -2,7 +2,9 @@ package model;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
+import java.util.HashMap;
 
 public class Statistics {
     private int id;
@@ -16,6 +18,11 @@ public class Statistics {
 
     public Statistics(int userID) {
         this.userID = userID;
+        this.biasRating = 0;
+        this.biasName = this.createBiasName(this.biasRating);
+        this.favNewsSource = "";
+        this.favTopic = "";
+        this.execSummary = this.createExecSummary();
     }
 
     @Override
@@ -59,7 +66,50 @@ public class Statistics {
 
     public String createBiasName(int bias) {
         String name;
-        name = "";
+        bias = bias % 10;
+        switch (bias) {
+            case -10:
+            case -9:
+            case -8:
+                name = "Extreme Liberal Bias";
+                break;
+            case -7:
+            case -6:
+            case -5:
+                name = "Strong Liberal Bias";
+                break;
+            case -4:
+            case -3:
+                name = "Moderate Liberal Bias";
+                break;
+            case -2:
+            case -1:
+                name = "Minimal Liberal Bias";
+                break;
+            case 0:
+                name = "Minimal Bias";
+                break;
+            case 1:
+            case 2:
+                name = "Minimal Conservative Bias";
+                break;
+            case 3:
+            case 4:
+                name = "Moderate Conservative Bias";
+                break;
+            case 5:
+            case 6:
+            case 7:
+                name = "Strong Conservative Bias";
+                break;
+            case 8:
+            case 9:
+            case 10:
+                name = "Extreme Conservative Bias";
+                break;
+            default:
+                name = "Bias Could not be determined";
+        }
         return name;
     }
 
@@ -72,31 +122,70 @@ public class Statistics {
         return text;
     }
 
-    public void updateBiasRating() {
-        //TODO: scan through userHistory, recalculated biasRating,
-        // and update biasRating
+    public void updateBiasRating(List<Article> userHistory) {
+        int biasTotal = 0;
+
+        for (Article a : userHistory) {
+            biasTotal += a.getBiasRating();
+        }
+
+        this.biasRating = biasTotal;
     }
 
     public void updateBiasName() {
-        //TODO: check biasRating, and update biasName
+        this.biasName = createBiasName(this.biasRating);
     }
 
-    public void updateFavNewsSource() {
-        //TODO: scan through userHistory, check for news source with most
-        // instances, and update favNewsSource
+    public void updateFavNewsSource(List<Article> userHistory) {
+        Map<String, Integer> map = new HashMap<>();
+
+        for (Article a : userHistory) {
+            Integer i = map.get(a.getNewsSource());
+            map.put(a.getNewsSource(), i == null ? 1 : i + 1);
+        }
+
+        Map.Entry<String, Integer> max = null;
+
+        for (Map.Entry<String, Integer> e : map.entrySet()) {
+            if (max == null || e.getValue() > max.getValue()) {
+                max = e;
+            }
+        }
+
+        this.favNewsSource = max.getKey();
     }
 
-    public void updateFavTopic() {
-        //TODO: scan through userHistory, check for topic with most
-        // instances, and update favTopic
+    public void updateFavTopic(List<Article> userHistory) {
+        Map<String, Integer> map = new HashMap<>();
+
+        for (Article a : userHistory) {
+            Integer i = map.get(a.getTopic());
+            map.put(a.getTopic(), i == null ? 1 : i + 1);
+        }
+
+        Map.Entry<String, Integer> max = null;
+
+        for (Map.Entry<String, Integer> e : map.entrySet()) {
+            if (max == null || e.getValue() > max.getValue()) {
+                max = e;
+            }
+        }
+
+        this.favNewsSource = max.getKey();
     }
 
-    public void updateRecentArticles() {
-        //TODO: scan through userHistory, check for 5 most recent articles,
-        // and update recentArticles
+    public void updateRecentArticles(List<Article> userHistory) {
+        List<Article> rArticles = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            rArticles.add(userHistory.get(userHistory.size() - (1 + i)));
+        }
+
+        this.recentArticles = rArticles;
     }
 
     public void updateExecSummary() {
         //TODO: create new ExecSummary and update objects execSummary
+        this.createExecSummary();
     }
 }
