@@ -17,9 +17,9 @@ public class Sql2oStatisticsDao implements StatisticsDao {
     public int add(Statistics stats) throws DaoException {
         try (Connection con = sql2o.open()) {
             String query = "INSERT INTO Statistics (id, biasRating, biasName, " +
-                    "favNewsSource, favTopic, recentArticles, execSummary, userID)" +
+                    "favNewsSource, favTopic, execSummary, userID)" +
                     "VALUES (NULL, :biasRating, :biasName, :favNewsSource," +
-                    " :favTopic, :recentArticles, :execSummary, :userID)";
+                    " :favTopic, :execSummary, :userID)";
             int id = (int) con.createQuery(query, true)
                     .bind(stats)
                     .executeUpdate().getKey();
@@ -63,14 +63,14 @@ public class Sql2oStatisticsDao implements StatisticsDao {
             String sql = "UPDATE Statistics " +
                     "SET biasRating = :biasRating, biasName = :biasName, " +
                     "favNewsSource = :favNewsSource, favTopic = :favTopic, " +
-                    "recentArticles = :recentArticles, execSummary = :execSummary " +
+                    "execSummary = :execSummary " +
                     "WHERE userID = :userID";
             con.createQuery(sql)
                     .addParameter("biasRating", stats.getBiasRating())
                     .addParameter("biasName", stats.getBiasName())
                     .addParameter("favNewsSource", stats.getFavNewsSource())
                     .addParameter("favTopic", stats.getFavTopic())
-                    .addParameter("recentArticles", stats.getRecentArticles())
+                    //.addParameter("recentArticles", stats.getRecentArticles())
                     .addParameter("execSummary", stats.getExecSummary())
                     .addParameter("userID", stats.getUserID())
                     .executeUpdate();

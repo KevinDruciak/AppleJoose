@@ -15,7 +15,7 @@ public class Main {
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Users (userID INTEGER PRIMARY KEY, " +
-                "userName VARCHAR(50), userStats VARCHAR(100), userHistory VARCHAR(100))";
+                "userName VARCHAR(50))";
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER, biasRating INTEGER, " +

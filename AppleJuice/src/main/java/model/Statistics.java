@@ -14,9 +14,14 @@ public class Statistics {
     private String favTopic;
     private List<Article> recentArticles = new ArrayList<>();
     private String execSummary;
-    private final int userID;
+    private int userID;
 
-    public Statistics(int userID) {
+    public Statistics(int biasRating, String biasName, String favNewsSource, String favTopic, String execSummary, int userID) {
+        this.biasRating = biasRating;
+        this.biasName = biasName;
+        this.favNewsSource = favNewsSource;
+        this.favTopic = favTopic;
+        this.execSummary = execSummary;
         this.userID = userID;
         this.biasRating = 0;
         this.biasName = this.createBiasName(this.biasRating);
@@ -40,7 +45,7 @@ public class Statistics {
                 ", biasName='" + biasName + '\'' +
                 ", favNewsSource='" + favNewsSource + '\'' +
                 ", favTopic=" + favTopic + '\'' +
-                ", recentArticles=" + recentArticles.toString() + '\'' +
+               // ", recentArticles=" + recentArticles.toString() + '\'' +
                 ", execSummary=" + execSummary + '\'' +
                 '}';
     }
@@ -58,7 +63,7 @@ public class Statistics {
 
     public String getFavTopic() { return this.favTopic; }
 
-    public List<Article> getRecentArticles() { return this.recentArticles; }
+    //public List<Article> getRecentArticles() { return this.recentArticles; }
 
     public String getExecSummary() { return this.execSummary; }
 
