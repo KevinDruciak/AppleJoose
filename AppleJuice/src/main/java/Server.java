@@ -55,7 +55,7 @@ public class Server {
             return new Gson().toJson(u.toString());
         });
 
-        //delarticle route; delete an article
+        //deluser route; delete an article
         post("/deluser", (req, res) -> {
             int userID = Integer.parseInt(req.queryParams("userID"));
             new Sql2oUserDao(getSql2o()).delete(userID);
@@ -102,6 +102,7 @@ public class Server {
             return new Gson().toJson(url);
         });
 
+        //stats route; return all user stats
         get("/stats", (req, res) -> {
             Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(getSql2o());
             String results = new Gson().toJson(sql2oStatsDao.listAll());
@@ -110,6 +111,7 @@ public class Server {
             return results;
         });
 
+        //addstats route; add stats to database
         post("/addstats", (req, res) -> {
             int biasRating = Integer.parseInt(req.queryParams("biasRating"));
             String biasName = req.queryParams("biasName");
@@ -125,7 +127,7 @@ public class Server {
             return new Gson().toJson(stats.toString());
         });
 
-        //delarticle route; delete an article
+        //delstats route; delete a user's stats
         post("/delstats", (req, res) -> {
             int userID = Integer.parseInt(req.queryParams("userID"));
             new Sql2oStatisticsDao(getSql2o()).delete(userID);

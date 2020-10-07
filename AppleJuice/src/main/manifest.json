@@ -1,11 +1,10 @@
 {
-  "name": "Know Your Bias",
-  "version": "1.0",
+  "name": "Apple Juice",
+  "version": "0.1",
   "description": "Apple-jOOSE Extension!",
-  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "permissions": ["webNavigation", "history", "storage", "tabs"],
   "background": {
-    "scripts": ["javaScript/model/background.js"],
-    "persistent": true
+    "scripts": []
   },
 
   "browser_action": {

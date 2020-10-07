@@ -72,11 +72,11 @@ public class Article {
     public int getTimesVisited() { return this.timesVisited; }
 
     public void updateTimeOnArticle() {
-        //TODO: get time on a webpage from extension api, and update objects value
+        //TODO: get time on a webpage from extension API, and update objects value
     }
 
     public void updateTimesVisited() {
-        //TODO: get numbers of url visits in user history from extension api,
+        //TODO: get numbers of url visits in user history from extension API,
         // and update objects value
     }
 }
