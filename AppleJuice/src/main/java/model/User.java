@@ -26,11 +26,9 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userID='" + userID + '\'' +
+                "userID=" + userID +
                 ", userName='" + userName + '\'' +
-                ", statistics='" + userStats.toString() + '\'' +
-                ", userHistory=" + userHistory.toString() + '\'' +
-                '}';
+                "}";
     }
 
     @Override
@@ -38,7 +36,7 @@ public class User {
 
     public void setUserID(int id) {
         this.userID = id;
-        this.userStats = new Statistics(this.userID);
+        //this.userStats = new Statistics(this.userID);
     }
 
     public int getUserID() { return this.userID; }
@@ -67,7 +65,7 @@ public class User {
 
     public void clearUserStats() {
         this.userStats = null;
-        this.userStats = new Statistics(this.userID);
+        //this.userStats = new Statistics(this.userID);
     }
 
     public void clearUserHistory() {

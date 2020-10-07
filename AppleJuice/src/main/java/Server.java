@@ -76,14 +76,14 @@ public class Server {
         //addarticle route; add a new article
         post("/addarticle", (req, res) -> {
             //TODO: REPLACE TEMPORARY MANUAL INFO WITH API CALLS
-            String url = req.queryParams("userName");
+            String url = req.queryParams("url");
             String title = req.queryParams("title");
             String newsSource = req.queryParams("newsSource");
             int biasRating = Integer.parseInt(req.queryParams("biasRating"));
             String topic = req.queryParams("topic");
-            double timeOnArticle = Double.parseDouble(req.queryParams("biasRating"));
-            int numWords = Integer.parseInt(req.queryParams("biasRating"));
-            int timesVisited = Integer.parseInt(req.queryParams("biasRating"));
+            double timeOnArticle = Double.parseDouble(req.queryParams("timeOnArticle"));
+            int numWords = Integer.parseInt(req.queryParams("numWords"));
+            int timesVisited = Integer.parseInt(req.queryParams("timesVisited"));
 
             Article article = new Article(url, title, newsSource, biasRating, topic,
                     timeOnArticle, numWords, timesVisited);
@@ -111,8 +111,14 @@ public class Server {
         });
 
         post("/addstats", (req, res) -> {
+            int biasRating = Integer.parseInt(req.queryParams("biasRating"));
+            String biasName = req.queryParams("biasName");
+            String favNewsSource = req.queryParams("favNewsSource");
+            String favTopic = req.queryParams("favTopic");
+            String execSummary = req.queryParams("execSummary");
             int userID = Integer.parseInt(req.queryParams("userID"));
-            Statistics stats = new Statistics(userID);
+
+            Statistics stats = new Statistics(biasRating, biasName, favNewsSource, favTopic, execSummary, userID);
             new Sql2oStatisticsDao(getSql2o()).add(stats);
             res.status(201);
             res.type("application/json");
