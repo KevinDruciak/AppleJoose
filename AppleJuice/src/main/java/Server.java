@@ -55,6 +55,15 @@ public class Server {
             return new Gson().toJson(u.toString());
         });
 
+        //delarticle route; delete an article
+        post("/deluser", (req, res) -> {
+            int userID = Integer.parseInt(req.queryParams("userID"));
+            new Sql2oUserDao(getSql2o()).delete(userID);
+            res.status(201);
+            res.type("application/json");
+            return new Gson().toJson(userID);
+        });
+
         //articles route; return list of articles as JSON
         get("/articles", (req, res) -> {
             Sql2oArticleDao article = new Sql2oArticleDao(getSql2o());
@@ -110,5 +119,13 @@ public class Server {
             return new Gson().toJson(stats.toString());
         });
 
+        //delarticle route; delete an article
+        post("/delstats", (req, res) -> {
+            int userID = Integer.parseInt(req.queryParams("userID"));
+            new Sql2oStatisticsDao(getSql2o()).delete(userID);
+            res.status(201);
+            res.type("application/json");
+            return new Gson().toJson(userID);
+        });
     }
 }
