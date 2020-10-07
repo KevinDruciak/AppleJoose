@@ -54,5 +54,44 @@ public class Server {
             res.type("application/json");
             return new Gson().toJson(u.toString());
         });
+
+        //articles route; return list of articles as JSON
+        get("/articles", (req, res) -> {
+            Sql2oArticleDao article = new Sql2oArticleDao(getSql2o());
+            String results = new Gson().toJson(article.listAll());
+            res.type("application/json");
+            res.status(200);
+            return results;
+        });
+
+        //addarticle route; add a new article
+        post("/addarticle", (req, res) -> {
+
+            //TODO: REPLACE TEMPORARY MANUAL INFO WITH API CALLS
+            String url = req.queryParams("userName");
+            String title = req.queryParams("title");
+            String newsSource = req.queryParams("newsSource");
+            int biasRating = Integer.parseInt(req.queryParams("biasRating"));
+            String topic = req.queryParams("topic");
+            double timeOnArticle = Double.parseDouble(req.queryParams("biasRating"));
+            int numWords = Integer.parseInt(req.queryParams("biasRating"));
+            int timesVisited = Integer.parseInt(req.queryParams("biasRating"));
+
+            Article article = new Article(url, title, newsSource, biasRating, topic,
+                    timeOnArticle, numWords, timesVisited);
+            new Sql2oArticleDao(getSql2o()).add(article);
+            res.status(201);
+            res.type("application/json");
+            return new Gson().toJson(article.toString());
+        });
+
+        //delarticle route; delete an article
+        post("/delarticle", (req, res) -> {
+            String url = req.queryParams("url");
+            new Sql2oArticleDao(getSql2o()).delete("url");
+            res.status(201);
+            res.type("application/json");
+            return new Gson().toJson(url);
+        });
     }
 }
