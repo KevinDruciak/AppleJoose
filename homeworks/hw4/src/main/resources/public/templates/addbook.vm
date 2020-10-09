@@ -12,14 +12,14 @@
 #end
 
 <h2>Add a new Book</h2>
-<form action="/addbook" method="post" class="content" id="formAddAuthor">
+<form action="/addbook" method="post" class="content" id="formAddBook">
     <div>
         <label for="name">Title: </label>
         <input type="text" name="title" placeholder="title" id="title" required>
     </div>
     <div>
-        <label for="ISBN">ISBN: </label>
-        <input type="text" name="ISBN" placeholder="ISBN" id="ISBN" />
+        <label for="isbn">ISBN: </label>
+        <input type="text" name="isbn" placeholder="isbn" id="isbn" />
     </div>
     <div>
         <label for="publisher">Publisher: </label>
