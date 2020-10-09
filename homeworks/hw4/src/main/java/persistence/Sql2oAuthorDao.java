@@ -23,8 +23,7 @@ public class Sql2oAuthorDao implements AuthorDao {
         try (Connection con = sql2o.open()) {
             String name = author.getName();
             String q = "SELECT id FROM Authors WHERE name = :name";
-            int test = con.createQuery(q).addParameter("name", name).executeAndFetchFirst(Integer.class);
-            int i = test;
+            int i = con.createQuery(q).addParameter("name", name).executeAndFetchFirst(Integer.class);
             if (i > 0) {
                 return i;
             }
