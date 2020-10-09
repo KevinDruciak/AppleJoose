@@ -26,6 +26,7 @@ public class Server {
 
         Sql2o sql2o = getSql2o();
 
+
         post("/", (req, res) -> {
             String username = req.queryParams("username");
             String color = req.queryParams("color");
@@ -95,7 +96,6 @@ public class Server {
             return new VelocityTemplateEngine().render(mdl);
         });
 
-        /* TODO: add your new endpoints here! */
         get("/books", (req, res) -> {
             if(req.cookie("username") == null){
 
@@ -134,10 +134,10 @@ public class Server {
             Author a = new Author(name, numOfBooks, nationality);
             //Book b = new Book(title, isbn, publisher, year, 1);
             try {
-                int authorId = new Sql2oAuthorDao(sql2o).add(a);
+                //int authorId = new Sql2oAuthorDao(sql2o).add(a);
                 //int id = new Sql2oBookDao(sql2o).add(b);
-                Book b = new Book(title, isbn, publisher, year, authorId);
-                int id = new Sql2oBookDao(sql2o).add(b);
+                Book b = new Book(title, isbn, publisher, year);
+                int id = new Sql2oBookDao(sql2o).add(b, a);
                 if (id > 0) {
                     //int temp = new Sql2oBookDao(sql2o).add(b);
                     model.put("added", "true");

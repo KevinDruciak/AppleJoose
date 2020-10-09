@@ -1,7 +1,7 @@
 package persistence;
 
 import exception.DaoException;
-import model.Book;
+import model.*;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
@@ -15,15 +15,26 @@ public class Sql2oBookDao implements BookDao {
     }
 
     @Override
-    public int add(Book book) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String query = "INSERT INTO Books (id, title, isbn, publisher, year, authorId)" +
+    public int add(Book book, Author author) throws DaoException {
+        try (Connection con = sql2o.beginTransaction(1)) {
+
+            String query1 = "INSERT INTO Authors (name, numOfBooks, nationality)" +
+                    "VALUES (:name, :numOfBooks, :nationality)";
+            int aId = (int) con.createQuery(query1, true)
+                    .bind(author)
+                    .executeUpdate().getKey();
+            author.setId(aId);
+
+            book.setAuthorId(aId);
+            String query2 = "INSERT INTO Books (id, title, isbn, publisher, year, authorId)" +
                     "VALUES (NULL, :title, :isbn, :publisher, :year, :authorId)";
-            int id = (int) con.createQuery(query, true)
+            int bId = (int) con.createQuery(query2, true)
                     .bind(book)
                     .executeUpdate().getKey();
-            book.setId(id);
-            return id;
+            book.setId(bId);
+            con.commit();
+
+            return bId;
         }
     }
 

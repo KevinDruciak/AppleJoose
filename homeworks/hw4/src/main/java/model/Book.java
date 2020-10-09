@@ -10,12 +10,11 @@ public class Book {
     private int year;
     private int authorId;
 
-    public Book(String title, String isbn, String publisher, int year, int authorId) {
+    public Book(String title, String isbn, String publisher, int year) {
         this.title = title;
         this.isbn = isbn;
         this.publisher = publisher;
         this.year = year;
-        this.authorId = authorId;
     }
 
     public String getTitle() {
@@ -49,6 +48,8 @@ public class Book {
     public int getAuthorId() {
         return authorId;
     }
+
+    public void setAuthorId(int authorId) { this.authorId = authorId; }
 
     public void setTitle(String title) {
         this.title = title;

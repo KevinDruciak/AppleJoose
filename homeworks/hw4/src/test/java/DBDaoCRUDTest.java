@@ -69,8 +69,8 @@ public class DBDaoCRUDTest {
     public void testBookAdd() {
         Author author = new Author("Franz Kafka", 16, "Czechoslovakian");
         assertTrue(authorDao.add(author) > 0);
-        Book book =  new Book("The Trial","978-0805210408", "Schocken", 1995, 1);
-        assertTrue(bookDao.add(book) > 0);
+        Book book =  new Book("The Trial","978-0805210408", "Schocken", 1995);
+        assertTrue(bookDao.add(book, author) > 0);
     }
 
     @Test
@@ -80,13 +80,13 @@ public class DBDaoCRUDTest {
 
     @Test
     public void testBookUpdate() {
-        Book book =  new Book("The Trial","978-0805210408", "Schocken", 1992, 1);
+        Book book =  new Book("The Trial","978-0805210408", "Schocken", 1992);
         assertTrue(bookDao.update(book));
     }
 
     @Test
     public void testBookDelete() {
-        Book book =  new Book("The Trial","978-0805210408", "Schocken", 1992, 1);
+        Book book =  new Book("The Trial","978-0805210408", "Schocken", 1992);
         assertTrue(bookDao.delete(book));
     }
 
