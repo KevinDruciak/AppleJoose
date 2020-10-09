@@ -47,6 +47,11 @@ public class Server {
         }, new VelocityTemplateEngine());
 
         get("/authors", (req, res) -> {
+            if(req.cookie("username") == null){
+
+                res.redirect("/");
+
+            }
             Map<String, Object> model = new HashMap<>();
             model.put("authors", new Sql2oAuthorDao(sql2o).listAll());
             res.status(200);
@@ -55,6 +60,11 @@ public class Server {
         }, new VelocityTemplateEngine());
 
         get("/addauthor", (req, res) -> {
+            if(req.cookie("username") == null){
+
+                res.redirect("/");
+
+            }
             Map<String, Object> model = new HashMap<>();
             res.status(200);
             res.type("text/html");
@@ -87,6 +97,11 @@ public class Server {
 
         /* TODO: add your new endpoints here! */
         get("/books", (req, res) -> {
+            if(req.cookie("username") == null){
+
+                res.redirect("/");
+
+            }
             Map<String, Object> model = new HashMap<>();
             model.put("books", new Sql2oBookDao(sql2o).listAll());
             res.status(200);
@@ -95,6 +110,11 @@ public class Server {
         }, new VelocityTemplateEngine());
 
         get("/addbook", (req, res) -> {
+            if(req.cookie("username") == null){
+
+                res.redirect("/");
+
+            }
             Map<String, Object> model = new HashMap<>();
             res.status(200);
             res.type("text/html");
