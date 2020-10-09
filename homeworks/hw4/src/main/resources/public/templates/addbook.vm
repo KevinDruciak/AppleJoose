@@ -7,19 +7,19 @@
 #end
 
 #if($failedAdd)
-<h2>Failed to add the book!</h2>
+<h2>Failed to add the Book!</h2>
 <br />
 #end
 
 <h2>Add a new Book</h2>
-<form action="/addbook" method="post" class="content" id="formAddBook">
+<form action="/addbook" method="post" class="content" id="formAddAuthor">
     <div>
-        <label for="title">Title: </label>
+        <label for="name">Title: </label>
         <input type="text" name="title" placeholder="title" id="title" required>
     </div>
     <div>
-        <label for="isbn">ISBN: </label>
-        <input type="text" name="isbn" placeholder="isbn" id="isbn" />
+        <label for="ISBN">ISBN: </label>
+        <input type="text" name="ISBN" placeholder="ISBN" id="ISBN" />
     </div>
     <div>
         <label for="publisher">Publisher: </label>
@@ -27,11 +27,20 @@
     </div>
     <div>
         <label for="year">Year: </label>
-        <input type="number" name="year" placeholder="2020" id="year" min="0" max="2020"/>
+        <input type="number" name="year" placeholder="year" id="year"/>
+    </div>
+    <h3>Author Info</h3>
+    <div>
+        <label for="name">Name: </label>
+        <input type="text" name="name" placeholder="name" id="name" required>
     </div>
     <div>
-        <label for="authorId">Author ID: </label>
-        <input type="number" name="authorId" placeholder="1" id="authorId" min="1"/>
+        <label for="nationality">Nationality: </label>
+        <input type="text" name="nationality" placeholder="nationality" id="nationality" />
+    </div>
+    <div>
+        <label for="numOfBooks">Number of books: </label>
+        <input type="number" name="numOfBooks" placeholder="1" id="numOfBooks" min="1" max="200"/>
     </div>
     <br />
     <input type="submit" value="Add" id="submitAddBook" />
