@@ -1,7 +1,9 @@
 import exception.DaoException;
 import model.Author;
+import model.Book;
 import org.sql2o.Sql2o;
 import persistence.Sql2oAuthorDao;
+import persistence.Sql2oBookDao;
 import spark.ModelAndView;
 import java.util.HashMap;
 import java.util.Map;
@@ -80,5 +82,47 @@ public class Server {
         });
 
         /* TODO: add your new endpoints here! */
+
+        get("/books", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            model.put("books", new Sql2oBookDao(sql2o).listAll());
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/books.vm");
+        }, new VelocityTemplateEngine());
+
+        get("/addbook", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/addbook.vm");
+        }, new VelocityTemplateEngine());
+
+        post("/addbook", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            String title = req.queryParams("title");
+            String isbn = req.queryParams("isbn");
+            String publisher = req.queryParams("publisher");
+            int year = Integer.parseInt(req.queryParams("year"));
+            int authorId = Integer.parseInt(req.queryParams("authorId"));
+            Book b = new Book(title, isbn, publisher, year, authorId);
+            try {
+                int id = new Sql2oBookDao(sql2o).add(b);
+                if (id > 0) {
+                    model.put("added", "true");
+                }
+                else {
+                    model.put("failedAdd", "true");
+                }
+            }
+            catch (DaoException ex) {
+                model.put("failedAdd", "true");
+            }
+            res.status(201);
+            res.type("text/html");
+            ModelAndView mdl = new ModelAndView(model, "public/templates/addbook.vm");
+            return new VelocityTemplateEngine().render(mdl);
+        });
+
     }
 }
