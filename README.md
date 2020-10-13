@@ -16,7 +16,7 @@ this project already implemented.
 
 Work Done:
 
-Kevin/Simon/Joao 
+Kevin/Simon/Connor/Joao 
  * Object Classes, Dao Interface and Sql2o Classes
  * Main.java and Server.java
  * initial extension implementation
