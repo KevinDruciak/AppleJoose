@@ -91,4 +91,12 @@ ol li button{
     border: 2px solid crimson;
 }
 
+form button{
+    color: green;
+    background: #0B132B;
+    border-radius: 4px;
+    font-weight: normal;
+    border: 2px solid green;
+}
+
 

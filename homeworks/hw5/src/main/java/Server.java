@@ -60,6 +60,33 @@ public class Server {
             return new ModelAndView(model, "public/templates/authors.vm");
         }, new VelocityTemplateEngine());
 
+        post("/authors", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            //model.put("authors", new Sql2oAuthorDao(sql2o).listAll());
+            String name = req.queryParams("name");
+            String nationality = req.queryParams("nationality");
+            int numOfBooks = Integer.parseInt(req.queryParams("numOfBooks"));
+            Author author = new Author(name, numOfBooks, nationality);
+            try {
+                int id = new Sql2oAuthorDao(sql2o).add(author);
+                if (id > 0) {
+                    model.put("added", "true");
+                    model.put("authors", new Sql2oAuthorDao(sql2o).listAll());
+                }
+                else {
+                    model.put("failedAdd", "true");
+                }
+//                model.put("authors", new Sql2oAuthorDao(sql2o).listAll());
+            }
+            catch (DaoException ex) {
+                model.put("failedAdd", "true");
+            }
+            res.status(201);
+            res.type("text/html");
+            ModelAndView mdl = new ModelAndView(model, "public/templates/authors.vm");
+            return new VelocityTemplateEngine().render(mdl);
+        });
+
         get("/addauthor", (req, res) -> {
             if(req.cookie("username") == null){
                 res.redirect("/");
@@ -73,8 +100,8 @@ public class Server {
         post("/addauthor", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             String name = req.queryParams("name");
-            int numOfBooks = Integer.parseInt(req.queryParams("numOfBooks"));
             String nationality = req.queryParams("nationality");
+            int numOfBooks = Integer.parseInt(req.queryParams("numOfBooks"));
             Author author = new Author(name, numOfBooks, nationality);
             try {
                 int id = new Sql2oAuthorDao(sql2o).add(author);
@@ -95,6 +122,7 @@ public class Server {
         });
 
         post("/delauthor", (req, res) -> {
+            System.out.println("REACHED DELAUTHOR");
             String name = req.queryParams("name");
             Author a = new Author(name, 0, "");
             new Sql2oAuthorDao(getSql2o()).delete(a);

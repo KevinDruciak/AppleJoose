@@ -12,7 +12,24 @@
         </p>
     </ol>
 </div>
+
+<h1>Add a new author</h1>
+<form action="/authors" method="post" class="content">
+    <label for="name">Name: </label>
+    <input type="text" name="name" placeholder="name" id="name" required>     <button>&#10004</button>
+    <br />
+    <label for="nationality">Nationality: </label>
+    <input type="text" name="nationality" placeholder="nationality" id="nationality" />
+    <br />
+    <label for="numOfBooks">Number of books: </label>
+    <input type="number" name="numOfBooks" placeholder="1" id="numOfBooks" min="1" max="200"/>
+    <br />
+##    <i><input type="submit" value="Add Author" class="submit" /></i>
+
+</form>
+
 #end
+
 <script src="js/delauthor.js"></script>
 
 #parse("public/templates/bottom.vm")
