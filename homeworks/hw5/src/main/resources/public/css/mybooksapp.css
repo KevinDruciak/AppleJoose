@@ -1,29 +1,56 @@
+body {
+    background: #454545;
+}
+
 h1 {
-    font-family: "Book Antiqua", serif;
-    font-style: italic;
-    padding: 10px;
+    font-family: "Arial", sans-serif;
+    font-style: normal;
+    color: gainsboro;
+    padding: 16px;
+    text-align: center;
 }
+
+h5 {
+    font-family: "Arial", sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    padding: 16px;
+    text-align: center;
+    vertical-align: center;
+    color: lawngreen;
+}
+
+h6 {
+    font-family: "Arial", sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    padding: 16px;
+    text-align: center;
+    vertical-align: center;
+    color: crimson;
+}
+
 .divContents, form{
-    background: #566573;
-    text-align: left;
-    border-radius: 9px;
-    padding: 10px 30px 10px 30px;
-    float: left;
+    background: #0B132B;
+    text-align: center;
+    border-radius: 8px;
+    padding: 16px 32px 16px 32px;
+    height: fit-content;
+    width: fit-content;
+    margin: 0 auto;
 }
-.indexLinkWrapper {
-    margin-left: 10px;
-}
+
 .content {
-    color: #F1C40F;
-    font-family: Bahnschrift, serif;
+    color: #E9E3E6;
+    font-family: "Arial", sans-serif;
 }
 
 .indexLink {
-    font-size: 27px;
+    font-size: 24px;
 }
 
 .author {
-    padding: 7px;
+    padding: 8px;
     font-size: 18px;
 }
 
@@ -32,33 +59,36 @@ h1 {
 }
 
 .submit {
-    background: #273746 ;
-    color: #F1C40F;
-    font-family: "Book Antiqua", serif ;
+    background: #3581B8;
+    color: #0B132B;
+    font-family: "Arial", sans-serif;
     font-weight: bolder;
-    font-size: 30px;
-    padding: 0 40px 0 40px;
-    border-radius: 0 16px 0 16px;
+    font-size: 24px;
+    padding: 4px 24px 4px 24px;
+    border-radius: 8px;
 }
 
 form label {
     padding: 22px;
     font-size: 20px;
+    text-align: center;
 }
 
 form input[type=text], input[type=number] {
-    padding: 10px;
-    margin: 10px;
-    font-family: "Book Antiqua", serif;
+    padding: 8px;
+    margin: 8px auto;
+    font-family: "Courier New", monospace;
     font-weight: bold;
     font-size: 18px;
     border-radius: 6px;
 }
 
 ol li button{
-    color: red;
-    border-radius: 50%;
-    font-weight: bold;
-    border: 2px solid red;
+    color: crimson;
+    background: #0B132B;
+    border-radius: 4px;
+    font-weight: normal;
+    border: 2px solid crimson;
 }
+
 

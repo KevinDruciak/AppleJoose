@@ -7,7 +7,7 @@
     <ol>
         <p>
             #foreach($author in $authors )
-                <li class="content author" ><i>$author.name</i> ($author.nationality) has published $author.numOfBooks books. <button class="$author.name">X</button></li>
+                <li class="content author" ><i>$author.name</i> ($author.nationality) has published $author.numOfBooks books. <button class="$author.name">Remove</button></li>
             #end
         </p>
     </ol>
