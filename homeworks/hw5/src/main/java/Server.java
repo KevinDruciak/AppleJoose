@@ -156,7 +156,6 @@ public class Server {
             return new VelocityTemplateEngine().render(mdl);
         });
 
-        //TODO: Complete & test /delbook path
         post("/delbook", (req, res) -> {
             String isbn = req.queryParams("isbn");
             Book b = new Book("", isbn, "", 0, 0);

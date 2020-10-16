@@ -7,11 +7,12 @@
     <ol>
     <p>
         #foreach($book in $books )
-            <li class="content book"><i>$book.title</i> (ISBN $book.isbn, Publisher: $book.publisher, Year: $book.year)</li>
+            <li class="content book"><i>$book.title</i> (ISBN $book.isbn, Publisher: $book.publisher, Year: $book.year) <button class="$book.isbn">X</button></li>
         #end
         </p>
     </ol>
 </div>
 #end
+<script src="js/delbook.js"></script>
 
 #parse("public/templates/bottom.vm")
