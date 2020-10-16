@@ -17,6 +17,16 @@ public class Sql2oAuthorDao implements AuthorDao {
     @Override
     public int add(Author author) throws DaoException {
         try (Connection con = sql2o.open()) {
+            String name = author.getName();
+            String q = "SELECT id FROM Authors WHERE name = :name";
+            int i = con.createQuery(q).addParameter("name", name).executeAndFetchFirst(Integer.class);
+            if (i > 0) {
+                return i;
+            }
+        } catch (Sql2oException | NullPointerException e) {
+            //do nothing
+        }
+        try (Connection con = sql2o.open()) {
             String query = "INSERT INTO Authors (name, numOfBooks, nationality)" +
                     "VALUES (:name, :numOfBooks, :nationality)";
             int id = (int) con.createQuery(query, true)

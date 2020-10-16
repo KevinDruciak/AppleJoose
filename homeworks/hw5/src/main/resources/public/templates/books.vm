@@ -1,0 +1,17 @@
+#set( $title = "Books List" )
+#parse("public/templates/top.vm")
+
+#if ($books)
+<h1>List of all books:</h1>
+<div class="divContents">
+    <ol>
+    <p>
+        #foreach($book in $books )
+            <li class="content book"><i>$book.title</i> (ISBN $book.isbn, Publisher: $book.publisher, Year: $book.year)</li>
+        #end
+        </p>
+    </ol>
+</div>
+#end
+
+#parse("public/templates/bottom.vm")
