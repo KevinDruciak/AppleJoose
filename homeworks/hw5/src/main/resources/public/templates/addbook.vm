@@ -12,7 +12,7 @@
 #end
 
 <h1>Add a new Book</h1>
-<form action="/addbook" method="post" class="content" id="formAddBook">
+<form action="/addbook" method="post" class="content" id="formAddBook" onsubmit="return validateBook() && validateAuthor();">
     <div>
         <label for="name">Title: </label>
         <input type="text" name="title" placeholder="title" id="title" required>
@@ -47,5 +47,6 @@
         <input type="submit" value="Add Book" class="submit" />
     </div>
 </form>
+<script src="js/validate.js"></script>
 
 #parse("public/templates/bottom.vm")
