@@ -8,5 +8,5 @@ Work Done:
 * Connor: post/get methods in server.java
 * Simon: addauthor.vm, authors.vm, delauthor.js
 * Montese: mybooksapp.css, minor html formatting
-* Joao: cleanup code, bug fixing
+* Joao: cleanup code, formatting, bug fixing
 * Morgan: nothing
