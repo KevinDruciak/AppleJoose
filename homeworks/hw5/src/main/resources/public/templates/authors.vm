@@ -16,7 +16,7 @@
 <h1>Add a new author</h1>
 <form action="/authors" method="post" class="content">
     <label for="name">Name: </label>
-    <input type="text" name="name" placeholder="name" id="name" required>     <button>&#10004</button>
+    <input type="text" name="name" placeholder="name" id="name" required>   <button>&#10004</button>
     <br />
     <label for="nationality">Nationality: </label>
     <input type="text" name="nationality" placeholder="nationality" id="nationality" />

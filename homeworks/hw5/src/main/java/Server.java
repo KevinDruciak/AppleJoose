@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import exception.DaoException;
 import model.Author;
 import model.Book;
@@ -62,7 +63,6 @@ public class Server {
 
         post("/authors", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            //model.put("authors", new Sql2oAuthorDao(sql2o).listAll());
             String name = req.queryParams("name");
             String nationality = req.queryParams("nationality");
             int numOfBooks = Integer.parseInt(req.queryParams("numOfBooks"));
@@ -76,7 +76,6 @@ public class Server {
                 else {
                     model.put("failedAdd", "true");
                 }
-//                model.put("authors", new Sql2oAuthorDao(sql2o).listAll());
             }
             catch (DaoException ex) {
                 model.put("failedAdd", "true");
@@ -122,7 +121,6 @@ public class Server {
         });
 
         post("/delauthor", (req, res) -> {
-            System.out.println("REACHED DELAUTHOR");
             String name = req.queryParams("name");
             Author a = new Author(name, 0, "");
             new Sql2oAuthorDao(getSql2o()).delete(a);
