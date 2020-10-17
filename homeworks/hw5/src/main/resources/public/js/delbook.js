@@ -2,7 +2,7 @@ function deleteBook(isbn) {
     fetch('http://localhost:7000/delbook?isbn=' + isbn, {
             method: 'POST',
         }
-    ).then(res => window.location.reload(true));
+    ).then(res => window.location.replace("http://localhost:7000/books"));
 }
 
 let delButtons = document.querySelectorAll("li.book > button")

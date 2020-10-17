@@ -12,6 +12,52 @@
         </p>
     </ol>
 </div>
+
+<h1>Add a new book</h1>
+<form action="/books" method="post" class="content" id="formAddBook">
+##    <label for="title">Title: </label>
+##    <input type="text" title="title" placeholder="title" id="title">
+##    <br />
+##    <label for="isbn">ISBN: </label>
+##    <input type="text" isbn="isbn" placeholder="ISBN" id="isbn" required> <button>&#10004</button>
+##    <br />
+##    <label for="publisher">Publisher: </label>
+##    <input type="text" publisher="publisher" placeholder="publisher" id="publisher">
+##    <br />
+##    <label for="year">Year: </label>
+##    <input type="number" name="year" placeholder="year" id="year"/>
+##    <br />
+    <div>
+        <label for="name">Title: </label>
+        <input type="text" name="title" placeholder="title" id="title" required>
+    </div>
+    <div>
+        <label for="isbn">ISBN: </label>
+        <input type="text" name="isbn" placeholder="isbn" id="isbn" /> <button>&#10004</button>
+    </div>
+    <div>
+        <label for="publisher">Publisher: </label>
+        <input type="text" name="publisher" placeholder="publisher" id="publisher"/>
+    </div>
+    <div>
+        <label for="year">Year: </label>
+        <input type="number" name="year" placeholder="year" id="year"/>
+    </div>
+    <h3>Author Info</h3>
+    <div>
+        <label for="name">Name: </label>
+        <input type="text" name="name" placeholder="name" id="name" required>
+    </div>
+    <div>
+        <label for="nationality">Nationality: </label>
+        <input type="text" name="nationality" placeholder="nationality" id="nationality" />
+    </div>
+    <div>
+        <label for="numOfBooks">Number of books: </label>
+        <input type="number" name="numOfBooks" placeholder="1" id="numOfBooks" min="1" max="200"/>
+    </div>
+    <br />
+</form>
 #end
 <script src="js/delbook.js"></script>
 

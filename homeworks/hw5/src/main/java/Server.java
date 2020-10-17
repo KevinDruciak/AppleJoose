@@ -140,6 +140,38 @@ public class Server {
             return new ModelAndView(model, "public/templates/books.vm");
         }, new VelocityTemplateEngine());
 
+        post("/books", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            String title = req.queryParams("title");
+            String isbn = req.queryParams("isbn");
+            String publisher = req.queryParams("publisher");
+            int year = Integer.parseInt(req.queryParams("year"));
+            String name = req.queryParams("name");
+            int numOfBooks = Integer.parseInt(req.queryParams("numOfBooks"));
+            String nationality = req.queryParams("nationality");
+            Author a = new Author(name, numOfBooks, nationality);
+            try {
+                int authorId = new Sql2oAuthorDao(sql2o).add(a);
+                Book b = new Book(title, isbn, publisher, year, authorId);
+                int id = new Sql2oBookDao(sql2o).add(b);
+                if (id > 0) {
+                    model.put("added", "true");
+                    model.put("books", new Sql2oBookDao(sql2o).listAll());
+                }
+                else {
+                    model.put("failedAdd", "true");
+                }
+            }
+            catch (DaoException ex) {
+                model.put("failedAdd", "true");
+            }
+
+            res.status(201);
+            res.type("text/html");
+            ModelAndView mdl = new ModelAndView(model, "public/templates/books.vm");
+            return new VelocityTemplateEngine().render(mdl);
+        });
+
         get("/addbook", (req, res) -> {
             if(req.cookie("username") == null){
                 res.redirect("/");
