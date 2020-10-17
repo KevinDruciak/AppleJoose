@@ -50,6 +50,9 @@ public class Server {
             return new ModelAndView(model, "public/templates/index.vm");
         }, new VelocityTemplateEngine());
 
+        /**
+         * Get call for authors page which displays list of authors in database
+         */
         get("/authors", (req, res) -> {
             if(req.cookie("username") == null){
                 res.redirect("/");
@@ -61,6 +64,10 @@ public class Server {
             return new ModelAndView(model, "public/templates/authors.vm");
         }, new VelocityTemplateEngine());
 
+        /**
+         * Post call for authors page which displays authors in database
+         * but also allows for the addition of a new author
+         */
         post("/authors", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             String name = req.queryParams("name");
@@ -86,6 +93,9 @@ public class Server {
             return new VelocityTemplateEngine().render(mdl);
         });
 
+        /**
+         * Get call for add authors to display formatted view model for the page
+         */
         get("/addauthor", (req, res) -> {
             if(req.cookie("username") == null){
                 res.redirect("/");
@@ -96,6 +106,9 @@ public class Server {
             return new ModelAndView(model, "public/templates/addauthor.vm");
         }, new VelocityTemplateEngine());
 
+        /**
+         * Post call for add author which allows user add author to the database
+         */
         post("/addauthor", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             String name = req.queryParams("name");
@@ -120,6 +133,9 @@ public class Server {
             return new VelocityTemplateEngine().render(mdl);
         });
 
+        /**
+         * Post call which allows a user to delete a specific author from database
+         */
         post("/delauthor", (req, res) -> {
             String name = req.queryParams("name");
             Author a = new Author(name, 0, "");
@@ -129,6 +145,9 @@ public class Server {
             return new Gson().toJson(a.toString());
         });
 
+        /**
+         * Get call which displays all the books in the database
+         */
         get("/books", (req, res) -> {
             if(req.cookie("username") == null){
                 res.redirect("/");
@@ -140,6 +159,10 @@ public class Server {
             return new ModelAndView(model, "public/templates/books.vm");
         }, new VelocityTemplateEngine());
 
+        /**
+         * Post call which displays all books in the database but also
+         * allows users to add a book at the bottom of the page
+         */
         post("/books", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             String title = req.queryParams("title");
@@ -172,6 +195,9 @@ public class Server {
             return new VelocityTemplateEngine().render(mdl);
         });
 
+        /**
+         * Get call which displays view information for the addbook page
+         */
         get("/addbook", (req, res) -> {
             if(req.cookie("username") == null){
                 res.redirect("/");
@@ -182,6 +208,10 @@ public class Server {
             return new ModelAndView(model, "public/templates/addbook.vm");
         }, new VelocityTemplateEngine());
 
+        /**
+         * Post call which allows users to add a new book to the database along with author
+         * information
+         */
         post("/addbook", (req, res) -> {
 
             Map<String, Object> model = new HashMap<>();
@@ -214,6 +244,9 @@ public class Server {
             return new VelocityTemplateEngine().render(mdl);
         });
 
+        /**
+         * Post call to allow for users to delete books from the database
+         */
         post("/delbook", (req, res) -> {
             String isbn = req.queryParams("isbn");
             Book b = new Book("", isbn, "", 0, 0);
