@@ -1,5 +1,12 @@
 # MyBooksApp
 
-This is a simple application we build during lectures in fall 2020 OOSE class together to practice with various concepts and technologies. This 
-is a web app conforming to Client-Server Architecture where user(s) can store their favorite books and authors. The app
-will store data in a database and its backend functionalities are implemented as RESTful API end-points.
+Assumptions:
+Followed homework 5 instructions.
+
+Work Done:  
+* Kevin: validate.js, books.vm, addbook.vm, readme
+* Connor: post/get methods in server.java
+* Simon: addauthor.vm, authors.vm, delauthor.js
+* Montese: mybooksapp.css, minor html formatting
+* Joao: cleanup code, bug fixing
+* Morgan: nothing
