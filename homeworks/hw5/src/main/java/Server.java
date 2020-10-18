@@ -41,6 +41,7 @@ public class Server {
 
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
+            //Checks cookies to ensure user has logged in
             if (req.cookie("username") != null)
                 model.put("username", req.cookie("username"));
             if(req.cookie("color") != null)
