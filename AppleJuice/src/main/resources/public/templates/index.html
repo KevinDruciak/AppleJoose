@@ -1,0 +1,34 @@
+
+#set( $title = "Welcome Page" )
+#parse("public/templates/top.vm")
+
+
+#if($username)
+<h1>Hello, $username</h1>
+<div class="divContents indexLinkWrapper">
+    <p class="linkIntro">Your bias rating is:</p>
+    <a href="/stats" class="buttonBiasRating">[rating]</a>
+    <p></p>
+    <p class="linkIntro">Your favorite news source is:</p>
+    <a href="/stats" class="buttonBigNews">[big website button]</a>
+</div>
+#else
+<h1>Login</h1>
+<form action="/" method="post" class="content" onsubmit="return validateUsername();">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" placeholder="username" name="username" id="username" />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" placeholder="password" name="password" id="password" />
+
+    </div>
+    <div id="divSubmit">
+        <input type="submit" value="Sign in" class="submit" />
+    </div>
+</form>
+<script src="../js/validate.js"></script>
+#end
+
+#parse("public/templates/bottom.vm")
