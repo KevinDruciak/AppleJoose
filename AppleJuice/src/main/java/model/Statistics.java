@@ -190,7 +190,6 @@ public class Statistics {
     }
 
     public void updateExecSummary() {
-        //TODO: create new ExecSummary and update objects execSummary
-        this.createExecSummary();
+        this.execSummary = this.createExecSummary();
     }
 }
