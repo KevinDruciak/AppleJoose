@@ -10,7 +10,8 @@ function validateUsername() {
 
 function validateAuthor() {
     let name = document.getElementById("name");
-    let nameRegex = new RegExp("[a-zA-Z]*\\s[a-zA-Z]*");
+    //let nameRegex = new RegExp("[a-zA-Z]*\\s[a-zA-Z]*");
+    let nameRegex = new RegExp("[a-zA-Z]+(\\s[a-zA-Z]+)+");
     if (!nameRegex.test(name.value)) {
         alert("Not a valid name!");
         return false;
