@@ -1,17 +1,16 @@
-
 #set( $title = "Welcome Page" )
 #parse("public/templates/top.vm")
 
-
 #if($username)
-<h1>Hello, $username</h1>
-<div class="divContents indexLinkWrapper">
-    <p class="linkIntro">Your bias rating is:</p>
-    <a href="/stats" class="buttonBiasRating">[rating]</a>
-    <p></p>
-    <p class="linkIntro">Your favorite news source is:</p>
-    <a href="/stats" class="buttonBigNews">[big website button]</a>
-</div>
+<h1>Hello $username,</h1>
+<p class="linkIntro">Your bias rating is:</p>
+<a href="/stats" class="buttonBiasRating">-0.2</a>
+<br />
+<p class="linkIntro">Your favorite news source is:</p>
+<a href="/stats" class="buttonBigNews">The Wall Street Journal</a>
+
+#parse("public/templates/ArticleCards.vm")
+
 #else
 <h1>Login</h1>
 <form action="/" method="post" class="content" onsubmit="return validateUsername();">
