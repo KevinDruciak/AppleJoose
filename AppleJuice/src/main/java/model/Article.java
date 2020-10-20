@@ -1,6 +1,8 @@
 package model;
 
 import java.util.Objects;
+import org.apache.bcel.generic.INSTANCEOF;
+import de.l3s.boilerpipe.extractors.ArticleExtractor;
 
 public class Article {
     private int id;
