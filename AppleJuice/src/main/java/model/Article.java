@@ -1,8 +1,18 @@
 package model;
 
 import java.util.Objects;
+import java.net.URI;
+import java.net.URL;
 import org.apache.bcel.generic.INSTANCEOF;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
+/*
+URL url = new URL("[example url]");
+String text = ArticleExtractor.INSTANCE.getText(url);
+
+print(text) //prints title, author, precursor text, and full article from url
+            // we should use this as a parser to get text for bias API to anaylze,
+            // word count, title, and maybe even News Source itself
+ */
 
 public class Article {
     private int id;
