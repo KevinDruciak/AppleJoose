@@ -2,19 +2,21 @@
   "name": "Apple Juice",
   "version": "0.1",
   "description": "Apple-jOOSE Extension!",
-  "permissions": ["webNavigation", "history", "storage", "tabs"],
-  "background": {
-    "scripts": []
-  },
-
-  "browser_action": {
-    "default_popup": "html/view/popup.html",
-    "default_icon": {
-      "16": "images/get_started16.png",
-      "32": "images/get_started32.png",
-      "48": "images/get_started48.png",
-      "128": "images/get_started128.png"
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["./javaScript/content.js"]
     }
+  ],
+  "browser_action": {
+
+    "default_title": "Bear"
+
   },
-  "manifest_version": 2
+  "background": {
+    "scripts": ["./javaScript/background.js"]
+
+  },
+  "manifest_version": 2,
+  "permissions": ["tabs"]
 }
