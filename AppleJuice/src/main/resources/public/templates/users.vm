@@ -14,7 +14,7 @@
         <ol>
         <p>
             #foreach($user in $users )
-                <li class="content author"><i>$author.name</i> ($author.nationality) has published $author.numOfBooks books.</li>
+                <li class="content author"><i>$user.userName</i> ($user.userHistory)</li>
             #end
             </p>
         </ol>

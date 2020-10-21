@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import exception.DaoException;
 import model.Article;
 import model.User;
 import model.Statistics;
@@ -37,13 +38,34 @@ public class Server {
         // set port number
         final int PORT_NUM = 7000;
         port(PORT_NUM);
+
+        Sql2o sql2o = getSql2o();
+
         staticFiles.location("/public");
 
         post("/", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+
             String username = req.queryParams("username");
             String password = req.queryParams("password");
             res.cookie("username", username);
             res.cookie("password", password);
+
+            //TEST, inserting users to database
+            User user = new User(username);
+            try {
+                int id = new Sql2oUserDao(sql2o).add(user);
+                if (id > 0) {
+                    model.put("added", "true");
+                }
+                else {
+                    model.put("failedAdd", "true");
+                }
+            }
+            catch (DaoException e) {
+                model.put("failedAdd", "true");
+            }
+
             res.redirect("/");
             return null;
         });
@@ -57,7 +79,7 @@ public class Server {
             }
             res.status(200);
             res.type("text/html");
-            return new ModelAndView(model, "public/templates/index.html");
+            return new ModelAndView(model, "public/templates/index.vm");
         }, new VelocityTemplateEngine());
 
         // users route; return list of users as JSON
