@@ -20,6 +20,12 @@ this project already implemented.
 Iteration 2 Notes:
 * For this iteration we attempted to finalize our front-end and link it to our back-end database, however we were not able to accomplish that this iteration. We have been able to get a dumby front-end up which displays the type of data we want and also have implmemented the political bias API into our server-side in order to process incoming user articles, but we were not able to full connect our database to the front end HTML code in order to display that data. Also missing from the app is the ability to automatically gather and parse through user history in order to populate the database in a non-manual fashion. Next steps for us over the next few days we will catch up with the linkage of the client and server sides of our app so that database population and additional features are the only things left for us to do over the next few iterations.
 
+Iteration 2 UPDATE:
+* Front-end now properly is capable of displaying a user's data. Because the statistics class is dependent on the API calls (which have yet to be implemented in future 
+iterations), a test Statistics object was inserted using the constructor: Statistics(-3, "Moderate Liberal Bias", "New York Times", "Economy", "You have Moderate Liberal Bias. Your favorite news source is New York Times. Your favorite topic to read about is Economy", id). In reality, these fields would be 0/empty for a new user's statistics object 
+(note that this is reflected in the actual constructor, which is commented out). This was done primarily to show an example of how it will appear when future implementations
+are completed. 
+
 Work Done:
 
 iter1:
@@ -41,8 +47,9 @@ Joao
  * HTML and CSS for client-side of application with stand-in data
  
  Simon
- * Added basic user insertion to call user class methods 
- * Working on VM files to pull from user/stats tables
+ * Added basic user insertion to call user class methods (and later assign different users their own stats classes)
+ * Added methods in Sql2oStatisticsDao to retrieve a user's relevant statistics
+ * Changed HTML text files to proper VM files that can pull from user/stats tables; debugged and tested
  
  Connor
  * Working on adding functionality to chrome extension
