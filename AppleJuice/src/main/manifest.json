@@ -5,7 +5,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["./javaScript/model/content.js"]
+      "js": ["./javaScript/content.js"]
     }
   ],
   "browser_action": {
@@ -14,7 +14,7 @@
 
   },
   "background": {
-    "scripts": ["./javaScript/model/background.js"]
+    "scripts": ["./javaScript/background.js"]
 
   },
   "manifest_version": 2,
