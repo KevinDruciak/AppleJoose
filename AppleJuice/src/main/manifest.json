@@ -10,9 +10,13 @@
   ],
   "browser_action": {
 
-    "default_popup": "./html/view/popup.html",
     "default_title": "Bear"
 
   },
-  "manifest_version": 2
+  "background": {
+    "scripts": ["./javaScript/model/background.js"]
+
+  },
+  "manifest_version": 2,
+  "permissions": ["tabs"]
 }
