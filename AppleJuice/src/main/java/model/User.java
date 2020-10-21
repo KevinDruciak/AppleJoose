@@ -1,7 +1,9 @@
 package model;
 
-import java.util.List;
+import org.sql2o.Sql2o;
+import persistence.Sql2oArticleDao;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class User {
@@ -61,6 +63,9 @@ public class User {
     public void updateUserHistory() {
         //TODO: Call extension API to scan user history, get new News articles,
         // create new Article objects, and add them to userHistory list
+        /*
+        For now user articles will simply be all articles in the data base
+         */
     }
 
     public void clearUserStats() {
@@ -72,4 +77,5 @@ public class User {
         this.userHistory = null;
         this.userHistory = new ArrayList<>();
     }
+
 }
