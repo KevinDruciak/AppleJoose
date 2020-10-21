@@ -126,16 +126,26 @@ public class Server {
             //TEST, inserting users to database
             User user = new User(username);
             try {
-                int id = new Sql2oUserDao(sql2o).add(user);
-                if (id > 0) {
-                    model.put("added", "true");
+                Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+                if (!(userDao.find(user) > 0)) {
+                    int id = userDao.add(user);
+                    //TODO: Change back to commented version; for now temp data to show how it works
+//                    Statistics userStats = new Statistics(0, "Minimal Bias",
+//                            "N/A", "N/A", "N/A", id);
+                    Statistics userStats = new Statistics(-3, "Moderate Liberal Bias",
+                            "New York Times", "Economy", "You have" +
+                            " Moderate Liberal Bias. Your favorite news source is New York Times." +
+                            " Your favorite topic to read about is Economy", id);
+                    int idStats = new Sql2oStatisticsDao(sql2o).add(userStats);
+
+                    model.put("addedNewUser", "true");
                 }
                 else {
-                    model.put("failedAdd", "true");
+                    model.put("existingUser", "true");
                 }
             }
             catch (DaoException e) {
-                model.put("failedAdd", "true");
+                model.put("failed", "true");
             }
 
             res.redirect("/");
@@ -148,6 +158,29 @@ public class Server {
             if (req.cookie("username") != null) {
                 model.put("username", req.cookie("username"));
                 model.put("password", req.cookie("password"));
+
+                String username = req.cookie("username");
+                User temp = new User(username);
+                try {
+                    int userID = new Sql2oUserDao(sql2o).find(temp);
+
+                    //TODO FIX
+                    if (userID > 0) {
+                        model.put("added", "true");
+                        model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
+                        model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
+                        model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
+                        model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
+                        model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
+                    }
+                    else {
+                        model.put("failedFind", "true");
+                    }
+                }
+                catch (DaoException ex) {
+                    model.put("failedFind", "true");
+                }
+
             }
             res.status(200);
             res.type("text/html");
@@ -255,21 +288,22 @@ public class Server {
             return results;
         });
 
+        //TODO: Update addstats for automatic updates
         //addstats route; add stats to database
-        post("/addstats", (req, res) -> {
-            int biasRating = Integer.parseInt(req.queryParams("biasRating"));
-            String biasName = req.queryParams("biasName");
-            String favNewsSource = req.queryParams("favNewsSource");
-            String favTopic = req.queryParams("favTopic");
-            String execSummary = req.queryParams("execSummary");
-            int userID = Integer.parseInt(req.queryParams("userID"));
-
-            Statistics stats = new Statistics(biasRating, biasName, favNewsSource, favTopic, execSummary, userID);
-            new Sql2oStatisticsDao(getSql2o()).add(stats);
-            res.status(201);
-            res.type("application/json");
-            return new Gson().toJson(stats.toString());
-        });
+//        post("/addstats", (req, res) -> {
+//            int biasRating = Integer.parseInt(req.queryParams("biasRating"));
+//            String biasName = req.queryParams("biasName");
+//            String favNewsSource = req.queryParams("favNewsSource");
+//            String favTopic = req.queryParams("favTopic");
+//            String execSummary = req.queryParams("execSummary");
+//            int userID = Integer.parseInt(req.queryParams("userID"));
+//
+//            Statistics stats = new Statistics(biasRating, biasName, favNewsSource, favTopic, execSummary, userID);
+//            new Sql2oStatisticsDao(getSql2o()).add(stats);
+//            res.status(201);
+//            res.type("application/json");
+//            return new Gson().toJson(stats.toString());
+//        });
 
         //delstats route; delete a user's stats
         post("/delstats", (req, res) -> {

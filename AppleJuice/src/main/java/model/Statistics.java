@@ -23,11 +23,11 @@ public class Statistics {
         this.favTopic = favTopic;
         this.execSummary = execSummary;
         this.userID = userID;
-        this.biasRating = 0;
-        this.biasName = this.createBiasName(this.biasRating);
-        this.favNewsSource = "";
-        this.favTopic = "";
-        this.execSummary = this.createExecSummary();
+//        this.biasRating = 0;
+//        this.biasName = this.createBiasName(this.biasRating);
+//        this.favNewsSource = "";
+//        this.favTopic = "";
+//        this.execSummary = this.createExecSummary();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class Statistics {
     public String createExecSummary() {
         String text;
 
-        text = "You are " + biasName + ". Your favorite news source is " +
+        text = "You have " + biasName + ". Your favorite news source is " +
         favNewsSource + ". Your favorite topic to read about is " + favTopic + ".";
 
         return text;
