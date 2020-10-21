@@ -15,7 +15,12 @@ import org.sqlite.SQLiteDataSource;
 import persistence.Sql2oArticleDao;
 import persistence.Sql2oUserDao;
 import persistence.Sql2oStatisticsDao;
+import spark.ModelAndView;
+import spark.template.velocity.VelocityTemplateEngine;
 
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static spark.Spark.*;
 
@@ -100,12 +105,32 @@ public class Server {
     }
 
     public static void main(String[] args) {
+
         // set port number
         final int PORT_NUM = 7000;
         port(PORT_NUM);
+        staticFiles.location("/public");
 
-        // root route; show a simple message!
-        get("/", (req, res) -> "Welcome to Apple Juice");
+        post("/", (req, res) -> {
+            String username = req.queryParams("username");
+            String password = req.queryParams("password");
+            res.cookie("username", username);
+            res.cookie("password", password);
+            res.redirect("/");
+            return null;
+        });
+
+        // root route; check that a user is logged in
+        get("/", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+            if (req.cookie("username") != null) {
+                model.put("username", req.cookie("username"));
+                model.put("password", req.cookie("password"));
+            }
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/index.html");
+        }, new VelocityTemplateEngine());
 
         // users route; return list of users as JSON
         get("/users", (req, res) -> {
