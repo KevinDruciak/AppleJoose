@@ -4,10 +4,18 @@
 #if($username)
 <h1>Hello $username,</h1>
 <p class="linkIntro">Your bias rating is:</p>
-<a href="/stats" class="buttonBiasRating">-0.2</a>
+<a href="/stats" class="buttonBiasRating">$biasRating</a>
+<br />
+<p class="linkIntro">This type of bias is:</p>
+<a href="/stats" class="buttonBigNews">$biasName</a>
 <br />
 <p class="linkIntro">Your favorite news source is:</p>
-<a href="/stats" class="buttonBigNews">The Wall Street Journal</a>
+<a href="/stats" class="buttonBigNews">$favNews</a>
+<br />
+<p class="linkIntro">Your favorite topic is:</p>
+<a href="/stats" class="buttonBigNews">$favTopic</a>
+
+
 
 #parse("public/templates/ArticleCards.vm")
 

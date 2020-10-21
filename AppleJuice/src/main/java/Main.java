@@ -1,10 +1,17 @@
+import org.sql2o.Sql2o;
+import persistence.Sql2oUserDao;
+import persistence.Sql2oStatisticsDao;
+import persistence.Sql2oArticleDao;
+
 import java.sql.*;
 
 public class Main {
     final static String URI = "jdbc:sqlite:AppleJuice.db";
     static Connection conn;
     static Statement st;
+
     public static void main(String[] args) throws SQLException {
+
         conn = DriverManager.getConnection(URI);
         st = conn.createStatement();
 
@@ -15,18 +22,18 @@ public class Main {
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Users (userID INTEGER PRIMARY KEY, " +
-                "userName VARCHAR(50))";
+                "userName VARCHAR(50));";
         st.execute(sql);
 
-        sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER, biasRating INTEGER, " +
+        sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER PRIMARY KEY, biasRating INTEGER, " +
                 "biasNAME VARCHAR(100), favNewsSource VARCHAR(100), favTopic VARCHAR(50), " +
                 "recentArticles VARCHAR(1000), execSummary VARCHAR(1000), " +
                 "userID INTEGER NOT NULL, FOREIGN KEY(userID) REFERENCES Users(userID) " +
-                "ON UPDATE CASCADE ON DELETE CASCADE)";
+                "ON UPDATE CASCADE ON DELETE CASCADE);";
         st.execute(sql);
 
         Server.main(new String[]{"Server Running"});
 
-        conn.close();
+        //conn.close();
     }
 }
