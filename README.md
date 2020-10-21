@@ -24,7 +24,9 @@ Iteration 2 UPDATE:
 * Front-end now properly is capable of displaying a user's data. Because the statistics class is dependent on the API calls (which have yet to be implemented in future 
 iterations), a test Statistics object was inserted using the constructor: Statistics(-3, "Moderate Liberal Bias", "New York Times", "Economy", "You have Moderate Liberal Bias. Your favorite news source is New York Times. Your favorite topic to read about is Economy", id). In reality, these fields would be 0/empty for a new user's statistics object 
 (note that this is reflected in the actual constructor, which is commented out). This was done primarily to show an example of how it will appear when future implementations
-are completed. 
+are completed, and to show that it is properly functioning.
+* To check this part, run the Main.java file and open http://localhost:7000/. Then sign in using any username (placeholder password for now) and the page with the user's stats
+should show up. 
 
 Work Done:
 
