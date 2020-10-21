@@ -1,0 +1,142 @@
+h1 {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 36pt;
+    color: #707070;
+    padding-left: 24px;
+    text-align: left;
+}
+
+h3 {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 30pt;
+    color: #707070;
+    padding-left: 24px;
+    padding-top: 32px;
+    text-align: left;
+    margin: 0;
+}
+
+h4 {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 24pt;
+    font-weight: normal;
+    color: #707070;
+    margin: 8px;
+    text-align: left;
+}
+
+.linkIntro {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 24pt;
+    color: #707070;
+    padding-left: 24px;
+    padding-bottom: 12px;
+    text-align: left;
+    display: inline-block;
+}
+
+a:link {
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.buttonBiasRating {
+     background-color: #D2E3FF; /* Green */
+     border: 2px solid #005EFF;
+     border-radius: 8px;
+     color: #005EFF;
+     padding: 2px 12px 8px 12px;
+     text-align: center;
+     font-family: "Segoe UI", sans-serif;
+     font-size: 18pt;
+     display: inline-block;
+ }
+.buttonBiasRating:hover {
+    background-color: #005EFF; /* Green */
+    border: 2px solid #005EFF;
+    border-radius: 8px;
+    color: #D2E3FF;
+    padding: 2px 12px 8px 12px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 18pt;
+    display: inline-block;
+}
+
+.buttonBigNews {
+    background-color: #D2E3FF; /* Green */
+    border: 2px solid #005EFF;
+    border-radius: 8px;
+    color: #005EFF;
+    padding: 2px 12px 8px 12px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 18pt;
+    display: inline-block;
+}
+.buttonBigNews:hover {
+    background-color: #005EFF; /* Green */
+    border: 2px solid #005EFF;
+    border-radius: 8px;
+    color: #D2E3FF;
+    padding: 2px 12px 8px 12px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 18pt;
+    display: inline-block;
+}
+
+p {
+    margin: 8px;
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 16pt;
+    color: #707070;
+    text-align: left;
+}
+
+.quickArticles {
+    margin: 24px;
+}
+
+.container:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    border-color: #707070;
+}
+
+.container {
+    width: 420px;
+    padding: 16px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 5px;
+    border-color: #707070;
+}
+
+.newsSourceSm {
+    background-color: #D2E3FF; /* Green */
+    border: 2px solid #005EFF;
+    border-radius: 8px;
+    color: #005EFF;
+    padding: 8px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 16pt;
+    display: inline-block;
+}
+
+.artScore {
+    background-color: #D2E3FF; /* Green */
+    border: 2px solid #005EFF;
+    border-radius: 8px;
+    color: #005EFF;
+    padding: 8px 12px 8px 12px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 16pt;
+    display: inline-block;
+}

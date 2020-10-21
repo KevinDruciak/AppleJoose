@@ -1,0 +1,24 @@
+<!-- Template from class -->
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Users list</title>
+</head>
+<body>
+    #if ($users)
+    <h1>List of the Users:</h1>
+    <div class="divContents">
+        <ol>
+        <p>
+            #foreach($user in $users )
+                <li class="content author"><i>$user.userName</i> ($user.userHistory)</li>
+            #end
+            </p>
+        </ol>
+    </div>
+    #end
+</body>
+</html>
