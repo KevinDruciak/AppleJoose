@@ -39,3 +39,10 @@ Joao
  Montese
  * HTML and CSS for client-side of application with stand-in data
  
+ Simon
+ * Added basic user insertion to call user class methods 
+ * Working on VM files to pull from user/stats tables
+ 
+ Connor
+ * Working on adding functionality to chrome extension 
+ 
