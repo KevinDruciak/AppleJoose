@@ -22,6 +22,7 @@ Iteration 2 Notes:
 Work Done:
 
 iter1:
+
 Kevin/Simon/Connor/Joao 
  * Object Classes, Dao Interface and Sql2o Classes
  * Main.java and Server.java
@@ -29,10 +30,12 @@ Kevin/Simon/Connor/Joao
  * DBPersistanceTest.java and APITests.java
  
  iter2:
+ 
 Joao
  * Political API integration into server-side of application and basic
  * Updated Article, Statistics and User classes to cater to API functionality
  * Added helper methods to server to help with political API integration
+ 
  Montese
  * HTML and CSS for client-side of application with stand-in data
  
