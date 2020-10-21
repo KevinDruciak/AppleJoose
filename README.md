@@ -16,11 +16,33 @@ key API implementation and client side functionality. However, most of the serve
 the project is complete and should be already have most of the functions we will need for the rest of 
 this project already implemented.
 
+Iteration 2 Notes:
+* For this iteration we attempted to finalize our front-end and link it to our back-end database, however we were not able to accomplish that this iteration. We have been able to get a dumby front-end up which displays the type of data we want and also have implmemented the political bias API into our server-side in order to process incoming user articles, but we were not able to full connect our database to the front end HTML code in order to display that data. Also missing from the app is the ability to automatically gather and parse through user history in order to populate the database in a non-manual fashion. Next steps for us over the next few days we will catch up with the linkage of the client and server sides of our app so that database population and additional features are the only things left for us to do over the next few iterations.
+
 Work Done:
+
+iter1:
 
 Kevin/Simon/Connor/Joao 
  * Object Classes, Dao Interface and Sql2o Classes
  * Main.java and Server.java
  * initial extension implementation
  * DBPersistanceTest.java and APITests.java
+ 
+ iter2:
+ 
+Joao
+ * Political API integration into server-side of application and basic
+ * Updated Article, Statistics and User classes to cater to API functionality
+ * Added helper methods to server to help with political API integration
+ 
+ Montese
+ * HTML and CSS for client-side of application with stand-in data
+ 
+ Simon
+ * Added basic user insertion to call user class methods 
+ * Working on VM files to pull from user/stats tables
+ 
+ Connor
+ * Working on adding functionality to chrome extension 
  
