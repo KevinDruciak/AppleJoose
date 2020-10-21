@@ -63,7 +63,7 @@ public class Statistics {
 
     public String getFavTopic() { return this.favTopic; }
 
-    //public List<Article> getRecentArticles() { return this.recentArticles; }
+    public List<Article> getRecentArticles() { return this.recentArticles; }
 
     public String getExecSummary() { return this.execSummary; }
 
@@ -71,23 +71,18 @@ public class Statistics {
 
     public String createBiasName(int bias) {
         String name;
-        bias = bias % 10;
+        bias = bias / 8;
         switch (bias) {
-            case -10:
-            case -9:
-            case -8:
+            case -5:
+            case -4:
                 name = "Extreme Liberal Bias";
                 break;
-            case -7:
-            case -6:
-            case -5:
+            case -3:
                 name = "Strong Liberal Bias";
                 break;
-            case -4:
-            case -3:
+            case -2:
                 name = "Moderate Liberal Bias";
                 break;
-            case -2:
             case -1:
                 name = "Minimal Liberal Bias";
                 break;
@@ -95,21 +90,16 @@ public class Statistics {
                 name = "Minimal Bias";
                 break;
             case 1:
-            case 2:
                 name = "Minimal Conservative Bias";
                 break;
-            case 3:
-            case 4:
+            case 2:
                 name = "Moderate Conservative Bias";
                 break;
-            case 5:
-            case 6:
-            case 7:
+            case 3:
                 name = "Strong Conservative Bias";
                 break;
-            case 8:
-            case 9:
-            case 10:
+            case 4:
+            case 5:
                 name = "Extreme Conservative Bias";
                 break;
             default:
@@ -128,13 +118,15 @@ public class Statistics {
     }
 
     public void updateBiasRating(List<Article> userHistory) {
-        int biasTotal = 0;
+        double biasTotal = 0;
+        double numArticles = 0;
 
         for (Article a : userHistory) {
             biasTotal += a.getBiasRating();
+            numArticles++;
         }
 
-        this.biasRating = biasTotal;
+        this.biasRating = (int) Math.round(biasTotal / numArticles);
     }
 
     public void updateBiasName() {
@@ -180,13 +172,13 @@ public class Statistics {
     }
 
     public void updateRecentArticles(List<Article> userHistory) {
-        List<Article> rArticles = new ArrayList<>();
+        List<Article> recArticles = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            rArticles.add(userHistory.get(userHistory.size() - (1 + i)));
+            recArticles.add(userHistory.get(userHistory.size() - (1 + i)));
         }
 
-        this.recentArticles = rArticles;
+        this.recentArticles = recArticles;
     }
 
     public void updateExecSummary() {
