@@ -29,7 +29,7 @@ Kevin/Simon/Connor/Joao
  * DBPersistanceTest.java and APITests.java
  
  iter2:
- Joao
+Joao
  * Political API integration into server-side of application and basic
  * Updated Article, Statistics and User classes to cater to API functionality
  * Added helper methods to server to help with political API integration
