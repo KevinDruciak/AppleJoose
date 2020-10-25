@@ -1,5 +1,5 @@
 import com.google.gson.Gson;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+// import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import exception.DaoException;
 import model.Author;
 import model.Book;
@@ -10,12 +10,24 @@ import spark.ModelAndView;
 import java.util.HashMap;
 import java.util.Map;
 import static spark.Spark.*;
+import spark.*;
+import java.net.*;
+import java.sql.*;
 import spark.template.velocity.VelocityTemplateEngine;
 
-public class Server {
+public class Application {
+
+    final static int PORT = 7000;
+    private static int getHerokuAssignedPort() {
+        String herokuPort = System.getenv("PORT");
+        if (herokuPort != null) {
+            return Integer.parseInt(herokuPort);
+        }
+        return PORT;
+    }
 
     private static Sql2o getSql2o() {
-        final String URI = "jdbc:sqlite:./MyBooksApp.db";
+        final String URI = System.getenv("DATABASE_URL");
         final String USERNAME = "";
         final String PASSWORD = "";
         return new Sql2o(URI, USERNAME, PASSWORD);
@@ -23,8 +35,8 @@ public class Server {
 
     public static void main(String[] args)  {
         // set port number
-        final int PORT_NUM = 7000;
-        port(PORT_NUM);
+        port(getHerokuAssignedPort());
+        workWithDatabase();
 
         Sql2o sql2o = getSql2o();
 
@@ -256,6 +268,36 @@ public class Server {
             res.type("application/json");
             return new Gson().toJson(b.toString());
         });
+    }
+
+    public static void workWithDatabase() {
+        try (Connection conn = getConnection()) {
+            String sql;
+
+            sql = "CREATE TABLE IF NOT EXISTS Authors (id serial PRIMARY KEY, name VARCHAR(100) NOT NULL UNIQUE," +
+                        " numOfBooks INTEGER, nationality VARCHAR(30));";
+            Statement st = conn.createStatement();
+            st.execute(sql);
+
+            sql = "INSERT INTO Authors(name, numOfBooks, nationality) VALUES ('Leo Tolstoy', 12, 'Russian');";
+            st.execute(sql);
+
+        } catch (URISyntaxException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Connection getConnection() throws URISyntaxException, SQLException {
+        String databaseUrl = System.getenv("DATABASE_URL");
+
+        URI dbUri = new URI(databaseUrl);
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':'
+                + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
+
+        return DriverManager.getConnection(dbUrl, username, password);
     }
 }
 
