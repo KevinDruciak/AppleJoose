@@ -22,6 +22,10 @@ public class Server {
 //        final String USERNAME = "";
 //        final String PASSWORD = "";
 //        return new Sql2o(URI, USERNAME, PASSWORD);
+
+        /*
+        Get Heroku url for web app
+         */
         String databaseUrl = System.getenv("DATABASE_URL");
 
         URI dbUri = new URI(databaseUrl);
@@ -36,6 +40,7 @@ public class Server {
     //get heroku port
     final static int PORT = 7000;
     private static int getHerokuAssignedPort() {
+        //check if port is valid, if not use regular local host 7000 port
         String herokuPort = System.getenv("PORT");
         if (herokuPort != null) {
             return Integer.parseInt(herokuPort);
@@ -43,6 +48,10 @@ public class Server {
         return PORT;
     }
 
+    /*
+    Generate database for heroku app to work with if one does not exist, or simply
+    connect to database if it already exists
+     */
     private static void workWithDatabase(){
         try (Connection conn = getConnection()) {
             String sql = "CREATE TABLE IF NOT EXISTS Authors (id serial PRIMARY KEY, name VARCHAR(100) NOT NULL UNIQUE," +
@@ -60,6 +69,7 @@ public class Server {
             e.printStackTrace();
         }
     }
+
 
     private static Connection getConnection() throws URISyntaxException, SQLException, NullPointerException {
         String databaseUrl = System.getenv("DATABASE_URL");
