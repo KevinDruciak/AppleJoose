@@ -62,7 +62,7 @@ public class Server {
         }
     }
 
-    private static Connection getConnection() throws URISyntaxException, SQLException {
+    private static Connection getConnection() throws URISyntaxException, SQLException, NullPointerException {
         String databaseUrl = System.getenv("DATABASE_URL");
 
         URI dbUri = new URI(databaseUrl);
