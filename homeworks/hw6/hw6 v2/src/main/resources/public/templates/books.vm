@@ -1,0 +1,55 @@
+#set( $title = "Books List" )
+#parse("public/templates/top.vm")
+
+#if ($books)
+<h1>List of all books:</h1>
+<div class="divContents">
+    <ol>
+    <p>
+        #foreach($book in $books )
+            <li class="content book"><i>$book.title</i> (ISBN $book.isbn, Publisher: $book.publisher, Year: $book.year) <button class="$book.isbn">X</button></li>
+        #end
+        </p>
+    </ol>
+</div>
+
+<h1>Add a new book</h1>
+<form action="/books" method="post" class="content" id="formAddBook" onsubmit="return validateBook() && validateAuthor();">
+
+    <div>
+        <label for="name">Title: </label>
+        <input type="text" name="title" placeholder="title" id="title" required>
+    </div>
+    <div>
+        <label for="isbn">ISBN: </label>
+        <input type="text" name="isbn" placeholder="isbn" id="isbn" /> <button>&#10004</button>
+    </div>
+    <div>
+        <label for="publisher">Publisher: </label>
+        <input type="text" name="publisher" placeholder="publisher" id="publisher"/>
+    </div>
+    <div>
+        <label for="year">Year: </label>
+        <input type="number" name="year" placeholder="year" id="year"/>
+    </div>
+    <h3>Author Info</h3>
+    <div>
+        <label for="name">Name: </label>
+        <input type="text" name="name" placeholder="name" id="name" required>
+    </div>
+    <div>
+        <label for="nationality">Nationality: </label>
+        <input type="text" name="nationality" placeholder="nationality" id="nationality" />
+    </div>
+    <div>
+        <label for="numOfBooks">Number of books: </label>
+        <input type="number" name="numOfBooks" placeholder="1" id="numOfBooks" min="1" max="200"/>
+    </div>
+    <br />
+</form>
+#end
+<script src="js/validate.js"></script>
+
+<script src="js/delbook.js"></script>
+
+#parse("public/templates/bottom.vm")
