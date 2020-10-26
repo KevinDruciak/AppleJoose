@@ -1,5 +1,5 @@
 import com.google.gson.Gson;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+//import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import exception.DaoException;
 import model.Author;
 import model.Book;
@@ -14,11 +14,10 @@ import spark.template.velocity.VelocityTemplateEngine;
 
 import java.net.*;
 import java.sql.*;
-import spark.*;
 
 public class Server {
 
-    private static Sql2o getSql2o() throws URISyntaxException, SQLException {
+    private static Sql2o getSql2o() throws URISyntaxException {
 //        final String URI = "jdbc:sqlite:./MyBooksApp.db";
 //        final String USERNAME = "";
 //        final String PASSWORD = "";
@@ -75,7 +74,7 @@ public class Server {
         return DriverManager.getConnection(dbUrl, username, password);
     }
 
-    public static void main(String[] args) throws URISyntaxException, SQLException {
+    public static void main(String[] args) throws URISyntaxException {
         // set port number
         //final int PORT_NUM = 7000;
         //port(PORT_NUM);
@@ -108,8 +107,8 @@ public class Server {
             return new ModelAndView(model, "public/templates/index.vm");
         }, new VelocityTemplateEngine());
 
-        /**
-         * Get call for authors page which displays list of authors in database
+        /*
+          Get call for authors page which displays list of authors in database
          */
         get("/authors", (req, res) -> {
             if(req.cookie("username") == null){
@@ -122,9 +121,9 @@ public class Server {
             return new ModelAndView(model, "public/templates/authors.vm");
         }, new VelocityTemplateEngine());
 
-        /**
-         * Post call for authors page which displays authors in database
-         * but also allows for the addition of a new author
+        /*
+          Post call for authors page which displays authors in database
+          but also allows for the addition of a new author
          */
         post("/authors", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
@@ -151,8 +150,8 @@ public class Server {
             return new VelocityTemplateEngine().render(mdl);
         });
 
-        /**
-         * Get call for add authors to display formatted view model for the page
+        /*
+          Get call for add authors to display formatted view model for the page
          */
         get("/addauthor", (req, res) -> {
             if(req.cookie("username") == null){
@@ -164,8 +163,8 @@ public class Server {
             return new ModelAndView(model, "public/templates/addauthor.vm");
         }, new VelocityTemplateEngine());
 
-        /**
-         * Post call for add author which allows user add author to the database
+        /*
+          Post call for add author which allows user add author to the database
          */
         post("/addauthor", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
@@ -191,8 +190,8 @@ public class Server {
             return new VelocityTemplateEngine().render(mdl);
         });
 
-        /**
-         * Post call which allows a user to delete a specific author from database
+        /*
+          Post call which allows a user to delete a specific author from database
          */
         post("/delauthor", (req, res) -> {
             String name = req.queryParams("name");
@@ -203,8 +202,8 @@ public class Server {
             return new Gson().toJson(a.toString());
         });
 
-        /**
-         * Get call which displays all the books in the database
+        /*
+          Get call which displays all the books in the database
          */
         get("/books", (req, res) -> {
             if(req.cookie("username") == null){
@@ -217,9 +216,9 @@ public class Server {
             return new ModelAndView(model, "public/templates/books.vm");
         }, new VelocityTemplateEngine());
 
-        /**
-         * Post call which displays all books in the database but also
-         * allows users to add a book at the bottom of the page
+        /*
+          Post call which displays all books in the database but also
+          allows users to add a book at the bottom of the page
          */
         post("/books", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
@@ -253,8 +252,8 @@ public class Server {
             return new VelocityTemplateEngine().render(mdl);
         });
 
-        /**
-         * Get call which displays view information for the addbook page
+        /*
+          Get call which displays view information for the addbook page
          */
         get("/addbook", (req, res) -> {
             if(req.cookie("username") == null){
@@ -266,9 +265,9 @@ public class Server {
             return new ModelAndView(model, "public/templates/addbook.vm");
         }, new VelocityTemplateEngine());
 
-        /**
-         * Post call which allows users to add a new book to the database along with author
-         * information
+        /*
+          Post call which allows users to add a new book to the database along with author
+          information
          */
         post("/addbook", (req, res) -> {
 
@@ -302,8 +301,8 @@ public class Server {
             return new VelocityTemplateEngine().render(mdl);
         });
 
-        /**
-         * Post call to allow for users to delete books from the database
+        /*
+          Post call to allow for users to delete books from the database
          */
         post("/delbook", (req, res) -> {
             String isbn = req.queryParams("isbn");
