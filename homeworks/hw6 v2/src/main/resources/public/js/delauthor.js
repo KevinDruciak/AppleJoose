@@ -1,8 +1,8 @@
 function deleteAuthor(authorName) {
-    fetch('http://localhost:7000/delauthor?name=' + authorName, {
+    fetch('https://secret-tor-59728.herokuapp.com/delauthor?name=' + authorName, {
             method: 'POST',
         }
-    ).then(res => window.location.replace('http://localhost:7000/authors'));
+    ).then(res => window.location.replace('https://secret-tor-59728.herokuapp.com/authors'));
 }
 
 let delButtons = document.querySelectorAll("li.author > button")

@@ -1,8 +1,8 @@
 function deleteBook(isbn) {
-    fetch('http://localhost:7000/delbook?isbn=' + isbn, {
+    fetch('https://secret-tor-59728.herokuapp.com/delbook?isbn=' + isbn, {
             method: 'POST',
         }
-    ).then(res => window.location.replace("http://localhost:7000/books"));
+    ).then(res => window.location.replace("https://secret-tor-59728.herokuapp.com/books"));
 }
 
 let delButtons = document.querySelectorAll("li.book > button")
