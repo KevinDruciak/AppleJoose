@@ -117,7 +117,7 @@ public class Statistics {
         return text;
     }
 
-    public void updateBiasRating(List<Article> userHistory) {
+    public void updateBiasRating(List<UserReadings> userHistory) {
         double biasTotal = 0;
         double numArticles = 0;
 
@@ -133,7 +133,7 @@ public class Statistics {
         this.biasName = createBiasName(this.biasRating);
     }
 
-    public void updateFavNewsSource(List<Article> userHistory) {
+    public void updateFavNewsSource(List<UserReadings> userHistory) {
         Map<String, Integer> map = new HashMap<>();
 
         for (Article a : userHistory) {
@@ -152,7 +152,7 @@ public class Statistics {
         this.favNewsSource = max.getKey();
     }
 
-    public void updateFavTopic(List<Article> userHistory) {
+    public void updateFavTopic(List<UserReadings> userHistory) {
         Map<String, Integer> map = new HashMap<>();
 
         for (Article a : userHistory) {
@@ -171,7 +171,7 @@ public class Statistics {
         this.favNewsSource = max.getKey();
     }
 
-    public void updateRecentArticles(List<Article> userHistory) {
+    public void updateRecentArticles(List<UserReadings> userHistory) {
         List<Article> recArticles = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {

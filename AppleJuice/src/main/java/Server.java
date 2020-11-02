@@ -4,8 +4,9 @@ import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import model.Article;
 import model.User;
 import model.Statistics;
+import model.UserReadings;
 import okhttp3.*;
-
+import java.util.Date;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,6 +17,7 @@ import org.sqlite.SQLiteDataSource;
 import persistence.Sql2oArticleDao;
 import persistence.Sql2oUserDao;
 import persistence.Sql2oStatisticsDao;
+import persistence.Sql2oUserReadingsDao;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
@@ -226,48 +228,72 @@ public class Server {
 
         //addarticle route; add a new article
         post("/addarticle", (req, res) -> {
-            //TODO: REPLACE TEMPORARY MANUAL INFO WITH API CALLS
-            String url = req.queryParams("url"); //chrome.history api call
+            Map<String, Object> model = new HashMap<String, Object>();
+            if (req.cookie("username") != null) {
+                model.put("username", req.cookie("username"));
+                model.put("password", req.cookie("password"));
 
-            String articleExtract = extractText(url); //extracts article text as well as title and other info
-            String[] parsedText = articleExtract.split("\\r?\\n");
+                String username = req.cookie("username");
+                User temp = new User(username);
+                try {
+                    int userID = new Sql2oUserDao(sql2o).find(temp);
 
-            /*
-            Get title from extracted text which is almost always first line
-             */
-            String title = parsedText[0];
+                    if (userID > 0) {
+                        String url = req.queryParams("url"); //chrome.history api call
 
-            /*
-            Get news source from extracted text, searches for the common ([New source name]) pattern
-            of news articles
-             */
-            String newsSource = null;
-            for (String line: parsedText) {
-                if (line.charAt(0) == '(') {
-                    newsSource = line.substring(1, line.indexOf(')'));
+                        String articleExtract = extractText(url); //extracts article text as well as title and other info
+                        String[] parsedText = articleExtract.split("\\r?\\n");
+                        /*
+                        Get title from extracted text which is almost always first line
+                        */
+                        String title = parsedText[0];
+
+                        /*
+                        Get news source from extracted text, searches for the common ([New source name]) pattern
+                        of news articles
+                        */
+                        String newsSource = null;
+                        for (String line: parsedText) {
+                            if (line.charAt(0) == '(') {
+                                newsSource = line.substring(1, line.indexOf(')'));
+                            }
+                        }
+                        if (newsSource == null) {
+                            newsSource = "News Source could not be identified";
+                        }
+
+                        /*
+                        Get bias rating for article by making call to Political Bias API
+                        API provided by BiPartisanPress.com team and all credit goes to them.
+                        */
+                        int biasRating = politicalBiasAPICall(articleExtract);
+
+                        //TODO: REPLACE TEMPORARY MANUAL INFO WITH API CALLS
+                        String topic = req.queryParams("topic");
+                        double timeOnArticle = Double.parseDouble(req.queryParams("timeOnArticle"));
+                        int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
+                        int timesVisited = Integer.parseInt(req.queryParams("timesVisited"));
+                        int currentDate = (int) (new Date().getTime())/ 1000;
+
+                        Article article = new Article(url, title, newsSource, biasRating, topic,
+                                timeOnArticle, numWords, timesVisited);
+                        new Sql2oArticleDao(getSql2o()).add(article);
+                        UserReadings userReading = new UserReadings(userID, article.getID(), currentDate, 0);
+                        new Sql2oUserReadingsDao(getSql2o()).add(userReading);
+                    }
+                    else {
+                        model.put("failedFind", "true");
+                    }
                 }
+                catch (DaoException ex) {
+                    model.put("failedFind", "true");
+                }
+
             }
-            if (newsSource == null) {
-                newsSource = "News Source could not be identified";
-            }
-
-            /*
-            Get bias rating for article by making call to Political Bias API
-            API provided by BiPartisanPress.com team and all credit goes to them.
-             */
-            int biasRating = politicalBiasAPICall(articleExtract);
-
-            String topic = req.queryParams("topic");
-            double timeOnArticle = Double.parseDouble(req.queryParams("timeOnArticle"));
-            int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
-            int timesVisited = Integer.parseInt(req.queryParams("timesVisited"));
-
-            Article article = new Article(url, title, newsSource, biasRating, topic,
-                    timeOnArticle, numWords, timesVisited);
-            new Sql2oArticleDao(getSql2o()).add(article);
             res.status(201);
             res.type("application/json");
-            return new Gson().toJson(article.toString());
+            //return new Gson().toJson(article.toString());
+            return null;
         });
 
         //delarticle route; delete an article

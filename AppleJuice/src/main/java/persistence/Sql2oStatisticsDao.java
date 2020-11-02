@@ -84,7 +84,6 @@ public class Sql2oStatisticsDao implements StatisticsDao {
     }
 
 
-
     //get a user's bias rating
     public int getBias(int userID) throws DaoException {
         try (Connection con = sql2o.open()) {

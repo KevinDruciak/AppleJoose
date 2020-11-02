@@ -32,4 +32,5 @@ public interface StatisticsDao {
      * If something goes wrong with query execution, DaoException is thrown.
      */
     boolean update(Statistics stats) throws DaoException;
+
 }

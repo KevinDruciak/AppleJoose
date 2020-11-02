@@ -40,6 +40,7 @@ public class Sql2oUserDao implements UserDao {
     }
 
     //find existing user; return user's id if exists, else -1
+    @Override
     public int find(User user) throws DaoException {
         try (Connection con = sql2o.open()) {
             String userName = user.getUserName();

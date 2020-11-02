@@ -10,7 +10,7 @@ public class User {
     private int userID;
     private String userName;
     private Statistics userStats;
-    private List<Article> userHistory;
+    private List<UserReadings> userHistory;
 
     public User(String userName) {
         this.userName = userName;
@@ -47,11 +47,11 @@ public class User {
 
     public Statistics getUserStats() { return userStats; }
 
-    public List<Article> getUserHistory() { return this.userHistory; }
+    public List<UserReadings> getUserHistory() { return this.userHistory; }
 
     public void setUserName(String userName) { this.userName = userName; }
 
-    public void updateUserStats() {
+    public void updateUserStats(Statistics stat) {
         userStats.updateBiasRating(this.userHistory);
         userStats.updateBiasName();
         userStats.updateFavNewsSource(this.userHistory);
@@ -60,12 +60,10 @@ public class User {
         userStats.updateExecSummary();
     }
 
-    public void updateUserHistory() {
+    public void updateUserHistory(List<UserReadings> readings) {
         //TODO: Call extension API to scan user history, get new News articles,
         // create new Article objects, and add them to userHistory list
-        /*
-        For now user articles will simply be all articles in the data base
-         */
+        this.userHistory = readings;
     }
 
     public void clearUserStats() {
