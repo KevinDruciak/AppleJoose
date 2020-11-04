@@ -19,9 +19,10 @@ import persistence.Sql2oStatisticsDao;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
-
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 import static spark.Spark.*;
 
@@ -163,6 +164,10 @@ public class Server {
                 User temp = new User(username);
                 try {
                     int userID = new Sql2oUserDao(sql2o).find(temp);
+                    List<Article> articles = new Sql2oArticleDao(sql2o).listAll();
+
+                    // Reverse Articles to report them in the correct order
+                    Collections.reverse(articles);
 
                     //TODO FIX
                     if (userID > 0) {
@@ -172,6 +177,8 @@ public class Server {
                         model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
                         model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
                         model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
+                        model.put("Articles", articles);
+
                     }
                     else {
                         model.put("failedFind", "true");
@@ -219,13 +226,27 @@ public class Server {
         get("/articles", (req, res) -> {
             Sql2oArticleDao article = new Sql2oArticleDao(getSql2o());
             String results = new Gson().toJson(article.listAll());
-            res.type("application/json");
+            res.type("text/html");
             res.status(200);
             return results;
         });
 
+        //addArticle route;
+        get("/addarticle", (req, res) -> {
+            if(req.cookie("username") == null){
+                res.redirect("/");
+            }
+
+            Map<String, Object> model = new HashMap<String, Object>();
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/addarticle.vm");
+        }, new VelocityTemplateEngine());
+
         //addarticle route; add a new article
         post("/addarticle", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+
             //TODO: REPLACE TEMPORARY MANUAL INFO WITH API CALLS
             String url = req.queryParams("url"); //chrome.history api call
 
@@ -258,23 +279,27 @@ public class Server {
             int biasRating = politicalBiasAPICall(articleExtract);
 
             String topic = req.queryParams("topic");
-            double timeOnArticle = Double.parseDouble(req.queryParams("timeOnArticle"));
+
+            // TODO, these two do not work for the manually added articles
+            double timeOnArticle = 0;
+            int timesVisited = 0;
+
             int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
-            int timesVisited = Integer.parseInt(req.queryParams("timesVisited"));
 
             Article article = new Article(url, title, newsSource, biasRating, topic,
                     timeOnArticle, numWords, timesVisited);
             new Sql2oArticleDao(getSql2o()).add(article);
             res.status(201);
-            res.type("application/json");
-            return new Gson().toJson(article.toString());
+            res.type("text/html");
+            res.redirect("/");
+            return new ModelAndView(model, "public/templates/addarticle.vm");
         });
 
         //delarticle route; delete an article
         post("/delarticle", (req, res) -> {
             String url = req.queryParams("url");
             new Sql2oArticleDao(getSql2o()).delete("url");
-            res.status(201);
+            res.status(200);
             res.type("application/json");
             return new Gson().toJson(url);
         });
@@ -283,7 +308,7 @@ public class Server {
         get("/stats", (req, res) -> {
             Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(getSql2o());
             String results = new Gson().toJson(sql2oStatsDao.listAll());
-            res.type("application/json");
+            res.type("text/html");
             res.status(200);
             return results;
         });
