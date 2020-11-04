@@ -121,7 +121,7 @@ public class Server {
             String username = req.queryParams("username");
             String password = req.queryParams("password");
             res.cookie("username", username);
-            res.cookie("password", password);
+            //res.cookie("password", password);
 
             //TEST, inserting users to database
             User user = new User(username);
@@ -185,6 +185,21 @@ public class Server {
             res.status(200);
             res.type("text/html");
             return new ModelAndView(model, "public/templates/index.vm");
+        }, new VelocityTemplateEngine());
+
+        //signup page
+        get("/signup", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+
+            String username = req.queryParams("username");
+            String password = req.queryParams("password");
+            String confirmPW = req.queryParams("confirmPW");
+
+
+
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/signup.vm");
         }, new VelocityTemplateEngine());
 
         // users route; return list of users as JSON
