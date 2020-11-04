@@ -3,19 +3,31 @@
 
 #if($username)
 <h1>Hello $username,</h1>
-<p class="linkIntro">Your bias rating is:</p>
-<a href="/stats" class="buttonBiasRating">$biasRating</a>
-<br />
-<p class="linkIntro">This type of bias is:</p>
-<a href="/stats" class="buttonBigNews">$biasName</a>
-<br />
-<p class="linkIntro">Your favorite news source is:</p>
-<a href="/stats" class="buttonBigNews">$favNews</a>
-<br />
-<p class="linkIntro">Your favorite topic is:</p>
-<a href="/stats" class="buttonBigNews">$favTopic</a>
-
-
+    #if($biasRating < 0)
+        <p class="linkIntro">Your bias rating is:</p>
+        <a href="/stats" class="buttonBiasRating">$biasRating</a>
+        <br />
+        <p class="linkIntro">This type of bias is:</p>
+        <a href="/stats" class="buttonBigNews">$biasName</a>
+        <br />
+        <p class="linkIntro">Your favorite news source is:</p>
+        <a href="/stats" class="buttonBigNews">$favNews</a>
+        <br />
+        <p class="linkIntro">Your favorite topic is:</p>
+        <a href="/stats" class="buttonBigNews">$favTopic</a>
+    #else
+        <p class="linkIntro">Your bias rating is:</p>
+        <a href="/stats" class="buttonBiasRatingR">$biasRating</a>
+        <br />
+        <p class="linkIntro">This type of bias is:</p>
+        <a href="/stats" class="buttonBigNewsR">$biasName</a>
+        <br />
+        <p class="linkIntro">Your favorite news source is:</p>
+        <a href="/stats" class="buttonBigNewsR">$favNews</a>
+        <br />
+        <p class="linkIntro">Your favorite topic is:</p>
+        <a href="/stats" class="buttonBigNewsR">$favTopic</a>
+    #end
 
 #parse("public/templates/ArticleCards.vm")
 

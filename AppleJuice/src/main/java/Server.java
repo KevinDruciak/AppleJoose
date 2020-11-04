@@ -20,7 +20,9 @@ import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 import static spark.Spark.*;
 
@@ -162,6 +164,10 @@ public class Server {
                 User temp = new User(username);
                 try {
                     int userID = new Sql2oUserDao(sql2o).find(temp);
+                    List<Article> articles = new Sql2oArticleDao(sql2o).listAll();
+
+                    // Reverse Articles to report them in the correct order
+                    Collections.reverse(articles);
 
                     //TODO FIX
                     if (userID > 0) {
@@ -171,6 +177,8 @@ public class Server {
                         model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
                         model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
                         model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
+                        model.put("Articles", articles);
+
                     }
                     else {
                         model.put("failedFind", "true");
@@ -283,6 +291,7 @@ public class Server {
             new Sql2oArticleDao(getSql2o()).add(article);
             res.status(201);
             res.type("text/html");
+            res.redirect("/");
             return new ModelAndView(model, "public/templates/addarticle.vm");
         });
 
@@ -290,7 +299,7 @@ public class Server {
         post("/delarticle", (req, res) -> {
             String url = req.queryParams("url");
             new Sql2oArticleDao(getSql2o()).delete("url");
-            res.status(201);
+            res.status(200);
             res.type("application/json");
             return new Gson().toJson(url);
         });

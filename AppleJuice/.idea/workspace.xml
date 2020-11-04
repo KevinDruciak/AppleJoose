@@ -29,9 +29,8 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="65d9d39c-4a16-4f9d-9fd6-cac93b5b8616" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/public/js/passUrl.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/public/templates/addarticle.vm" afterDir="false" />
+    <list default="true" id="65d9d39c-4a16-4f9d-9fd6-cac93b5b8616" name="Default Changelist" comment="Commits:&#10;Added a functional add articles page. The /addarticles route successfully adds a url, passes that url  &#10;to the API and parses all article params EXCEPT timesVisited and timeOnArticle.&#10;&#10;TODO:&#10;* Add a link button to /addarticles on home page.&#10;* Update ArticleCards with live information&#10;* Create individual article pages">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/public/js/delArticle.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/fileContent/fileContent.lock" afterDir="false" />
@@ -53,6 +52,10 @@
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oStatisticsDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oStatisticsDao.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oUserDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oUserDao.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/css/Styling.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/css/Styling.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/js/passUrl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/js/passUrl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/templates/ArticleCards.vm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/templates/ArticleCards.vm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/templates/index.vm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/templates/index.vm" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -236,8 +239,16 @@
       <updated>1601984458861</updated>
       <workItem from="1601984460121" duration="403000" />
       <workItem from="1604446689161" duration="3857000" />
-      <workItem from="1604514002832" duration="2056000" />
+      <workItem from="1604514002832" duration="14583000" />
     </task>
+    <task id="LOCAL-00001" summary="Commits:&#10;Added a functional add articles page. The /addarticles route successfully adds a url, passes that url  &#10;to the API and parses all article params EXCEPT timesVisited and timeOnArticle.&#10;&#10;TODO:&#10;* Add a link button to /addarticles on home page.&#10;* Update ArticleCards with live information&#10;* Create individual article pages">
+      <created>1604516818756</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1604516818756</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -267,6 +278,10 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Commits:&#10;Added a functional add articles page. The /addarticles route successfully adds a url, passes that url  &#10;to the API and parses all article params EXCEPT timesVisited and timeOnArticle.&#10;&#10;TODO:&#10;* Add a link button to /addarticles on home page.&#10;* Update ArticleCards with live information&#10;* Create individual article pages" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commits:&#10;Added a functional add articles page. The /addarticles route successfully adds a url, passes that url  &#10;to the API and parses all article params EXCEPT timesVisited and timeOnArticle.&#10;&#10;TODO:&#10;* Add a link button to /addarticles on home page.&#10;* Update ArticleCards with live information&#10;* Create individual article pages" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="320" y="127" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601984839402">
       <screen x="0" y="23" width="1440" height="877" />
@@ -276,37 +291,49 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1047" y="224" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1602038847826" />
+    <state x="1373" y="100" width="1094" height="1207" key="DiffContextDialog" timestamp="1604528686260">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1373" y="100" width="1094" height="1207" key="DiffContextDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1604528686260" />
     <state x="1220" y="274" key="FileChooserDialogImpl" timestamp="1602027671683">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1220" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1602027671683" />
-    <state width="2517" height="304" key="GridCell.Tab.0.bottom" timestamp="1604516490254">
+    <state width="1234" height="304" key="GridCell.Tab.0.bottom" timestamp="1604529303810">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
-    <state width="2517" height="304" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1604516490254" />
+    <state width="1234" height="304" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1604529303810" />
     <state width="1398" height="231" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1601984862964" />
-    <state width="2517" height="304" key="GridCell.Tab.0.center" timestamp="1604516490254">
+    <state width="1234" height="304" key="GridCell.Tab.0.center" timestamp="1604529303810">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
-    <state width="2517" height="304" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1604516490254" />
+    <state width="1234" height="304" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1604529303810" />
     <state width="1398" height="231" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1601984862963" />
-    <state width="2517" height="304" key="GridCell.Tab.0.left" timestamp="1604516490254">
+    <state width="1234" height="304" key="GridCell.Tab.0.left" timestamp="1604529303810">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
-    <state width="2517" height="304" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1604516490254" />
+    <state width="1234" height="304" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1604529303810" />
     <state width="1398" height="231" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1601984862963" />
-    <state width="2517" height="304" key="GridCell.Tab.0.right" timestamp="1604516490254">
+    <state width="1234" height="304" key="GridCell.Tab.0.right" timestamp="1604529303810">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
-    <state width="2517" height="304" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1604516490254" />
+    <state width="1234" height="304" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1604529303810" />
     <state width="1398" height="231" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1601984862963" />
+    <state width="196" height="457" key="HiddenNamespacesPopup" timestamp="1604523562124">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="196" height="457" key="HiddenNamespacesPopup/0.0.2560.1400@0.0.2560.1400" timestamp="1604523562124" />
     <state x="1686" y="424" key="RollbackChangesDialog" timestamp="1604433632378">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1686" y="424" key="RollbackChangesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1604433632378" />
+    <state x="872" y="433" key="Vcs.Push.Dialog.v2" timestamp="1604528232058">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="872" y="433" key="Vcs.Push.Dialog.v2/0.0.2560.1400@0.0.2560.1400" timestamp="1604528232058" />
   </component>
 </project>
