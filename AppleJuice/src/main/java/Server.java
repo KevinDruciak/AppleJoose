@@ -1,3 +1,4 @@
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
 import exception.DaoException;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
@@ -120,7 +121,7 @@ public class Server {
 
             String username = req.queryParams("username");
             String password = req.queryParams("password");
-            res.cookie("username", username);
+            res.cookie("username", username); //set this only if success
             //res.cookie("password", password);
 
             //TEST, inserting users to database
@@ -129,6 +130,7 @@ public class Server {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
                 if (!(userDao.find(user) > 0)) {
                     int id = userDao.add(user);
+                    System.out.println("TESTING ID HERE!!!!!!" + id);
                     //TODO: Change back to commented version; for now temp data to show how it works
 //                    Statistics userStats = new Statistics(0, "Minimal Bias",
 //                            "N/A", "N/A", "N/A", id);
@@ -157,7 +159,7 @@ public class Server {
             Map<String, Object> model = new HashMap<String, Object>();
             if (req.cookie("username") != null) {
                 model.put("username", req.cookie("username"));
-                model.put("password", req.cookie("password"));
+                //model.put("password", req.cookie("password"));
 
                 String username = req.cookie("username");
                 User temp = new User(username);
@@ -190,21 +192,65 @@ public class Server {
         //signup page
         get("/signup", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
-
-            String username = req.queryParams("username");
-            String password = req.queryParams("password");
-            String confirmPW = req.queryParams("confirmPW");
-
-
-
             res.status(200);
             res.type("text/html");
             return new ModelAndView(model, "public/templates/signup.vm");
         }, new VelocityTemplateEngine());
 
+        post("/signup", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+
+            String username = req.queryParams("username");
+            String password = req.queryParams("password");
+            String confirmPW = req.queryParams("confirmPW");
+
+            boolean userExists = true;
+            User user = new User(username);
+            try {
+                Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+                if (userDao.find(user) > 0) {
+                    model.put("userExists", "true");
+                    userExists = true;
+
+//                    res.status(201);
+//                    res.type("text/html");
+//                    ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
+//                    return new VelocityTemplateEngine().render(mdl);
+                }
+                else {
+                    model.put("userExists", "false");
+                    model.put("added", "true");
+                    userExists = false;
+
+                    String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+                    User userNEW = new User(username, bcryptHash);
+
+                    userDao.add(userNEW);
+                }
+            }
+            catch (DaoException e) {
+                model.put("failed", "true");
+            }
+
+//            if (userExists) {
+//                res.status(201);
+//                res.type("text/html");
+//                ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
+//                return new VelocityTemplateEngine().render(mdl);
+//            }
+//
+//            String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+
+            res.status(201);
+            res.type("text/html");
+            ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
+            return new VelocityTemplateEngine().render(mdl);
+        });
+
+
         // users route; return list of users as JSON
         get("/users", (req, res) -> {
-            Sql2oUserDao sql2oUser = new Sql2oUserDao(getSql2o());
+            Sql2oUserDao sql2oUser = new Sql2oUserDao(sql2o);
             String results = new Gson().toJson(sql2oUser.listAll());
             res.type("application/json");
             res.status(200);

@@ -12,8 +12,16 @@ public class User {
     private Statistics userStats;
     private List<Article> userHistory;
 
+    private String encryptedPW;
+
     public User(String userName) {
         this.userName = userName;
+        this.userHistory = new ArrayList<>();
+    }
+
+    public User(String userName, String encryptedPW) {
+        this.userName = userName;
+        this.encryptedPW = encryptedPW;
         this.userHistory = new ArrayList<>();
     }
 

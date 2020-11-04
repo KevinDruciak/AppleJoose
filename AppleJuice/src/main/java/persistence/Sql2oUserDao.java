@@ -39,6 +39,22 @@ public class Sql2oUserDao implements UserDao {
         }
     }
 
+    //add method for new login stuff
+    public int addNEW(String username, String password) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            User user = new User(username, password);
+            String query = "INSERT INTO Users (userName, password)" +
+                    "VALUES (:userName, :password)";
+            int id = (int) con.createQuery(query, true)
+                    .bind(user)
+                    .executeUpdate().getKey();
+            user.setUserID(id);
+
+            return id;
+        }
+    }
+
+
     //find existing user; return user's id if exists, else -1
     public int find(User user) throws DaoException {
         try (Connection con = sql2o.open()) {

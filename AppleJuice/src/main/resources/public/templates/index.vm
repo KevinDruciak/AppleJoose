@@ -35,6 +35,7 @@
         <input type="submit" value="Sign in" class="submit" />
     </div>
 </form>
+<a href="/signup" class="button">Create new account</a> ##change css later maybe
 <script src="../js/validate.js"></script>
 #end
 
