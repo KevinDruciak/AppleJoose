@@ -19,6 +19,7 @@ import org.sql2o.Sql2o;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import persistence.Sql2oArticleDao;
 import persistence.Sql2oUserDao;
 import persistence.Sql2oStatisticsDao;
@@ -47,7 +48,7 @@ public class Server {
         return new Sql2o(ds);
     }
 
-    public static String extractText(String url)throws Exception {
+    public static String extractText(String url) {
         URL urlObj = null;
 
         try {
@@ -55,9 +56,13 @@ public class Server {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        InputSource is = HTMLFetcher.fetch(urlObj).toInputSource();
-        final BoilerpipeSAXInput in = new BoilerpipeSAXInput(is);
-        final TextDocument doc = in.getTextDocument();
+        try {
+            InputSource is = HTMLFetcher.fetch(urlObj).toInputSource();
+            final BoilerpipeSAXInput in = new BoilerpipeSAXInput(is);
+            final TextDocument doc = in.getTextDocument();
+        } catch (IOException | SAXException | BoilerpipeProcessingException err) {
+            err.printStackTrace();
+        }
 
         String text = null;
         try {
