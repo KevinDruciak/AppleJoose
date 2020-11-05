@@ -168,7 +168,7 @@ p {
     border-radius: 5px;
     border-color: #707070;
     display: flex;
-    flex-direction: column;
+    flex-flow: wrap;
 }
 
 .newsSourceSm {
@@ -247,19 +247,18 @@ p {
 .articleLink {
     font-family: "Segoe UI", sans-serif;
     font-size: 16pt;
-    display: inline-block;
     color: #aaaab1;
-    text-decoration: underline;
     align-self: flex-end;
+    margin-left: auto;
 }
 
 .articleLink:hover {
     font-family: "Segoe UI", sans-serif;
     font-size: 16pt;
-    display: inline-block;
     color: #005EFF;
-    text-decoration: underline;
     align-self: flex-end;
+    text-decoration: underline;
+    margin-left: auto;
 }
 
 .ArticleDel {
