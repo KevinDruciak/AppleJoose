@@ -121,26 +121,39 @@ public class Server {
 
             String username = req.queryParams("username");
             String password = req.queryParams("password");
-            res.cookie("username", username); //set this only if success
+            //String encrypted = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+            //BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), encrypted);
+
+            //res.cookie("username", username); //set this only if success
             //res.cookie("password", password);
 
             //TEST, inserting users to database
-            User user = new User(username);
+            User user = new User(username, null);
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
-                if (!(userDao.find(user) > 0)) {
-                    int id = userDao.add(user);
-                    System.out.println("TESTING ID HERE!!!!!!" + id);
-                    //TODO: Change back to commented version; for now temp data to show how it works
-//                    Statistics userStats = new Statistics(0, "Minimal Bias",
-//                            "N/A", "N/A", "N/A", id);
+                if (userDao.find(user) > 0) {
+                    //String encrypted = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+                    //System.out.println(password.toCharArray());
+                    //System.out.println(userDao.getPassword(userDao.find(user)));
+                    //BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.getTemp(username));
+                    if (userDao.getPassword(userDao.find(user)).equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))) {
+                    //if (result.verified) {
+                        model.put("existinguser", "true");
+                        model.put("username", username);
+                        res.cookie("username", username); //set this only if success
+
+                    }
+                    /*//userDao.getPassword()
+                    //int id = userDao.add(user);
+                    //Statistics userStats = new Statistics(0, "Minimal Bias",
+                    //           "N/A", "N/A", "N/A", id);
                     Statistics userStats = new Statistics(-3, "Moderate Liberal Bias",
                             "New York Times", "Economy", "You have" +
                             " Moderate Liberal Bias. Your favorite news source is New York Times." +
                             " Your favorite topic to read about is Economy", id);
                     int idStats = new Sql2oStatisticsDao(sql2o).add(userStats);
 
-                    model.put("addedNewUser", "true");
+                    model.put("addedNewUser", "true");*/
                 }
                 else {
                     model.put("existingUser", "true");
@@ -150,40 +163,43 @@ public class Server {
                 model.put("failed", "true");
             }
 
-            res.redirect("/");
-            return null;
+            res.status(201);
+            res.type("text/html");
+            ModelAndView mdl = new ModelAndView(model, "public/templates/index.vm");
+            return new VelocityTemplateEngine().render(mdl);
+            //res.redirect("/");
+            //return null;
         });
 
         // root route; check that a user is logged in
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
-            if (req.cookie("username") != null) {
-                model.put("username", req.cookie("username"));
-                //model.put("password", req.cookie("password"));
-
-                String username = req.cookie("username");
-                User temp = new User(username);
-                try {
-                    int userID = new Sql2oUserDao(sql2o).find(temp);
-
-                    //TODO FIX
-                    if (userID > 0) {
-                        model.put("added", "true");
-                        model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
-                        model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
-                        model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
-                        model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
-                        model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
-                    }
-                    else {
-                        model.put("failedFind", "true");
-                    }
-                }
-                catch (DaoException ex) {
-                    model.put("failedFind", "true");
-                }
-
-            }
+//            if (req.cookie("username") != null) {
+//                model.put("username", req.cookie("username"));
+//                //model.put("password", req.cookie("password"));
+//
+//                String username = req.cookie("username");
+//                User temp = new User(username, null); //changed constrcutor
+//                try {
+//                    int userID = new Sql2oUserDao(sql2o).find(temp);
+//                    //TODO FIX
+//                    if (userID > 0) {
+//                        model.put("added", "true");
+//                        model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
+//                        model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
+//                        model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
+//                        model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
+//                        model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
+//                    }
+//                    else {
+//                        model.put("failedFind", "true");
+//                    }
+//                }
+//                catch (DaoException ex) {
+//                    model.put("failedFind", "true");
+//                }
+//
+//            }
             res.status(200);
             res.type("text/html");
             return new ModelAndView(model, "public/templates/index.vm");
@@ -205,9 +221,10 @@ public class Server {
             String confirmPW = req.queryParams("confirmPW");
 
             boolean userExists = true;
-            User user = new User(username);
+            User user = new User(username, null); //changed constrcutor
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+
                 if (userDao.find(user) > 0) {
                     model.put("userExists", "true");
                     userExists = true;
@@ -221,8 +238,8 @@ public class Server {
                     model.put("userExists", "false");
                     model.put("added", "true");
                     userExists = false;
-
                     String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+                    System.out.println(bcryptHash + "PASS");
                     User userNEW = new User(username, bcryptHash);
 
                     userDao.add(userNEW);
@@ -250,8 +267,8 @@ public class Server {
 
         // users route; return list of users as JSON
         get("/users", (req, res) -> {
-            Sql2oUserDao sql2oUser = new Sql2oUserDao(sql2o);
-            String results = new Gson().toJson(sql2oUser.listAll());
+            Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+            String results = new Gson().toJson(userDao.listAll());
             res.type("application/json");
             res.status(200);
             return results;
@@ -260,7 +277,7 @@ public class Server {
         //adduser route; add a new user
         post("/adduser", (req, res) -> {
             String userName = req.queryParams("userName");
-            User u = new User(userName);
+            User u = new User(userName, null); //changed construftor
             new Sql2oUserDao(getSql2o()).add(u);
             res.status(201);
             res.type("application/json");

@@ -31,7 +31,7 @@ public class Main {
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Users (userID INTEGER PRIMARY KEY, " +
-                "userName VARCHAR(50), password VARCHAR(100));";
+                "userName VARCHAR(50), password VARCHAR(1000));";
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER PRIMARY KEY, biasRating INTEGER, " +

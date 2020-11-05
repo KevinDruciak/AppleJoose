@@ -28,21 +28,8 @@ public class Sql2oUserDao implements UserDao {
             //do nothing
         }
         try (Connection con = sql2o.open()) {
-            String query = "INSERT INTO Users (userName)" +
-                    "VALUES (:userName)";
-            int id = (int) con.createQuery(query, true)
-                    .bind(user)
-                    .executeUpdate().getKey();
-            user.setUserID(id);
-
-            return id;
-        }
-    }
-
-    //add method for new login stuff
-    public int addNEW(String username, String password) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            User user = new User(username, password);
+            //String query = "INSERT INTO Users (userName)" +
+            //       "VALUES (:userName)";
             String query = "INSERT INTO Users (userName, password)" +
                     "VALUES (:userName, :password)";
             int id = (int) con.createQuery(query, true)
@@ -54,6 +41,34 @@ public class Sql2oUserDao implements UserDao {
         }
     }
 
+    //get a user's encrypted password
+    public String getPassword(int userID) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            String q = "SELECT password FROM Users WHERE userID = :userID";
+            //System.out.println(userID);
+            String temp = con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(String.class);
+            System.out.println(temp + " sql");
+            return temp;
+        } catch (Sql2oException | NullPointerException e) {
+            //do nothing
+            System.out.println("TEST IF EXCEPTION");
+        }
+        return "-404"; //temp return value
+    }
+
+    public String getTemp(String userName) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            String q = "SELECT password FROM Users WHERE userName = :userName";
+            //System.out.println(userID);
+            String temp = con.createQuery(q).addParameter("userName", userName).executeAndFetchFirst(String.class);
+            System.out.println(temp + " sql");
+            return temp;
+        } catch (Sql2oException | NullPointerException e) {
+            //do nothing
+            System.out.println("TEST IF EXCEPTION");
+        }
+        return "-404"; //temp return value
+    }
 
     //find existing user; return user's id if exists, else -1
     public int find(User user) throws DaoException {
