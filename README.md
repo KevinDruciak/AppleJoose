@@ -70,8 +70,6 @@ Connor
 * Fixed APITests to reflect changes in article class and spl2oDao.
 * Implemented sitesVisited update for articles.
 
-Simon
-
 Kevin/Simon
 * Worked on secure login using BCrypt with Simon (discovered bug that makes this impossible??)
   * Unable to insert encrypted String into Users table (always NULL).
