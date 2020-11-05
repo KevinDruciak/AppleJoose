@@ -58,3 +58,9 @@ Joao
  * Chrome Extension now logs all URLS a user visits
  * All visited URLs are displayed on a webpage, which can be accessed by clicking the extension icon in the top right hand corner.
  
+iter3:
+
+Montese
+* Created add articles page, allow us to see the project in action in realtime
+* Parsing article title, bias ranking and source now show up on the front page
+* UI is way more fleshed out for the home page and closer to the final look of the project
