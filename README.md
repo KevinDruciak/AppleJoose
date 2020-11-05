@@ -72,7 +72,11 @@ Connor
 
 Simon
 
-Kevin
+Kevin/Simon
 * Worked on secure login using BCrypt with Simon (discovered bug that makes this impossible??)
+  * Unable to insert encrypted String into Users table (always NULL).
+  * Does not work using hardcoded Strings either...
+* Signup post/get
+* Login functionality
 
 Joao
