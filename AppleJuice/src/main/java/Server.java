@@ -1,6 +1,12 @@
 import com.google.gson.Gson;
+import de.l3s.boilerpipe.sax.InputSourceable;
 import exception.DaoException;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
+import de.l3s.boilerpipe.document.TextDocument;
+import de.l3s.boilerpipe.extractors.ArticleExtractor;
+import de.l3s.boilerpipe.sax.BoilerpipeSAXInput;
+import de.l3s.boilerpipe.sax.HTMLFetcher;
+
 import model.Article;
 import model.User;
 import model.Statistics;
@@ -9,10 +15,10 @@ import okhttp3.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import org.sql2o.Sql2o;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
+import org.xml.sax.InputSource;
 import persistence.Sql2oArticleDao;
 import persistence.Sql2oUserDao;
 import persistence.Sql2oStatisticsDao;
@@ -41,7 +47,7 @@ public class Server {
         return new Sql2o(ds);
     }
 
-    public static String extractText(String url) {
+    public static String extractText(String url)throws Exception {
         URL urlObj = null;
 
         try {
@@ -49,13 +55,18 @@ public class Server {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        InputSource is = HTMLFetcher.fetch(urlObj).toInputSource();
+        final BoilerpipeSAXInput in = new BoilerpipeSAXInput(is);
+        final TextDocument doc = in.getTextDocument();
+
         String text = null;
         try {
             text = ArticleExtractor.INSTANCE.getText(urlObj);
         } catch (BoilerpipeProcessingException e) {
             e.printStackTrace();
         }
-
+        // append title to text
+        text = doc.getTitle() + '\n' + text;
         return text;
     }
 
