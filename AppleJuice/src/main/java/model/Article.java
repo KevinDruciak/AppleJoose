@@ -4,7 +4,7 @@ package model;
 import java.util.Objects;
 
 public class Article {
-    private int id;
+    private int articleID;
     private final String url;
     private final String title;
     private final String newsSource;
@@ -52,13 +52,9 @@ public class Article {
     @Override
     public int hashCode() { return Objects.hash(url, title, numWords); }
 
-    public void setID(int id) { this.id = id; }
+    public void setID(int id) { this.articleID = id; }
 
-    public int getID() { return this.id; }
-
-    public void setBiasRating() {
-
-    }
+    public int getArticleID() { return this.articleID; }
 
     public String getUrl() { return this.url; }
 

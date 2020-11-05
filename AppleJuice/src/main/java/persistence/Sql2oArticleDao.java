@@ -7,6 +7,7 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 public class Sql2oArticleDao implements ArticleDao {
@@ -19,7 +20,7 @@ public class Sql2oArticleDao implements ArticleDao {
     @Override
     public String add(Article article) throws DaoException {
         try (Connection con = sql2o.open()) {
-            String query = "INSERT INTO Articles (id, url, title, newsSource, " +
+            String query = "INSERT IGNORE INTO Articles (id, url, title, newsSource, " +
                     "biasRating, topic, timeOnArticle, numWords, timesVisited)" +
                     "VALUES (NULL, :url, :title, :newsSource, :biasRating, " +
                     ":topic, :timeOnArticle, :numWords, :timesVisited)";
@@ -28,8 +29,7 @@ public class Sql2oArticleDao implements ArticleDao {
                     .executeUpdate().getKey();
             article.setID(id);
             return article.getUrl();
-        }
-        catch (Sql2oException ex) {
+        } catch (Sql2oException ex) {
             throw new DaoException();
         }
     }
@@ -72,6 +72,19 @@ public class Sql2oArticleDao implements ArticleDao {
                     .executeUpdate();
 
             return true;
+        }
+        catch (Sql2oException ex) {
+            throw new DaoException();
+        }
+    }
+
+    @Override
+    public Article find(int id) throws DaoException {
+        String sql = "SELECT * FROM Articles WHERE id = :id";
+        try (Connection con = sql2o.open()) {
+            return (Article) con.createQuery(sql)
+                    .addParameter("id", id)
+                    .executeAndFetch(Article.class);
         }
         catch (Sql2oException ex) {
             throw new DaoException();

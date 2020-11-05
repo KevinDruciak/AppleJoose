@@ -25,7 +25,7 @@ public class Main {
         st = conn.createStatement();
 
         String sql = "CREATE TABLE IF NOT EXISTS Articles (id INTEGER PRIMARY KEY, " +
-                "url VARCHAR(1000), title VARCHAR(100), newsSource VARCHAR(100), " +
+                "url VARCHAR(1000) UNIQUE, title VARCHAR(100), newsSource VARCHAR(100), " +
                 "biasRating INTEGER, topic VARCHAR(50), timeOnArticle DOUBLE, " +
                 "numWords INTEGER, timesVisited INTEGER);";
         st.execute(sql);
@@ -39,6 +39,11 @@ public class Main {
                 "recentArticles VARCHAR(1000), execSummary VARCHAR(1000), " +
                 "userID INTEGER NOT NULL, FOREIGN KEY(userID) REFERENCES Users(userID) " +
                 "ON UPDATE CASCADE ON DELETE CASCADE);";
+        st.execute(sql);
+
+        sql = "CREATE TABLE IF NOT EXISTS UserReadings (userID INTEGER NOT NULL, " +
+                "articleID INTEGER NOT NULL, dateRead INTEGER NOT NULL, readingID INTEGER, " +
+                "FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE)";
         st.execute(sql);
 
         /*
