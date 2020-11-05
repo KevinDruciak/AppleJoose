@@ -64,3 +64,14 @@ Montese
 * Created add articles page, allow us to see the project in action in realtime
 * Parsing article title, bias ranking and source now show up on the front page
 * UI is way more fleshed out for the home page and closer to the final look of the project
+
+Connor
+* Made it so Chrome extension writes all visited URLs to article data base.
+* Fixed APITests to reflect changes in article class and spl2oDao.
+* Implemented sitesVisited update for articles.
+
+Simon
+
+Kevin
+
+Joao
