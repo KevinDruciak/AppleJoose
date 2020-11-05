@@ -3,6 +3,7 @@ package persistence;
 import exception.DaoException;
 import model.Statistics;
 import model.User;
+import model.UserReadings;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
@@ -83,64 +84,16 @@ public class Sql2oStatisticsDao implements StatisticsDao {
         }
     }
 
-
-    //get a user's bias rating
-    public int getBias(int userID) throws DaoException {
+    @Override
+    public Statistics find(int userID) throws DaoException {
+        String sql = "SELECT * FROM Statistics WHERE userID = :userID";
         try (Connection con = sql2o.open()) {
-            String q = "SELECT biasRating FROM Statistics WHERE userID = :userID";
-            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(Integer.class);
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-            System.out.println("TEST IF EXCEPTION");
+            return (Statistics) con.createQuery(sql)
+                    .addParameter("userID", userID)
+                    .executeAndFetch(Statistics.class);
         }
-        return -404; //temp return value
-    }
-
-    //get a user's bias name
-    public String getBiasName(int userID) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String q = "SELECT biasNAME FROM Statistics WHERE userID = :userID";
-            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(String.class);
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-            System.out.println("TEST IF EXCEPTION");
+        catch (Sql2oException ex) {
+            throw new DaoException();
         }
-        return "N/A"; //temp return value
-    }
-
-    //get a user's favorite news source
-    public String getFavNews(int userID) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String q = "SELECT favNewsSource FROM Statistics WHERE userID = :userID";
-            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(String.class);
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-            System.out.println("TEST IF EXCEPTION");
-        }
-        return "N/A"; //temp return value
-    }
-
-    //get a user's favorite topic
-    public String getFavTopic(int userID) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String q = "SELECT favTopic FROM Statistics WHERE userID = :userID";
-            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(String.class);
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-            System.out.println("TEST IF EXCEPTION");
-        }
-        return "N/A"; //temp return value
-    }
-
-    //get a user's summary
-    public String getExecSummary(int userID) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String q = "SELECT execSummary FROM Statistics WHERE userID = :userID";
-            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(String.class);
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-            System.out.println("TEST IF EXCEPTION");
-        }
-        return "N/A"; //temp return value
     }
 }

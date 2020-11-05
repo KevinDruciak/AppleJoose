@@ -1,6 +1,7 @@
 package persistence;
 
 import exception.DaoException;
+import model.Article;
 import model.Statistics;
 import model.UserReadings;
 
@@ -40,5 +41,20 @@ public interface UserReadingsDao {
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
      */
-    int find(UserReadings userReadings) throws DaoException;
+    UserReadings find(int readingID) throws DaoException;
+
+    /**
+     * Returns a list of all the articles that a particular user has read
+     * If sql query is successfully executed, true is returned
+     * If something goes wrong with query execution, DaoException is thrown.
+     */
+    List<UserReadings> getAllUserReadings(int userID) throws DaoException;
+
+    /**
+     * Returns a list of a specific number of the most recent articles
+     *      that a particular user has read
+     * If sql query is successfully executed, true is returned
+     * If something goes wrong with query execution, DaoException is thrown.
+     */
+    List<UserReadings> getMostRecentUserReadings(int userID, int numArticles) throws DaoException;
 }

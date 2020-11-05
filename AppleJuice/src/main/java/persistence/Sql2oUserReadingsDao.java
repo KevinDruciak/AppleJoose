@@ -5,6 +5,7 @@ import model.Article;
 import model.UserReadings;
 import org.sql2o.Sql2o;
 
+import java.util.ArrayList;
 import java.util.List;
 import exception.DaoException;
 import model.UserReadings;
@@ -76,12 +77,20 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
     }
 
     @Override
-    public int find(UserReadings reading) throws DaoException {
-        return 0;
+    public UserReadings find(int readingID) throws DaoException {
+        String sql = "SELECT DISTINCT * FROM UserReadings WHERE readingID = :readingID";
+        try (Connection con = sql2o.open()) {
+            return (UserReadings) con.createQuery(sql)
+                    .addParameter("readingID", readingID)
+                    .executeAndFetch(UserReadings.class);
+        }
+        catch (Sql2oException ex) {
+            throw new DaoException();
+        }
     }
 
-    //get a list of all the articles a specific user has read
-    public List<UserReadings> getAllUserReadings(int userID) {
+    @Override
+    public List<UserReadings> getAllUserReadings(int userID) throws DaoException {
         String sql = "SELECT * FROM UserReadings WHERE userID = :userID";
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
@@ -91,5 +100,26 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
         catch (Sql2oException ex) {
             throw new DaoException();
         }
+    }
+
+    @Override
+    public List<UserReadings> getMostRecentUserReadings(int userID, int numArticles) throws DaoException {
+        String sql = "SELECT * FROM UserReadings WHERE userID = :userID ORDER BY dateRead DESC";
+        List<UserReadings> in;
+        List<UserReadings> out = new ArrayList<>();
+        try (Connection con = sql2o.open()) {
+            in = con.createQuery(sql)
+                    .addParameter("userID", userID)
+                    .executeAndFetch(UserReadings.class);
+        }
+        catch (Sql2oException ex) {
+            throw new DaoException();
+        }
+
+        for(int i = 0; i < numArticles; i++) {
+            out.set(i, in.get(i));
+        }
+
+        return out;
     }
 }

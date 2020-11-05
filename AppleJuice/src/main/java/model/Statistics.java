@@ -117,6 +117,7 @@ public class Statistics {
         return text;
     }
 
+    /*
     public void updateBiasRating(List<UserReadings> userHistory) {
         double biasTotal = 0;
         double numArticles = 0;
@@ -155,9 +156,9 @@ public class Statistics {
     public void updateFavTopic(List<UserReadings> userHistory) {
         Map<String, Integer> map = new HashMap<>();
 
-        for (Article a : userHistory) {
-            Integer i = map.get(a.getTopic());
-            map.put(a.getTopic(), i == null ? 1 : i + 1);
+        for (UserReadings r : userHistory) {
+            Integer i = map.get(r.getArticle());
+            map.put(r.getArticle(), i == null ? 1 : i + 1);
         }
 
         Map.Entry<String, Integer> max = null;
@@ -184,4 +185,6 @@ public class Statistics {
     public void updateExecSummary() {
         this.execSummary = this.createExecSummary();
     }
+
+     */
 }
