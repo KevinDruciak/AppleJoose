@@ -12,7 +12,8 @@ import model.User;
 import model.Statistics;
 import model.UserReadings;
 import okhttp3.*;
-import java.util.Date;
+
+import java.util.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,11 +28,6 @@ import persistence.Sql2oStatisticsDao;
 import persistence.Sql2oUserReadingsDao;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Collections;
 
 import static spark.Spark.*;
 
@@ -149,14 +145,14 @@ public class Server {
             User user = new User(username);
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
-                if (!(userDao.find(user) > 0)) {
+                if (userDao.find(user.getUserName()) == null) {
                     int id = userDao.add(user);
                     //TODO: Change back to commented version; for now temp data to show how it works
 //                    Statistics userStats = new Statistics(0, "Minimal Bias",
 //                            "N/A", "N/A", "N/A", id);
-                    Statistics userStats = new Statistics(-3, "Moderate Liberal Bias",
+                    Statistics userStats = new Statistics(0, "Neutral Bias",
                             "New York Times", "Economy", "You have" +
-                            " Moderate Liberal Bias. Your favorite news source is New York Times." +
+                            " Neutral. Your favorite news source is New York Times." +
                             " Your favorite topic to read about is Economy", id);
                     int idStats = new Sql2oStatisticsDao(sql2o).add(userStats);
 
@@ -182,22 +178,24 @@ public class Server {
                 model.put("password", req.cookie("password"));
 
                 String username = req.cookie("username");
-                User temp = new User(username);
                 try {
-                    int userID = new Sql2oUserDao(sql2o).find(temp);
-                    List<Article> articles = new Sql2oArticleDao(sql2o).listAll();
+                    User u = new Sql2oUserDao(sql2o).find(username);
+                    List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
+                    List<Article> articles = new ArrayList<>();
 
-                    // Reverse Articles to report them in the correct order
-                    Collections.reverse(articles);
+                    for(UserReadings ur : uReadings) {
+                        articles.add(new Sql2oArticleDao(sql2o).find(ur.getArticleid()));
+                    }
+                    Statistics stats = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
 
-                    //TODO FIX
-                    if (userID > 0) {
+                    if (u.getUserID() > 0) {
+
                         model.put("added", "true");
-                        model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
-                        model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
-                        model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
-                        model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
-                        model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
+                        model.put("biasRating", stats.getBiasRating());
+                        model.put("biasName", stats.getBiasName());
+                        model.put("favNews", stats.getFavNewsSource());
+                        model.put("favTopic", stats.getFavTopic());
+                        model.put("execSummary", stats.getExecSummary());
                         model.put("Articles", articles);
 
                     }
@@ -269,9 +267,11 @@ public class Server {
             Map<String, Object> model = new HashMap<String, Object>();
             if (req.cookie("username") != null) {
                 model.put("username", req.cookie("username"));
-              User temp = new User(username);
+
+                String username = req.cookie("username");
+                User temp = new User(username);
                 try {
-                    int userID = new Sql2oUserDao(sql2o).find(temp);
+                    User u = new Sql2oUserDao(sql2o).find(username);
 
               
               String url = req.queryParams("url"); //chrome.history api call
@@ -306,7 +306,7 @@ public class Server {
                                             timeOnArticle, numWords, timesVisited);
               new Sql2oArticleDao(getSql2o()).add(article);
                         
-              UserReadings userReading = new UserReadings(userID, article.getArticleID(), currentDate, 0);
+              UserReadings userReading = new UserReadings(u.getUserID(), article.getArticleID(), currentDate, 0);
               new Sql2oUserReadingsDao(getSql2o()).add(userReading);
                     
               }

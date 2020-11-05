@@ -51,6 +51,7 @@ public class User {
 
     public void setUserName(String userName) { this.userName = userName; }
 
+    /*
     public void updateUserStats(Statistics stat) {
         userStats.updateBiasRating(this.userHistory);
         userStats.updateBiasName();
@@ -59,6 +60,7 @@ public class User {
         userStats.updateRecentArticles(this.userHistory);
         userStats.updateExecSummary();
     }
+     */
 
     public void updateUserHistory(List<UserReadings> readings) {
         //TODO: Call extension API to scan user history, get new News articles,

@@ -41,18 +41,15 @@ public class Sql2oUserDao implements UserDao {
 
     //find existing user; return user's id if exists, else -1
     @Override
-    public int find(User user) throws DaoException {
+    public User find(String userName) throws DaoException {
         try (Connection con = sql2o.open()) {
-            String userName = user.getUserName();
-            String q = "SELECT userID FROM Users WHERE userName = :userName";
-            int i = con.createQuery(q).addParameter("userName", userName).executeAndFetchFirst(Integer.class);
-            if (i > 0) {
-                return i;
-            }
+            String q = "SELECT * FROM Users WHERE userName = :userName";
+            return con.createQuery(q)
+                    .addParameter("userName", userName)
+                    .executeAndFetchFirst(User.class);
         } catch (Sql2oException | NullPointerException e) {
-            //do nothing
+            throw new DaoException();
         }
-        return -1;
     }
 
     @Override
@@ -92,10 +89,11 @@ public class Sql2oUserDao implements UserDao {
                     .addParameter("userID", user.getUserID())
                     .executeUpdate();
 
-            return true;
         }
         catch (Sql2oException ex) {
             throw new DaoException();
         }
+
+        return true;
     }
 }
