@@ -80,13 +80,9 @@ public class APITests {
     @Test
     public void testAddArticle() throws IOException {
         RequestBody postBody = new FormBody.Builder()
-                .add("url", "www.applejuice.com")
-                .add("title", "Apple Juice")
-                .add("newsSource", "NYT")
-                .add("biasRating", "7")
-                .add("topic", "OOSE")
+                .add("url", "https://www.cnn.com/2020/11/04/weather/hurricane-eta-wednesday/index.html")
+                .add("topic", "weather")
                 .add("timeOnArticle", "0")
-                .add("numWords", "240")
                 .add("timesVisited", "1")
                 .build();
         Request request = new Request.Builder()
@@ -101,7 +97,7 @@ public class APITests {
                 .build();
         response = client.newCall(request).execute();
         String resBody = response.body().string();
-        assertEquals("[{\"id\":1,\"url\":\"www.applejuice.com\"," +
+        assertEquals("[{\"id\":1,\"url\":\"https://www.cnn.com/2020/11/04/weather/hurricane-eta-wednesday/index.html\"," +
                 "\"title\":\"Apple Juice\",\"newsSource\":\"NYT\",\"biasRating\":7," +
                 "\"topic\":\"OOSE\",\"timeOnArticle\":0.0,\"numWords\":240,\"timesVisited\"" +
                 ":1}]", resBody);

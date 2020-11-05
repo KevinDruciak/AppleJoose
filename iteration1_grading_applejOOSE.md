@@ -20,21 +20,15 @@ _(Grading based on commit `3acbf5e8988a340e752c9354b8a88f96ee059fa4`)_
 
 - Branches named "test", "test2" etc are not very useful. Try to create branches based on features. Seems like most of the work is being done directly on master?
 
-## Github Project (5/10)
+## Github Project (10/10)
 
-- There needs to be more tasks on the Project Backlog and it should be updated more frequently. 
-
-- Tasks are too broad. Something like "Create Chrome extension" should be broken into 4/5 smaller tasks to organize your work better.
-
-- All iteration 1 tasks are not done?
-
-## Implementation (12/20)
+## Implementation (15/20)
 
 - Not totally sure which functional requirement was completed in this iteration. Iteration 1 is definitely more weighted towards design/planning but the actual coding work in this iteration was a little sparse.
 
 - From our conversations, it seemed like you would first start with creating a web-client and then focus on the Chrome extension. It didn't seem like that was attempted in this iteration.
 
-## README (4/5)
+## README (5/5)
 
 - Can you provide a more step-by-step description of how to run the app in your README for the next iteration?
 
@@ -54,6 +48,6 @@ _(Grading based on commit `3acbf5e8988a340e752c9354b8a88f96ee059fa4`)_
 
 - Focus on building out a functional client-server architecture first
 
-**Total:** 57/80
+**Total:** 66/80
 
 **Advisor Name:** `Debanik Purkayastha`

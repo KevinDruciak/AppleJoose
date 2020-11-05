@@ -1,14 +1,22 @@
 <h3>Your most recent articles</h3>
+<a href="/addarticle" class="buttonDev">[ Manually add an article ]</a>
+
 <div class="quickArticles">
-    <div class="container">
-        <h4>Justice Department Files
-            Google Antitrust Lawsuit</h4>
-        <p class="newsSourceSm">The Wall Street Journal</p>
-        <p class="artScore">-0.2</p>
-        <p>The Justice Department filed a long-awaited antitrust
-            lawsuit Tuesday alleging that Google uses anticompetitive
-            tactics to preserve a monopoly for its flagship search
-            engine and related advertising business, illegally
-            choking off potential competition...</p>
-    </div>
+    #foreach($Article in $Articles)
+        #if($Article.getBiasRating() < 0)
+            <div class="container">
+                <h4>$Article.getTitle()</h4>
+                <p class="newsSourceSm">$Article.getNewsSource()</p>
+                <p class="artScore">$Article.getBiasRating()</p>
+                <a href="$Article.getUrl()" class="articleLink">View Article -></a>
+            </div>
+        #else
+            <div class="container">
+                <h4>$Article.getTitle()</h4>
+                <p class="newsSourceSmR">$Article.getNewsSource()</p>
+                <p class="artScoreR">$Article.getBiasRating()</p>
+                <a href="$Article.getUrl()" class="articleLink">View Article -></a>
+            </div>
+        #end
+    #end
 </div>

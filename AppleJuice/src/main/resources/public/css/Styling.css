@@ -26,6 +26,7 @@ h4 {
     color: #707070;
     margin: 8px;
     text-align: left;
+    align-self: stretch;
 }
 
 .linkIntro {
@@ -91,6 +92,52 @@ a:link {
     display: inline-block;
 }
 
+.buttonBiasRatingR {
+    background-color: #b39696; /* Green */
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    color: #ff0000;
+    padding: 2px 12px 8px 12px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 18pt;
+    display: inline-block;
+}
+.buttonBiasRatingR:hover {
+    background-color: #ff0000; /* Green */
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    color: #b39696;
+    padding: 2px 12px 8px 12px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 18pt;
+    display: inline-block;
+}
+
+.buttonBigNewsR {
+    background-color: #b39696; /* Green */
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    color: #ff0000;
+    padding: 2px 12px 8px 12px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 18pt;
+    display: inline-block;
+}
+.buttonBigNewsR:hover {
+    background-color: #ff0000; /* Green */
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    color: #b39696;
+    padding: 2px 12px 8px 12px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 18pt;
+    display: inline-block;
+}
+
 p {
     margin: 8px;
     font-family: "Segoe UI", sans-serif;
@@ -101,7 +148,11 @@ p {
 }
 
 .quickArticles {
-    margin: 24px;
+    align-items: flex-start;
+    height: fit-content;
+    margin: 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 2fr));
 }
 
 .container:hover {
@@ -111,10 +162,13 @@ p {
 
 .container {
     width: 420px;
+    margin: 8px;
     padding: 16px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     border-radius: 5px;
     border-color: #707070;
+    display: flex;
+    flex-flow: wrap;
 }
 
 .newsSourceSm {
@@ -126,7 +180,7 @@ p {
     text-align: center;
     font-family: "Segoe UI", sans-serif;
     font-size: 16pt;
-    display: inline-block;
+    align-self: flex-start;
 }
 
 .artScore {
@@ -138,5 +192,101 @@ p {
     text-align: center;
     font-family: "Segoe UI", sans-serif;
     font-size: 16pt;
+    align-self: baseline;
+}
+
+.artScoreR {
+    background-color: #b39696; /* Green */
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    color: #ff0000;
+    padding: 8px 12px 8px 12px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 16pt;
+    align-self: baseline;
+}
+
+.newsSourceSmR {
+    background-color: #b39696; /* Green */
+    border: 2px solid #ff0000;
+    border-radius: 8px;
+    color: #ff0000;
+    padding: 8px;
+    text-align: center;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 16pt;
+    align-self: flex-start;
+}
+
+.buttonDev {
+    background-color: #cde5ce; /* Green */
+    border: 2px solid #009229;
+    border-radius: 8px;
+    color: #009229;
+    padding: 8px 12px 8px 12px;
+    text-align: center;
+    font-family: "consolas", monospace;
+    font-size: 12pt;
+    margin-left: 24px;
     display: inline-block;
+}
+.buttonDev:hover {
+    background-color: #009229; /* Green */
+    border: 2px solid #cde5ce;
+    border-radius: 8px;
+    color: #cde5ce;
+    padding: 8px 12px 8px 12px;
+    text-align: center;
+    font-family: "consolas", monospace;
+    font-size: 12pt;
+    margin-left: 24px;
+    display: inline-block;
+}
+
+.articleLink {
+    font-family: "Segoe UI", sans-serif;
+    font-size: 16pt;
+    color: #aaaab1;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.articleLink:hover {
+    font-family: "Segoe UI", sans-serif;
+    font-size: 16pt;
+    color: #005EFF;
+    align-self: flex-end;
+    text-decoration: underline;
+    margin-left: auto;
+}
+
+.ArticleDel {
+    font-family: "Segoe UI", sans-serif;
+    font-size: 16pt;
+    display: inline-block;
+    color: #aaaab1;
+    text-decoration: underline;
+    align-self: flex-start;
+}
+
+.ArticleDel:hover {
+    font-family: "Segoe UI", sans-serif;
+    font-size: 16pt;
+    display: inline-block;
+    color: #cd0808;
+    text-decoration: underline;
+    align-self: flex-start;
+}
+
+.showMore {
+    background-color: #D2E3FF; /* Green */
+    border: 2px solid #005EFF;
+    border-radius: 8px;
+    color: #005EFF;
+    padding: 8px 12px 8px 12px;
+    text-align: left;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 16pt;
+    align-self: center;
 }
