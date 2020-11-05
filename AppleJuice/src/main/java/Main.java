@@ -24,14 +24,24 @@ public class Main {
         conn = DriverManager.getConnection(URI);
         st = conn.createStatement();
 
-        String sql = "CREATE TABLE IF NOT EXISTS Articles (id INTEGER PRIMARY KEY, " +
+        String sql = "DROP TABLE IF EXISTS Articles";
+        st.execute(sql);
+
+        sql = "CREATE TABLE IF NOT EXISTS Articles (id INTEGER PRIMARY KEY, " +
                 "url VARCHAR(1000), title VARCHAR(100), newsSource VARCHAR(100), " +
                 "biasRating INTEGER, topic VARCHAR(50), timeOnArticle DOUBLE, " +
                 "numWords INTEGER, timesVisited INTEGER);";
         st.execute(sql);
 
+        sql = "DROP TABLE IF EXISTS Users";
+        st.execute(sql);
+
         sql = "CREATE TABLE IF NOT EXISTS Users (userID INTEGER PRIMARY KEY, " +
-                "userName VARCHAR(50), password VARCHAR(1000));";
+                "userName VARCHAR(50), " +
+                "password VARCHAR(1000));";
+        st.execute(sql);
+
+        sql = "DROP TABLE IF EXISTS Statistics";
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER PRIMARY KEY, biasRating INTEGER, " +
@@ -65,6 +75,6 @@ public class Main {
 
         Server.main(new String[]{"Server Running"});
 
-        //conn.close();
+        conn.close();
     }
 }

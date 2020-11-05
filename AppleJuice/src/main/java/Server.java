@@ -121,39 +121,20 @@ public class Server {
 
             String username = req.queryParams("username");
             String password = req.queryParams("password");
-            //String encrypted = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-            //BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), encrypted);
-
-            //res.cookie("username", username); //set this only if success
-            //res.cookie("password", password);
 
             //TEST, inserting users to database
             User user = new User(username, null);
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
                 if (userDao.find(user) > 0) {
-                    //String encrypted = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-                    //System.out.println(password.toCharArray());
-                    //System.out.println(userDao.getPassword(userDao.find(user)));
-                    //BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.getTemp(username));
-                    if (userDao.getPassword(userDao.find(user)).equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))) {
-                    //if (result.verified) {
+                    BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.getPassword(userDao.find(user)));
+                    //if (userDao.getPassword(userDao.find(user)).equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))) {
+                    if (result.verified) {
                         model.put("existinguser", "true");
                         model.put("username", username);
                         res.cookie("username", username); //set this only if success
 
                     }
-                    /*//userDao.getPassword()
-                    //int id = userDao.add(user);
-                    //Statistics userStats = new Statistics(0, "Minimal Bias",
-                    //           "N/A", "N/A", "N/A", id);
-                    Statistics userStats = new Statistics(-3, "Moderate Liberal Bias",
-                            "New York Times", "Economy", "You have" +
-                            " Moderate Liberal Bias. Your favorite news source is New York Times." +
-                            " Your favorite topic to read about is Economy", id);
-                    int idStats = new Sql2oStatisticsDao(sql2o).add(userStats);
-
-                    model.put("addedNewUser", "true");*/
                 }
                 else {
                     model.put("existingUser", "true");
@@ -167,8 +148,6 @@ public class Server {
             res.type("text/html");
             ModelAndView mdl = new ModelAndView(model, "public/templates/index.vm");
             return new VelocityTemplateEngine().render(mdl);
-            //res.redirect("/");
-            //return null;
         });
 
         // root route; check that a user is logged in
@@ -220,29 +199,28 @@ public class Server {
             String password = req.queryParams("password");
             String confirmPW = req.queryParams("confirmPW");
 
-            boolean userExists = true;
-            User user = new User(username, null); //changed constrcutor
+            User user2 = new User(username, null); //changed constrcutor
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
-
-                if (userDao.find(user) > 0) {
+                if (userDao.find(user2) > 0) {
                     model.put("userExists", "true");
-                    userExists = true;
-
 //                    res.status(201);
 //                    res.type("text/html");
 //                    ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
 //                    return new VelocityTemplateEngine().render(mdl);
                 }
                 else {
+
                     model.put("userExists", "false");
                     model.put("added", "true");
-                    userExists = false;
                     String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-                    System.out.println(bcryptHash + "PASS");
-                    User userNEW = new User(username, bcryptHash);
+                    User user = new User(username, bcryptHash);
+                    //userDao.add(user);
+                    new Sql2oUserDao(getSql2o()).add(user);
 
-                    userDao.add(userNEW);
+                    //Sql2oArticleDao artDao = new Sql2oArticleDao(sql2o);
+                    //Article art = new Article(username, bcryptHash, username, 123, username, 123, 123, 123);
+                    //artDao.add(art);
                 }
             }
             catch (DaoException e) {
