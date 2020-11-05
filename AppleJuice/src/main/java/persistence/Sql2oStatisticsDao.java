@@ -60,28 +60,9 @@ public class Sql2oStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public boolean update(Statistics stats) throws DaoException {
-        try (Connection con = sql2o.open()){
-            String sql = "UPDATE Statistics " +
-                    "SET biasRating = :biasRating, biasName = :biasName, " +
-                    "favNewsSource = :favNewsSource, favTopic = :favTopic, " +
-                    "execSummary = :execSummary " +
-                    "WHERE userID = :userID";
-            con.createQuery(sql)
-                    .addParameter("biasRating", stats.getBiasRating())
-                    .addParameter("biasName", stats.getBiasName())
-                    .addParameter("favNewsSource", stats.getFavNewsSource())
-                    .addParameter("favTopic", stats.getFavTopic())
-                    //.addParameter("recentArticles", stats.getRecentArticles())
-                    .addParameter("execSummary", stats.getExecSummary())
-                    .addParameter("userID", stats.getUserID())
-                    .executeUpdate();
+    public boolean update() throws DaoException {
 
-            return true;
-        }
-        catch (Sql2oException ex) {
-            throw new DaoException();
-        }
+        return true;
     }
 
     @Override
@@ -96,4 +77,7 @@ public class Sql2oStatisticsDao implements StatisticsDao {
             throw new DaoException();
         }
     }
+
+    //WHAT FOLLOWS ARE THE UPDATE FUNCTIONS FOR UPDATING STATISTICS ROW IN DATABASE
+
 }

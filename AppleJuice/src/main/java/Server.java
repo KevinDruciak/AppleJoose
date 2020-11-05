@@ -278,7 +278,7 @@ public class Server {
                         Article article = new Article(url, title, newsSource, biasRating, topic,
                                 timeOnArticle, numWords, timesVisited);
                         new Sql2oArticleDao(getSql2o()).add(article);
-                        UserReadings userReading = new UserReadings(userID, article.getID(), currentDate, 0);
+                        UserReadings userReading = new UserReadings(userID, article.getArticleID(), currentDate, 0);
                         new Sql2oUserReadingsDao(getSql2o()).add(userReading);
                     }
                     else {

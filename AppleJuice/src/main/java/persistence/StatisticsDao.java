@@ -31,7 +31,7 @@ public interface StatisticsDao {
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
      */
-    boolean update(Statistics stats) throws DaoException;
+    boolean update() throws DaoException;
 
     /**
      * finds statistics in database
