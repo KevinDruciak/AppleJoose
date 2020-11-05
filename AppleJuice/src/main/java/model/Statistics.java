@@ -54,6 +54,8 @@ public class Statistics {
 
     public void setID(int id) { this.id = id; }
 
+    public int getID() { return this.id; }
+
     public void setBiasRating(int biasRating) { this.biasRating = biasRating; }
 
     public void setFavNewsSource(String favNews) { this.favNewsSource = favNews; }

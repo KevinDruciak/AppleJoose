@@ -178,35 +178,58 @@ public class Server {
                 model.put("password", req.cookie("password"));
 
                 String username = req.cookie("username");
-                try {
-                    User u = new Sql2oUserDao(sql2o).find(username);
+                User u = new Sql2oUserDao(sql2o).find(username);
+                if (username == "u1") {
+                    Statistics stats = new Sql2oStatisticsDao(getSql2o()).find(u.getUserID());
+
                     List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
                     List<Article> articles = new ArrayList<>();
 
                     for(UserReadings ur : uReadings) {
                         articles.add(new Sql2oArticleDao(sql2o).find(ur.getArticleid()));
                     }
-                    Statistics stats = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
 
-                    if (u.getUserID() > 0) {
+                    model.put("biasRating", stats.getBiasRating());
+                    model.put("biasName", stats.getBiasName());
+                    model.put("favNews", stats.getFavNewsSource());
+                    model.put("favTopic", stats.getFavTopic());
+                    model.put("execSummary", stats.getExecSummary());
+                    model.put("Articles", articles);
+                } else {
+                    try {
 
-                        model.put("added", "true");
-                        model.put("biasRating", stats.getBiasRating());
-                        model.put("biasName", stats.getBiasName());
-                        model.put("favNews", stats.getFavNewsSource());
-                        model.put("favTopic", stats.getFavTopic());
-                        model.put("execSummary", stats.getExecSummary());
-                        model.put("Articles", articles);
+                        Statistics stats = new Statistics(0, "Neutral Bias",
+                                "New York Times", "Economy", "You have" +
+                                " Neutral. Your favorite news source is New York Times." +
+                                " Your favorite topic to read about is Economy", u.getUserID());
 
-                    }
-                    else {
+                        int idStats = new Sql2oStatisticsDao(sql2o).add(stats);
+
+                        List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
+                        List<Article> articles = new ArrayList<>();
+
+                        for (UserReadings ur : uReadings) {
+                            articles.add(new Sql2oArticleDao(sql2o).find(ur.getArticleid()));
+                        }
+
+
+                        if (u.getUserID() > 0) {
+
+                            model.put("added", "true");
+                            model.put("biasRating", stats.getBiasRating());
+                            model.put("biasName", stats.getBiasName());
+                            model.put("favNews", stats.getFavNewsSource());
+                            model.put("favTopic", stats.getFavTopic());
+                            model.put("execSummary", stats.getExecSummary());
+                            model.put("Articles", articles);
+
+                        } else {
+                            model.put("failedFind", "true");
+                        }
+                    } catch (DaoException ex) {
                         model.put("failedFind", "true");
                     }
                 }
-                catch (DaoException ex) {
-                    model.put("failedFind", "true");
-                }
-
             }
             res.status(200);
             res.type("text/html");
@@ -269,10 +292,9 @@ public class Server {
                 model.put("username", req.cookie("username"));
 
                 String username = req.cookie("username");
-                User temp = new User(username);
+
                 try {
                     User u = new Sql2oUserDao(sql2o).find(username);
-
               
               String url = req.queryParams("url"); //chrome.history api call
 
@@ -308,7 +330,16 @@ public class Server {
                         
               UserReadings userReading = new UserReadings(u.getUserID(), article.getArticleID(), currentDate, 0);
               new Sql2oUserReadingsDao(getSql2o()).add(userReading);
-                    
+
+              Statistics stats = new Sql2oStatisticsDao(getSql2o()).find(u.getUserID());
+              List<UserReadings> ur = new Sql2oUserReadingsDao(getSql2o()).getAllUserReadings(u.getUserID());
+              List<Article> arts = new ArrayList<>();
+              for(UserReadings r : ur) {
+                  arts.add(new Sql2oArticleDao(getSql2o()).find(r.getArticleid()));
+              }
+
+              new Sql2oStatisticsDao(getSql2o()).update(stats.getID(), arts);
+
               }
                 catch (DaoException ex) {
                     model.put("failedFind", "true");
@@ -334,8 +365,11 @@ public class Server {
 
         //stats route; return all user stats
         get("/stats", (req, res) -> {
+            String username = req.cookie("username");
+            User u = new Sql2oUserDao(sql2o).find(username);
             Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(getSql2o());
-            String results = new Gson().toJson(sql2oStatsDao.listAll());
+
+            String results = new Gson().toJson(sql2oStatsDao.find(u.getUserID()));
             res.type("text/html");
             res.status(200);
             return results;

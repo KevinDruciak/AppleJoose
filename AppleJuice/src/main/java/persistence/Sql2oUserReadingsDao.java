@@ -8,7 +8,7 @@ import org.sql2o.Sql2o;
 import java.util.ArrayList;
 import java.util.List;
 import exception.DaoException;
-import model.UserReadings;
+
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
@@ -116,10 +116,12 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
             throw new DaoException();
         }
 
+        /*
         for(int i = 0; i < numArticles; i++) {
             out.set(i, in.get(i));
         }
 
+         */
         return out;
     }
 }

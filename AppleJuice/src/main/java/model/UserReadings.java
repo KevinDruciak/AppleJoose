@@ -1,6 +1,8 @@
 package model;
 
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserReadings {
     int userID;
