@@ -78,3 +78,4 @@ Kevin/Simon
 * Login functionality
 
 Joao
+* Continued implementing DAO functions and building out database in order to support connection between front-end and back-end
