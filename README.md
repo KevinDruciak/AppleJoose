@@ -75,7 +75,7 @@ Kevin/Simon
   * Unable to insert encrypted String into Users table (always NULL).
   * Does not work using hardcoded Strings either...
 * Signup post/get to create account initially
-* Login functionality
+* Login functionality (still in progress, will complete by iteration 4)
 
 Joao
 * Continued implementing DAO functions and building out database in order to support connection between front-end and back-end
