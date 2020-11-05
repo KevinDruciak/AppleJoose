@@ -50,6 +50,7 @@ public class Server {
 
     public static String extractText(String url) {
         URL urlObj = null;
+        TextDocument doc = null;
 
         try {
             urlObj = new URL(url);
@@ -58,8 +59,8 @@ public class Server {
         }
         try {
             InputSource is = HTMLFetcher.fetch(urlObj).toInputSource();
-            final BoilerpipeSAXInput in = new BoilerpipeSAXInput(is);
-            final TextDocument doc = in.getTextDocument();
+            BoilerpipeSAXInput in = new BoilerpipeSAXInput(is);
+            doc = in.getTextDocument();
         } catch (IOException | SAXException | BoilerpipeProcessingException err) {
             err.printStackTrace();
         }
