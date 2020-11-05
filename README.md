@@ -67,11 +67,12 @@ Montese
 
 Connor
 * Made it so Chrome extension writes all visited URLs to article data base.
-* Fixed APITests to reflect changes in article class and sql2oDao.
+* Fixed APITests to reflect changes in article class and spl2oDao.
 * Implemented sitesVisited update for articles.
 
 Simon
 
 Kevin
+* Worked on secure login using BCrypt with Simon (discovered bug that makes this impossible??)
 
 Joao
