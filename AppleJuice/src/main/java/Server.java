@@ -51,6 +51,7 @@ public class Server {
     public static String extractText(String url) {
         URL urlObj = null;
         TextDocument doc = null;
+        String text = null;
 
         try {
             urlObj = new URL(url);
@@ -65,7 +66,6 @@ public class Server {
             err.printStackTrace();
         }
 
-        String text = null;
         try {
             text = ArticleExtractor.INSTANCE.getText(urlObj);
         } catch (BoilerpipeProcessingException e) {
@@ -132,6 +132,8 @@ public class Server {
         Sql2o sql2o = getSql2o();
 
         staticFiles.location("/public");
+
+
 
         post("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
@@ -276,15 +278,10 @@ public class Server {
             String title = parsedText[0];
 
             /*
-            Get news source from extracted text, searches for the common ([New source name]) pattern
-            of news articles
+            Get news source from extracted url host name
              */
-            String newsSource = null;
-            for (String line: parsedText) {
-                if (line.charAt(0) == '(') {
-                    newsSource = line.substring(1, line.indexOf(')'));
-                }
-            }
+            String newsSource = new URL(url).getHost();
+            newsSource = newsSource.replace("www.", "");
             if (newsSource == null) {
                 newsSource = "News Source could not be identified";
             }
