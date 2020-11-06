@@ -39,6 +39,7 @@ public interface StatisticsDao {
      * finds statistics in database
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
+     * @return
      */
-    Statistics find(int userID) throws DaoException;
+    List<Statistics> find(int userID) throws DaoException;
 }

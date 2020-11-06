@@ -77,10 +77,10 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
     }
 
     @Override
-    public UserReadings find(int readingID) throws DaoException {
+    public List<UserReadings> find(int readingID) throws DaoException {
         String sql = "SELECT DISTINCT * FROM UserReadings WHERE readingID = :readingID";
         try (Connection con = sql2o.open()) {
-            return (UserReadings) con.createQuery(sql)
+            return con.createQuery(sql)
                     .addParameter("readingID", readingID)
                     .executeAndFetch(UserReadings.class);
         }
@@ -116,12 +116,17 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
             throw new DaoException();
         }
 
-        /*
-        for(int i = 0; i < numArticles; i++) {
-            out.set(i, in.get(i));
+        if (numArticles > 0 && in == null) {
+            if (out.size() < numArticles) {
+                numArticles = out.size();
+            }
+            for (int i = 0; i < numArticles; i++) {
+                out.set(i, in.get(i));
+            }
+        } else {
+            return null;
         }
 
-         */
         return out;
     }
 }

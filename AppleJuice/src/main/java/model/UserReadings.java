@@ -7,14 +7,13 @@ import java.util.List;
 public class UserReadings {
     int userID;
     int articleID;
-    int dateRead;
+    long dateRead;
     int readingID;
 
-    public UserReadings (int articleid, int userid, int dateRead, int readingID) {
+    public UserReadings (int articleid, int userid, long dateRead) {
         this.userID = userid;
         this.articleID = articleid;
         this.dateRead = dateRead;
-        this.readingID = readingID;
     }
 
     @Override
@@ -38,9 +37,9 @@ public class UserReadings {
     @Override
     public int hashCode() { return Objects.hash(userID, articleID); }
 
-    public int getArticleid() { return this.articleID; }
+    public int getArticleID() { return this.articleID; }
     public int getUserReadingsid() { return this.userID; }
-    public int getDateRead() { return dateRead; }
+    public long getDateRead() { return dateRead; }
     public int getReadingID() { return readingID; }
 
     public void setReadingID(int readingID) { this.readingID = readingID; }

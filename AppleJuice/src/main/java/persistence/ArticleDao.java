@@ -38,5 +38,5 @@ public interface ArticleDao {
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
      */
-    Article find(int articleID) throws DaoException;
+    List<Article> find(int articleID) throws DaoException;
 }

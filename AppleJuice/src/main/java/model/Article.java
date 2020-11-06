@@ -10,22 +10,18 @@ public class Article {
     private final String newsSource;
     private final int biasRating;
     private final String topic;
-    private  double timeOnArticle;
     private final int numWords;
-    private  int timesVisited;
 
     public Article(String url, String title, String newsSource,
-                   int biasRating, String topic, double timeOnArticle,
-                   int numWords, int timesVisited) {
+                   int biasRating, String topic,
+                   int numWords) {
 
         this.url = url;
         this.title = title;
         this.newsSource = newsSource;
         this.biasRating = biasRating;
         this.topic = topic;
-        this.timeOnArticle = 0;
         this.numWords = numWords;
-        this.timesVisited = 1;
     }
 
     @Override
@@ -39,13 +35,13 @@ public class Article {
     @Override
     public String toString() {
         return "Article{" +
+                "articleID= " + articleID +
                 "url='" + url + '\'' +
                 ", title='" + title + '\'' +
+                ", newSource='" + newsSource + '\'' +
                 ", biasRating='" + biasRating +
                 ", topic=" + topic + '\'' +
-                ", timeOnArticle='" + timeOnArticle +
                 ", numWords='" + numWords +
-                ", timesVisited='" + timesVisited +
                 '}';
     }
 
@@ -66,18 +62,6 @@ public class Article {
 
     public String getTopic() { return this.topic; }
 
-    public double getTimeOnArticle() { return this.timeOnArticle; }
-
     public int getNumWords() { return this.numWords; }
 
-    public int getTimesVisited() { return this.timesVisited; }
-
-    public void updateTimeOnArticle() {
-        //TODO: get time on a webpage from extension API, and update objects value
-    }
-
-    public void updateTimesVisited() {
-        //TODO: get numbers of url visits in user history from extension API,
-        // and update objects value
-    }
 }

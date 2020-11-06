@@ -19,7 +19,7 @@ public class Sql2oStatisticsDao implements StatisticsDao {
     @Override
     public int add(Statistics stats) throws DaoException {
         try (Connection con = sql2o.open()) {
-            String query = "INSERT INTO Statistics (id, biasRating, biasName, " +
+            String query = "INSERT OR IGNORE INTO Statistics (id, biasRating, biasName, " +
                     "favNewsSource, favTopic, execSummary, userID)" +
                     "VALUES (NULL, :biasRating, :biasName, :favNewsSource," +
                     " :favTopic, :execSummary, :userID)";
@@ -30,6 +30,7 @@ public class Sql2oStatisticsDao implements StatisticsDao {
             return id;
         }
         catch (Sql2oException ex) {
+            System.out.print("add user stats throwing DAOEX");
             throw new DaoException();
         }
     }
@@ -63,11 +64,12 @@ public class Sql2oStatisticsDao implements StatisticsDao {
     @Override
     public boolean update(int id, List<Article> userHistory) throws DaoException {
         String sql = "SELECT * FROM Statistics WHERE id = :id";
-        Statistics stat;
+        List<Statistics> statsList;
         try (Connection con = sql2o.open()) {
-            stat = (Statistics) con.createQuery(sql)
-                    .addParameter("userID", id)
+            statsList = con.createQuery(sql)
+                    .addParameter("id", id)
                     .executeAndFetch(Statistics.class);
+            Statistics stat = statsList.get(0);
 
             double biasTotal = 0;
             double numArticles = 0;
@@ -87,13 +89,13 @@ public class Sql2oStatisticsDao implements StatisticsDao {
             Map.Entry<String, Integer> favTopic = null;
 
             for (Map.Entry<String, Integer> e : newsSources.entrySet()) {
-                if (newsSources == null || e.getValue() > favNews.getValue()) {
+                if (favNews == null || e.getValue() > favNews.getValue()) {
                     favNews = e;
                 }
             }
 
             for (Map.Entry<String, Integer> h : topics.entrySet()) {
-                if (topics == null || h.getValue() > favTopic.getValue()) {
+                if (favTopic == null || h.getValue() > favTopic.getValue()) {
                     favTopic = h;
                 }
             }
@@ -119,6 +121,7 @@ public class Sql2oStatisticsDao implements StatisticsDao {
                     .executeUpdate();
         }
         catch (Sql2oException ex) {
+            System.out.println(ex.toString());
             throw new DaoException();
         }
 
@@ -126,14 +129,15 @@ public class Sql2oStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public Statistics find(int userID) throws DaoException {
+    public List<Statistics> find(int userID) throws DaoException {
         String sql = "SELECT * FROM Statistics WHERE userID = :userID";
         try (Connection con = sql2o.open()) {
-            return (Statistics) con.createQuery(sql)
+            return con.createQuery(sql)
                     .addParameter("userID", userID)
                     .executeAndFetch(Statistics.class);
         }
         catch (Sql2oException ex) {
+            System.out.println("find stats throwing dao ex");
             throw new DaoException();
         }
     }

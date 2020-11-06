@@ -17,18 +17,20 @@ public class Sql2oUserDao implements UserDao {
 
     @Override
     public int add(User user) throws DaoException {
-        try (Connection con = sql2o.open()) {
+        /*try (Connection con = sql2o.open()) {
             String name = user.getUserName();
             String q = "SELECT userID FROM Users WHERE name = :name";
-            int i = con.createQuery(q).addParameter("name", name).executeAndFetchFirst(Integer.class);
+            int i = con.createQuery(q)
+                    .addParameter("name", name)
+                    .executeAndFetchFirst(Integer.class);
             if (i > 0) {
                 return i;
             }
         } catch (Sql2oException | NullPointerException e) {
             //do nothing
-        }
+        }*/
         try (Connection con = sql2o.open()) {
-            String query = "INSERT INTO Users (userName)" +
+            String query = "INSERT OR IGNORE INTO Users (userName)" +
                     "VALUES (:userName)";
             int id = (int) con.createQuery(query, true)
                     .bind(user)

@@ -74,6 +74,48 @@ public class Server {
         return text;
     }
 
+    public static Statistics extractFromStatsList(List<Statistics> objList) {
+        if (objList.size() > 1) {
+            System.out.println("DUPLICATE Statistics");
+        } else {
+            return objList.get(0);
+        }
+
+        return null;
+    }
+
+    public static Article extractFromArtsList(List<Article> objList) {
+        if (objList.size() > 1) {
+            System.out.println("DUPLICATE Articles");
+        } else {
+            return objList.get(0);
+        }
+
+        return null;
+    }
+
+    public static User extractFromUserList(List<User> objList) {
+        if (objList.size() > 1) {
+            System.out.println("DUPLICATE Users");
+        } else {
+            return objList.get(0);
+        }
+
+        return null;
+    }
+
+    public static UserReadings extractFromURList(List<UserReadings> objList) {
+        if (objList.size() > 1) {
+            System.out.println("DUPLICATE UserReadings");
+        } else {
+            return objList.get(0);
+        }
+
+        return null;
+    }
+
+
+
     public static int politicalBiasAPICall(String text) throws IOException {
         int biasRating = 100;
 
@@ -147,14 +189,12 @@ public class Server {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
                 if (userDao.find(user.getUserName()) == null) {
                     int id = userDao.add(user);
-                    //TODO: Change back to commented version; for now temp data to show how it works
-//                    Statistics userStats = new Statistics(0, "Minimal Bias",
-//                            "N/A", "N/A", "N/A", id);
                     Statistics userStats = new Statistics(0, "Neutral Bias",
                             "New York Times", "Economy", "You have" +
                             " Neutral. Your favorite news source is New York Times." +
                             " Your favorite topic to read about is Economy", id);
                     int idStats = new Sql2oStatisticsDao(sql2o).add(userStats);
+                    System.out.println("added new user stats");
 
                     model.put("addedNewUser", "true");
                 }
@@ -179,15 +219,23 @@ public class Server {
 
                 String username = req.cookie("username");
                 User u = new Sql2oUserDao(sql2o).find(username);
-                if (username == "u1") {
-                    Statistics stats = new Sql2oStatisticsDao(getSql2o()).find(u.getUserID());
+                if (username != null) {
+                    List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
+                    Statistics stats = extractFromStatsList(statsList);
 
                     List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
                     List<Article> articles = new ArrayList<>();
 
-                    for(UserReadings ur : uReadings) {
-                        articles.add(new Sql2oArticleDao(sql2o).find(ur.getArticleid()));
+                    if (uReadings != null) {
+                        for (UserReadings ur : uReadings) {
+                            List<Article> artList = new Sql2oArticleDao(sql2o).find(ur.getArticleID());
+                            Article art = extractFromArtsList(artList);
+                            articles.add(art);
+                        }
+                    } else {
+                        articles = null;
                     }
+
 
                     model.put("biasRating", stats.getBiasRating());
                     model.put("biasName", stats.getBiasName());
@@ -195,7 +243,9 @@ public class Server {
                     model.put("favTopic", stats.getFavTopic());
                     model.put("execSummary", stats.getExecSummary());
                     model.put("Articles", articles);
+
                 } else {
+                    /*
                     try {
 
                         Statistics stats = new Statistics(0, "Neutral Bias",
@@ -208,12 +258,15 @@ public class Server {
                         List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
                         List<Article> articles = new ArrayList<>();
 
-                        for (UserReadings ur : uReadings) {
-                            articles.add(new Sql2oArticleDao(sql2o).find(ur.getArticleid()));
+                        if (uReadings != null) {
+                            for (UserReadings ur : uReadings) {
+                                List<Article> artList = new Sql2oArticleDao(sql2o).find(ur.getArticleid());
+                                Article art = extractFromArtsList(artList);
+                                articles.add(art);
+                            }
                         }
 
-
-                        if (u.getUserID() > 0) {
+                        if (idStats > 0) {
 
                             model.put("added", "true");
                             model.put("biasRating", stats.getBiasRating());
@@ -228,7 +281,7 @@ public class Server {
                         }
                     } catch (DaoException ex) {
                         model.put("failedFind", "true");
-                    }
+                    }*/
                 }
             }
             res.status(200);
@@ -238,7 +291,7 @@ public class Server {
 
         // users route; return list of users as JSON
         get("/users", (req, res) -> {
-            Sql2oUserDao sql2oUser = new Sql2oUserDao(getSql2o());
+            Sql2oUserDao sql2oUser = new Sql2oUserDao(sql2o);
             String results = new Gson().toJson(sql2oUser.listAll());
             res.type("application/json");
             res.status(200);
@@ -249,7 +302,7 @@ public class Server {
         post("/adduser", (req, res) -> {
             String userName = req.queryParams("userName");
             User u = new User(userName);
-            new Sql2oUserDao(getSql2o()).add(u);
+            new Sql2oUserDao(sql2o).add(u);
             res.status(201);
             res.type("application/json");
             return new Gson().toJson(u.toString());
@@ -258,7 +311,7 @@ public class Server {
         //deluser route; delete an article
         post("/deluser", (req, res) -> {
             int userID = Integer.parseInt(req.queryParams("userID"));
-            new Sql2oUserDao(getSql2o()).delete(userID);
+            new Sql2oUserDao(sql2o).delete(userID);
             res.status(201);
             res.type("application/json");
             return new Gson().toJson(userID);
@@ -266,7 +319,7 @@ public class Server {
 
         //articles route; return list of articles as JSON
         get("/articles", (req, res) -> {
-            Sql2oArticleDao article = new Sql2oArticleDao(getSql2o());
+            Sql2oArticleDao article = new Sql2oArticleDao(sql2o);
             String results = new Gson().toJson(article.listAll());
             res.type("text/html");
             res.status(200);
@@ -288,60 +341,65 @@ public class Server {
         //addarticle route; add a new article
         post("/addarticle", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
+            System.out.println("Article add started");
             if (req.cookie("username") != null) {
                 model.put("username", req.cookie("username"));
 
                 String username = req.cookie("username");
-
                 try {
                     User u = new Sql2oUserDao(sql2o).find(username);
-              
-              String url = req.queryParams("url"); //chrome.history api call
+                    String url = req.queryParams("url"); //chrome.history api call
+                    String articleExtract = extractText(url); //extracts article text as well as title and other info
+                    String[] parsedText = articleExtract.split("\\r?\\n");
+                    /*
+                    Get title from extracted text which is almost always first line
+                    */
+                    String title = parsedText[0];
 
-              String articleExtract = extractText(url); //extracts article text as well as title and other info
-              String[] parsedText = articleExtract.split("\\r?\\n");
+                    /*
+                    Get news source from extracted url host name
+                     */
+                    String newsSource = new URL(url).getHost();
+                    newsSource = newsSource.replace("www.", "");
+                    newsSource = newsSource.replace(".com", "");
+                    if (newsSource == null) {
+                        newsSource = "News Source could not be identified";
+                    }
 
-              /*
-              Get title from extracted text which is almost always first line
-              */
-              String title = parsedText[0];
+                    int biasRating = politicalBiasAPICall(articleExtract);
+                    System.out.println("API call passed");
+                    String topic = req.queryParams("topic");
+                    int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
+                    long currentDate = (new Date().getTime())/ 1000;
 
-              /*
-              Get news source from extracted url host name
-              */
-              String newsSource = new URL(url).getHost();
-              newsSource = newsSource.replace("www.", "");
-              if (newsSource == null) {
-                  newsSource = "News Source could not be identified";
-              }
 
-              int biasRating = politicalBiasAPICall(articleExtract);
+                    Sql2oArticleDao articleDao = new Sql2oArticleDao(sql2o);
+                    Article article = new Article(url, title, newsSource, biasRating, topic, numWords);
+                    articleDao.add(article);
+                    System.out.println(article.toString());
+                    System.out.println("new article added to DB");
+                    UserReadings userReading = new UserReadings(u.getUserID(), article.getArticleID(), currentDate);
+                    new Sql2oUserReadingsDao(sql2o).add(userReading);
+                    System.out.println("new UReading added to DB");
+                    List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
+                    Statistics stats = extractFromStatsList(statsList);
+                    System.out.println("user stats found");
+                    List<UserReadings> ur = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(u.getUserID());
+                    System.out.println("user readings retrieved");
+                    List<Article> arts = new ArrayList<>();
+                    for(UserReadings r : ur) {
+                        System.out.println(r.getArticleID());
+                        List<Article> artsList = articleDao.find(r.getArticleID());
+                        Article art = extractFromArtsList(artsList);
+                        System.out.println(art.toString());
+                        arts.add(art);
+                        System.out.println("article added");
+                    }
 
-              //TODO: REPLACE TEMPORARY MANUAL INFO WITH API CALLS
-              String topic = req.queryParams("topic");
-              double timeOnArticle = 0;
-              int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
-              int timesVisited = 0;
-              int currentDate = (int) (new Date().getTime())/ 1000;
-                  
-              Article article = new Article(url, title, newsSource, biasRating, topic,
-                                            timeOnArticle, numWords, timesVisited);
-              new Sql2oArticleDao(getSql2o()).add(article);
-                        
-              UserReadings userReading = new UserReadings(u.getUserID(), article.getArticleID(), currentDate, 0);
-              new Sql2oUserReadingsDao(getSql2o()).add(userReading);
-
-              Statistics stats = new Sql2oStatisticsDao(getSql2o()).find(u.getUserID());
-              List<UserReadings> ur = new Sql2oUserReadingsDao(getSql2o()).getAllUserReadings(u.getUserID());
-              List<Article> arts = new ArrayList<>();
-              for(UserReadings r : ur) {
-                  arts.add(new Sql2oArticleDao(getSql2o()).find(r.getArticleid()));
-              }
-
-              new Sql2oStatisticsDao(getSql2o()).update(stats.getID(), arts);
-
-              }
-                catch (DaoException ex) {
+                    new Sql2oStatisticsDao(sql2o).update(stats.getID(), arts);
+                    System.out.println("stats updated");
+              } catch (DaoException ex) {
+                    System.out.print("catch statement");
                     model.put("failedFind", "true");
               }
             } else {
@@ -357,7 +415,7 @@ public class Server {
         //delarticle route; delete an article
         post("/delarticle", (req, res) -> {
             String url = req.queryParams("url");
-            new Sql2oArticleDao(getSql2o()).delete("url");
+            new Sql2oArticleDao(sql2o).delete("url");
             res.status(200);
             res.type("application/json");
             return new Gson().toJson(url);
@@ -367,7 +425,7 @@ public class Server {
         get("/stats", (req, res) -> {
             String username = req.cookie("username");
             User u = new Sql2oUserDao(sql2o).find(username);
-            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(getSql2o());
+            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
 
             String results = new Gson().toJson(sql2oStatsDao.find(u.getUserID()));
             res.type("text/html");
@@ -386,7 +444,7 @@ public class Server {
 //            int userID = Integer.parseInt(req.queryParams("userID"));
 //
 //            Statistics stats = new Statistics(biasRating, biasName, favNewsSource, favTopic, execSummary, userID);
-//            new Sql2oStatisticsDao(getSql2o()).add(stats);
+//            new Sql2oStatisticsDao(sql2o).add(stats);
 //            res.status(201);
 //            res.type("application/json");
 //            return new Gson().toJson(stats.toString());
@@ -395,7 +453,7 @@ public class Server {
         //delstats route; delete a user's stats
         post("/delstats", (req, res) -> {
             int userID = Integer.parseInt(req.queryParams("userID"));
-            new Sql2oStatisticsDao(getSql2o()).delete(userID);
+            new Sql2oStatisticsDao(sql2o).delete(userID);
             res.status(201);
             res.type("application/json");
             return new Gson().toJson(userID);
