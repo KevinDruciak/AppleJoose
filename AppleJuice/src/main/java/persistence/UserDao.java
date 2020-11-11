@@ -39,5 +39,5 @@ public interface UserDao {
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
      */
-    int find(User user) throws DaoException;
+    User find(String username) throws DaoException;
 }

@@ -2,6 +2,7 @@ package persistence;
 
 import exception.DaoException;
 import model.Statistics;
+import model.Article;
 import java.util.List;
 
 public interface StatisticsDao {
@@ -30,13 +31,15 @@ public interface StatisticsDao {
      * Updates statistics in database
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
+     * @param id
      */
-    boolean update() throws DaoException;
+    boolean update(int id, List<Article> articles) throws DaoException;
 
     /**
      * finds statistics in database
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
+     * @return
      */
-    Statistics find(int userID) throws DaoException;
+    List<Statistics> find(int userID) throws DaoException;
 }

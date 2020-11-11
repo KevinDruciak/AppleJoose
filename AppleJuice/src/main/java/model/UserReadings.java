@@ -1,18 +1,19 @@
 package model;
 
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserReadings {
     int userID;
     int articleID;
-    int dateRead;
+    long dateRead;
     int readingID;
 
-    public UserReadings (int articleid, int userid, int dateRead, int readingID) {
+    public UserReadings (int articleid, int userid, long dateRead) {
         this.userID = userid;
         this.articleID = articleid;
         this.dateRead = dateRead;
-        this.readingID = readingID;
     }
 
     @Override
@@ -36,13 +37,13 @@ public class UserReadings {
     @Override
     public int hashCode() { return Objects.hash(userID, articleID); }
 
-    public int getArticleid() { return this.articleID; }
-    public int getUserReadingsid() { return this.userID; }
-    public int getDateRead() { return dateRead; }
+    public int getArticleID() { return this.articleID; }
+    public int getUserID() { return this.userID; }
+    public long getDateRead() { return dateRead; }
     public int getReadingID() { return readingID; }
 
     public void setReadingID(int readingID) { this.readingID = readingID; }
-    public void setDateRead(int dateRead) { this.dateRead = dateRead; }
-    public void setArticleid(int articleid) { this.articleID = articleid; }
-    public void setUserReadingsid(int userid) { this.userID = userid; }
+    public void setDateRead(long dateRead) { this.dateRead = dateRead; }
+    public void setArticleID(int articleid) { this.articleID = articleid; }
+    public void setUserID(int userid) { this.userID = userid; }
 }
