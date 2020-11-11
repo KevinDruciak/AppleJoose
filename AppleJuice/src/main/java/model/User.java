@@ -51,31 +51,4 @@ public class User {
 
     public void setUserName(String userName) { this.userName = userName; }
 
-    /*
-    public void updateUserStats(Statistics stat) {
-        userStats.updateBiasRating(this.userHistory);
-        userStats.updateBiasName();
-        userStats.updateFavNewsSource(this.userHistory);
-        userStats.updateFavTopic(this.userHistory);
-        userStats.updateRecentArticles(this.userHistory);
-        userStats.updateExecSummary();
-    }
-     */
-
-    public void updateUserHistory(List<UserReadings> readings) {
-        //TODO: Call extension API to scan user history, get new News articles,
-        // create new Article objects, and add them to userHistory list
-        this.userHistory = readings;
-    }
-
-    public void clearUserStats() {
-        this.userStats = null;
-        //this.userStats = new Statistics(this.userID);
-    }
-
-    public void clearUserHistory() {
-        this.userHistory = null;
-        this.userHistory = new ArrayList<>();
-    }
-
 }

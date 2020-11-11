@@ -185,15 +185,7 @@ public class Statistics {
         List<Article> recArticles = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            recArticles.add(userHistory.get(userHistory.size() - (1 + i)));
-        }
-
-        this.recentArticles = recArticles;
-    }
-
-    public void updateExecSummary() {
-        this.execSummary = this.createExecSummary();
-    }
+            recArticles.add(userHistory.get(userHistory.size()
 
      */
 }

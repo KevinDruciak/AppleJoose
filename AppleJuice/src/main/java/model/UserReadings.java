@@ -38,12 +38,12 @@ public class UserReadings {
     public int hashCode() { return Objects.hash(userID, articleID); }
 
     public int getArticleID() { return this.articleID; }
-    public int getUserReadingsid() { return this.userID; }
+    public int getUserID() { return this.userID; }
     public long getDateRead() { return dateRead; }
     public int getReadingID() { return readingID; }
 
     public void setReadingID(int readingID) { this.readingID = readingID; }
-    public void setDateRead(int dateRead) { this.dateRead = dateRead; }
-    public void setArticleid(int articleid) { this.articleID = articleid; }
-    public void setUserReadingsid(int userid) { this.userID = userid; }
+    public void setDateRead(long dateRead) { this.dateRead = dateRead; }
+    public void setArticleID(int articleid) { this.articleID = articleid; }
+    public void setUserID(int userid) { this.userID = userid; }
 }
