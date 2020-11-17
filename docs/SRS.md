@@ -44,7 +44,7 @@
 > List major user stories here
 
 >> A user has recently watched the Presidential debates and felt very passionately afterwards that his preferred candidate was a no-brainer choice for president. However, after meeting up with a friend they get into a heated argument as his friend was a a supporter of his opponent. Not understanding how his friend could possibly think that, our user opens our extension, only to realize that all the news he's been reading recently about the presidential campaign has been strongly favoring on side of the political spectrum. With this information, the user explored other news sources and came to realize that not only was his views being heavily skewed to one side by what he was reading but that there were some arguments to be made for the other candidate.
->>
+
 >> A user has just come back from a fiery political debate during dinner with his family, him and his parents just couldn't see eye-to-eye in any of the political issues that were brought up. Confused by why this was he decided to show his parents a great browser extension which help demonstrate potential political biases in the news sources they were consuming online. After installing the extension, him and his parents sat down and read his and their reports side by side and saw that almost all of their new sources differed and were deeply situated on opposite sides of the political spectrum. Armed with this knowledge both of them vowed to read more moderate news sources and explore each others perspectives more intimately in order to gain some common ground and develop less divisive perspectives on political issues.
 
 ## Wireframes

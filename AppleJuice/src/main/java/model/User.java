@@ -11,7 +11,7 @@ public class User {
     private final String password;
     private String userName;
     private Statistics userStats;
-    private List<Article> userHistory;
+    private List<UserReadings> userHistory;
 
     public User(String userName, String password) {
         this.password = password;
@@ -54,35 +54,8 @@ public class User {
 
     public Statistics getUserStats() { return userStats; }
 
-    public List<Article> getUserHistory() { return this.userHistory; }
+    public List<UserReadings> getUserHistory() { return this.userHistory; }
 
     public void setUserName(String userName) { this.userName = userName; }
-
-    public void updateUserStats() {
-        userStats.updateBiasRating(this.userHistory);
-        userStats.updateBiasName();
-        userStats.updateFavNewsSource(this.userHistory);
-        userStats.updateFavTopic(this.userHistory);
-        userStats.updateRecentArticles(this.userHistory);
-        userStats.updateExecSummary();
-    }
-
-    public void updateUserHistory() {
-        //TODO: Call extension API to scan user history, get new News articles,
-        // create new Article objects, and add them to userHistory list
-        /*
-        For now user articles will simply be all articles in the data base
-         */
-    }
-
-    public void clearUserStats() {
-        this.userStats = null;
-        //this.userStats = new Statistics(this.userID);
-    }
-
-    public void clearUserHistory() {
-        this.userHistory = null;
-        this.userHistory = new ArrayList<>();
-    }
 
 }

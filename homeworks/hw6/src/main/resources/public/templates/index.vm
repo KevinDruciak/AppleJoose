@@ -11,7 +11,7 @@
     <p><a class="content indexLink" href="/addbook">Add book</a></p>
 </div>
 #else
-<h1>Please login first!</h1>
+<h1>Please login first! >:^)</h1>
 <form action="/" method="post" class="content" onsubmit="return validateUsername();">
     <div>
         <label for="username">Username:</label>

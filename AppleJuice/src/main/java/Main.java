@@ -27,28 +27,36 @@ public class Main {
         String sql = "DROP TABLE IF EXISTS Articles";
         st.execute(sql);
 
-        sql = "CREATE TABLE IF NOT EXISTS Articles (id INTEGER PRIMARY KEY, " +
-                "url VARCHAR(1000), title VARCHAR(100), newsSource VARCHAR(100), " +
-                "biasRating INTEGER, topic VARCHAR(50), timeOnArticle DOUBLE, " +
-                "numWords INTEGER, timesVisited INTEGER);";
-        st.execute(sql);
-
         sql = "DROP TABLE IF EXISTS Users";
         st.execute(sql);
 
-        sql = "CREATE TABLE IF NOT EXISTS Users (userID INTEGER PRIMARY KEY, " +
-                "userName VARCHAR(50), " +
-                "password VARCHAR(1000));";
+        sql = "DROP TABLE IF EXISTS UserReadings";
         st.execute(sql);
 
         sql = "DROP TABLE IF EXISTS Statistics";
         st.execute(sql);
 
+        sql = "CREATE TABLE IF NOT EXISTS Articles (articleID INTEGER PRIMARY KEY, " +
+                "url VARCHAR(1000) UNIQUE, title VARCHAR(100), newsSource VARCHAR(100), " +
+                "biasRating INTEGER, topic VARCHAR(50), " +
+                "numWords INTEGER);";
+        st.execute(sql);
+
+        sql = "CREATE TABLE IF NOT EXISTS Users (userID INTEGER PRIMARY KEY, " +
+                "userName VARCHAR(50) UNIQUE, " +
+                "password VARCHAR(1000));";
+        st.execute(sql);
+
         sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER PRIMARY KEY, biasRating INTEGER, " +
                 "biasNAME VARCHAR(100), favNewsSource VARCHAR(100), favTopic VARCHAR(50), " +
-                "recentArticles VARCHAR(1000), execSummary VARCHAR(1000), " +
-                "userID INTEGER NOT NULL, FOREIGN KEY(userID) REFERENCES Users(userID) " +
+                "execSummary VARCHAR(1000), " +
+                "userID INTEGER NOT NULL UNIQUE, FOREIGN KEY(userID) REFERENCES Users(userID) " +
                 "ON UPDATE CASCADE ON DELETE CASCADE);";
+        st.execute(sql);
+
+        sql = "CREATE TABLE IF NOT EXISTS UserReadings (userID INTEGER NOT NULL, " +
+                "articleID INTEGER NOT NULL, dateRead INTEGER NOT NULL, readingID INTEGER, " +
+                "FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE)";
         st.execute(sql);
 
         /*

@@ -2,11 +2,13 @@ package persistence;
 
 import exception.DaoException;
 import model.Article;
+import model.Statistics;
 import model.User;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 public class Sql2oArticleDao implements ArticleDao {
@@ -19,17 +21,16 @@ public class Sql2oArticleDao implements ArticleDao {
     @Override
     public String add(Article article) throws DaoException {
         try (Connection con = sql2o.open()) {
-            String query = "INSERT INTO Articles (id, url, title, newsSource, " +
-                    "biasRating, topic, timeOnArticle, numWords, timesVisited)" +
+            String query = "INSERT OR IGNORE INTO Articles (articleID, url, title, newsSource, " +
+                    "biasRating, topic, numWords)" +
                     "VALUES (NULL, :url, :title, :newsSource, :biasRating, " +
-                    ":topic, :timeOnArticle, :numWords, :timesVisited)";
+                    ":topic, :numWords)";
             int id = (int) con.createQuery(query, true)
                     .bind(article)
                     .executeUpdate().getKey();
             article.setID(id);
             return article.getUrl();
-        }
-        catch (Sql2oException ex) {
+        } catch (Sql2oException ex) {
             throw new DaoException();
         }
     }
@@ -60,6 +61,7 @@ public class Sql2oArticleDao implements ArticleDao {
 
     @Override
     public boolean update(Article article) throws DaoException {
+        /*
         try (Connection con = sql2o.open()) {
             String sql = "UPDATE Articles " +
                     "SET timeOnArticle = :timeOnArticle, " +
@@ -74,6 +76,22 @@ public class Sql2oArticleDao implements ArticleDao {
             return true;
         }
         catch (Sql2oException ex) {
+            throw new DaoException();
+        }*/
+        return true;
+    }
+
+    @Override
+    public List<Article> find(int articleID) throws DaoException {
+        String sql = "SELECT * FROM Articles WHERE articleID = :articleID";
+        System.out.println("query about to be made");
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .addParameter("articleID", articleID)
+                    .executeAndFetch(Article.class);
+        }
+        catch (Sql2oException ex) {
+            System.out.println(ex.toString());
             throw new DaoException();
         }
     }

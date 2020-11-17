@@ -1,28 +1,34 @@
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
+import de.l3s.boilerpipe.sax.InputSourceable;
 import exception.DaoException;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
+import de.l3s.boilerpipe.document.TextDocument;
+import de.l3s.boilerpipe.extractors.ArticleExtractor;
+import de.l3s.boilerpipe.sax.BoilerpipeSAXInput;
+import de.l3s.boilerpipe.sax.HTMLFetcher;
+
 import model.Article;
 import model.User;
 import model.Statistics;
+import model.UserReadings;
 import okhttp3.*;
 
+import java.util.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import org.sql2o.Sql2o;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import persistence.Sql2oArticleDao;
 import persistence.Sql2oUserDao;
 import persistence.Sql2oStatisticsDao;
+import persistence.Sql2oUserReadingsDao;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
-
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static spark.Spark.*;
 
@@ -43,21 +49,73 @@ public class Server {
 
     public static String extractText(String url) {
         URL urlObj = null;
+        TextDocument doc = null;
+        String text = null;
 
         try {
             urlObj = new URL(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        String text = null;
+        try {
+            InputSource is = HTMLFetcher.fetch(urlObj).toInputSource();
+            BoilerpipeSAXInput in = new BoilerpipeSAXInput(is);
+            doc = in.getTextDocument();
+        } catch (IOException | SAXException | BoilerpipeProcessingException err) {
+            err.printStackTrace();
+        }
+
         try {
             text = ArticleExtractor.INSTANCE.getText(urlObj);
         } catch (BoilerpipeProcessingException e) {
             e.printStackTrace();
         }
-
+        // append title to text
+        text = doc.getTitle() + '\n' + text;
         return text;
     }
+
+    public static Statistics extractFromStatsList(List<Statistics> objList) {
+        if (objList.size() > 1) {
+            System.out.println("DUPLICATE Statistics");
+        } else {
+            return objList.get(0);
+        }
+
+        return null;
+    }
+
+    public static Article extractFromArtsList(List<Article> objList) {
+        if (objList.size() > 1) {
+            System.out.println("DUPLICATE Articles");
+        } else {
+            return objList.get(0);
+        }
+
+        return null;
+    }
+
+    public static User extractFromUserList(List<User> objList) {
+        if (objList.size() > 1) {
+            System.out.println("DUPLICATE Users");
+        } else {
+            return objList.get(0);
+        }
+
+        return null;
+    }
+
+    public static UserReadings extractFromURList(List<UserReadings> objList) {
+        if (objList.size() > 1) {
+            System.out.println("DUPLICATE UserReadings");
+        } else {
+            return objList.get(0);
+        }
+
+        return null;
+    }
+
+
 
     public static int politicalBiasAPICall(String text) throws IOException {
         int biasRating = 100;
@@ -116,6 +174,8 @@ public class Server {
 
         staticFiles.location("/public");
 
+
+
         post("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
 
@@ -126,7 +186,7 @@ public class Server {
             User user = new User(username, null);
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
-                if (userDao.find(user) > 0) {
+                if (userDao.findID(user) > 0) {
                     BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.getPassword(userDao.find(user)));
                     //if (userDao.getPassword(userDao.find(user)).equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))) {
                     if (result.verified) {
@@ -221,7 +281,7 @@ public class Server {
             User user2 = new User(username, null); //changed constrcutor
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
-                if (userDao.find(user2) > 0) {
+                if (userDao.findID(user2) > 0) {
                     model.put("userExists", "true");
 //                    res.status(201);
 //                    res.type("text/html");
@@ -280,8 +340,12 @@ public class Server {
         //adduser route; add a new user
         post("/adduser", (req, res) -> {
             String userName = req.queryParams("userName");
-            User u = new User(userName, null); //changed construftor
-            new Sql2oUserDao(getSql2o()).add(u);
+
+//             User u = new User(userName, null); //changed construftor
+//             new Sql2oUserDao(getSql2o()).add(u);
+            User u = new User(userName);
+            new Sql2oUserDao(sql2o).add(u);
+
             res.status(201);
             res.type("application/json");
             return new Gson().toJson(u.toString());
@@ -290,7 +354,7 @@ public class Server {
         //deluser route; delete an article
         post("/deluser", (req, res) -> {
             int userID = Integer.parseInt(req.queryParams("userID"));
-            new Sql2oUserDao(getSql2o()).delete(userID);
+            new Sql2oUserDao(sql2o).delete(userID);
             res.status(201);
             res.type("application/json");
             return new Gson().toJson(userID);
@@ -298,73 +362,116 @@ public class Server {
 
         //articles route; return list of articles as JSON
         get("/articles", (req, res) -> {
-            Sql2oArticleDao article = new Sql2oArticleDao(getSql2o());
+            Sql2oArticleDao article = new Sql2oArticleDao(sql2o);
             String results = new Gson().toJson(article.listAll());
-            res.type("application/json");
+            res.type("text/html");
             res.status(200);
             return results;
         });
 
+        //addArticle route;
+        get("/addarticle", (req, res) -> {
+            if(req.cookie("username") == null){
+                res.redirect("/");
+            }
+
+            Map<String, Object> model = new HashMap<String, Object>();
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/addarticle.vm");
+        }, new VelocityTemplateEngine());
+
         //addarticle route; add a new article
         post("/addarticle", (req, res) -> {
-            //TODO: REPLACE TEMPORARY MANUAL INFO WITH API CALLS
-            String url = req.queryParams("url"); //chrome.history api call
+            Map<String, Object> model = new HashMap<String, Object>();
+            System.out.println("Article add started");
+            if (req.cookie("username") != null) {
+                model.put("username", req.cookie("username"));
 
-            String articleExtract = extractText(url); //extracts article text as well as title and other info
-            String[] parsedText = articleExtract.split("\\r?\\n");
+                String username = req.cookie("username");
+                try {
+                    User u = new Sql2oUserDao(sql2o).find(username);
+                    String url = req.queryParams("url"); //chrome.history api call
+                    String articleExtract = extractText(url); //extracts article text as well as title and other info
+                    String[] parsedText = articleExtract.split("\\r?\\n");
+                    /*
+                    Get title from extracted text which is almost always first line
+                    */
+                    String title = parsedText[0];
 
-            /*
-            Get title from extracted text which is almost always first line
-             */
-            String title = parsedText[0];
+                    /*
+                    Get news source from extracted url host name
+                     */
+                    String newsSource = new URL(url).getHost();
+                    newsSource = newsSource.replace("www.", "");
+                    newsSource = newsSource.replace(".com", "");
+                    if (newsSource == null) {
+                        newsSource = "News Source could not be identified";
+                    }
 
-            /*
-            Get news source from extracted text, searches for the common ([New source name]) pattern
-            of news articles
-             */
-            String newsSource = null;
-            for (String line: parsedText) {
-                if (line.charAt(0) == '(') {
-                    newsSource = line.substring(1, line.indexOf(')'));
-                }
+                    int biasRating = politicalBiasAPICall(articleExtract);
+                    System.out.println("API call passed");
+                    String topic = req.queryParams("topic");
+                    int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
+                    long currentDate = (new Date().getTime())/ 1000;
+
+
+                    Sql2oArticleDao articleDao = new Sql2oArticleDao(sql2o);
+                    Article article = new Article(url, title, newsSource, biasRating, topic, numWords);
+                    articleDao.add(article);
+                    System.out.println(article.toString());
+                    System.out.println("new article added to DB");
+                    UserReadings userReading = new UserReadings(u.getUserID(), article.getArticleID(), currentDate);
+                    new Sql2oUserReadingsDao(sql2o).add(userReading);
+                    System.out.println("new UReading added to DB");
+                    List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
+                    Statistics stats = extractFromStatsList(statsList);
+                    System.out.println("user stats found");
+                    List<UserReadings> ur = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(u.getUserID());
+                    System.out.println("user readings retrieved");
+                    List<Article> arts = new ArrayList<>();
+                    for(UserReadings r : ur) {
+                        System.out.println(r.getArticleID());
+                        List<Article> artsList = articleDao.find(r.getArticleID());
+                        Article art = extractFromArtsList(artsList);
+                        System.out.println(art.toString());
+                        arts.add(art);
+                        System.out.println("article added");
+                    }
+
+                    new Sql2oStatisticsDao(sql2o).update(stats.getID(), arts);
+                    System.out.println("stats updated");
+              } catch (DaoException ex) {
+                    System.out.print("catch statement");
+                    model.put("failedFind", "true");
+              }
+            } else {
+                  model.put("failedFind", "true");
             }
-            if (newsSource == null) {
-                newsSource = "News Source could not be identified";
-            }
-
-            /*
-            Get bias rating for article by making call to Political Bias API
-            API provided by BiPartisanPress.com team and all credit goes to them.
-             */
-            int biasRating = politicalBiasAPICall(articleExtract);
-
-            String topic = req.queryParams("topic");
-            double timeOnArticle = Double.parseDouble(req.queryParams("timeOnArticle"));
-            int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
-            int timesVisited = Integer.parseInt(req.queryParams("timesVisited"));
-
-            Article article = new Article(url, title, newsSource, biasRating, topic,
-                    timeOnArticle, numWords, timesVisited);
-            new Sql2oArticleDao(getSql2o()).add(article);
+             
             res.status(201);
-            res.type("application/json");
-            return new Gson().toJson(article.toString());
+            res.type("text/html");
+            res.redirect("/");
+            return new ModelAndView(model, "public/templates/addarticle.vm");
         });
 
         //delarticle route; delete an article
         post("/delarticle", (req, res) -> {
             String url = req.queryParams("url");
-            new Sql2oArticleDao(getSql2o()).delete("url");
-            res.status(201);
+            new Sql2oArticleDao(sql2o).delete("url");
+            res.status(200);
             res.type("application/json");
             return new Gson().toJson(url);
         });
 
         //stats route; return all user stats
         get("/stats", (req, res) -> {
-            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(getSql2o());
-            String results = new Gson().toJson(sql2oStatsDao.listAll());
-            res.type("application/json");
+            String username = req.cookie("username");
+            User u = new Sql2oUserDao(sql2o).find(username);
+            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
+
+            String results = new Gson().toJson(sql2oStatsDao.find(u.getUserID()));
+            res.type("text/html");
             res.status(200);
             return results;
         });
@@ -380,7 +487,7 @@ public class Server {
 //            int userID = Integer.parseInt(req.queryParams("userID"));
 //
 //            Statistics stats = new Statistics(biasRating, biasName, favNewsSource, favTopic, execSummary, userID);
-//            new Sql2oStatisticsDao(getSql2o()).add(stats);
+//            new Sql2oStatisticsDao(sql2o).add(stats);
 //            res.status(201);
 //            res.type("application/json");
 //            return new Gson().toJson(stats.toString());
@@ -389,7 +496,7 @@ public class Server {
         //delstats route; delete a user's stats
         post("/delstats", (req, res) -> {
             int userID = Integer.parseInt(req.queryParams("userID"));
-            new Sql2oStatisticsDao(getSql2o()).delete(userID);
+            new Sql2oStatisticsDao(sql2o).delete(userID);
             res.status(201);
             res.type("application/json");
             return new Gson().toJson(userID);

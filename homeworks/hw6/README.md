@@ -1,17 +1,11 @@
 # MyBooksApp
 
-In this homework, we added post methods to the /authors and 
-/books roots so that fields could be filled to add relevant
-entries, automatically updating them on the page as they 
-are entered. We assumed that fields were complete and 
-added validations based on the HW5 instructions (i.e. author
-name is of form "first second third..." and isbn follows
-the given convention).
+Heroku app link: https://secret-tor-59728.herokuapp.com/
 
-Work Done:  
-* Kevin: validate.js, books.vm, addbook.vm, readme
-* Connor: post/get methods in server.java
-* Simon: addauthor.vm, authors.vm, delauthor.js
-* Montese: mybooksapp.css, minor html formatting
-* Joao: cleanup code, formatting, bug fixing
-* Morgan: nothing
+HW6 submission
+
+In this homework the MyBooksApp was adapted to be hosted out of a heroku server as opposed to a simple localhost as well as made so that auto-deployment and updating of the app with Github action was completed with each push to the master branch.
+
+Some specific changes to the code were also needed in order to adapt the code from SQLite to PostgreSQL which is what works with non-local databases.
+
+A few challenges that we had were with certain application errors when running the heroku app, however those were mostly related to how we were setting up the database and were eventually resolved.

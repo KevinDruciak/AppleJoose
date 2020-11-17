@@ -1,13 +1,15 @@
 package persistence;
 
 import exception.DaoException;
+import model.Article;
 import model.Statistics;
-import model.User;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Sql2oStatisticsDao implements StatisticsDao {
     private final Sql2o sql2o;
@@ -17,7 +19,7 @@ public class Sql2oStatisticsDao implements StatisticsDao {
     @Override
     public int add(Statistics stats) throws DaoException {
         try (Connection con = sql2o.open()) {
-            String query = "INSERT INTO Statistics (id, biasRating, biasName, " +
+            String query = "INSERT OR IGNORE INTO Statistics (id, biasRating, biasName, " +
                     "favNewsSource, favTopic, execSummary, userID)" +
                     "VALUES (NULL, :biasRating, :biasName, :favNewsSource," +
                     " :favTopic, :execSummary, :userID)";
@@ -28,6 +30,7 @@ public class Sql2oStatisticsDao implements StatisticsDao {
             return id;
         }
         catch (Sql2oException ex) {
+            System.out.print("add user stats throwing DAOEX");
             throw new DaoException();
         }
     }
@@ -59,89 +62,86 @@ public class Sql2oStatisticsDao implements StatisticsDao {
     }
 
     @Override
-    public boolean update(Statistics stats) throws DaoException {
-        try (Connection con = sql2o.open()){
-            String sql = "UPDATE Statistics " +
-                    "SET biasRating = :biasRating, biasName = :biasName, " +
-                    "favNewsSource = :favNewsSource, favTopic = :favTopic, " +
-                    "execSummary = :execSummary " +
-                    "WHERE userID = :userID";
-            con.createQuery(sql)
-                    .addParameter("biasRating", stats.getBiasRating())
-                    .addParameter("biasName", stats.getBiasName())
-                    .addParameter("favNewsSource", stats.getFavNewsSource())
-                    .addParameter("favTopic", stats.getFavTopic())
-                    //.addParameter("recentArticles", stats.getRecentArticles())
-                    .addParameter("execSummary", stats.getExecSummary())
-                    .addParameter("userID", stats.getUserID())
-                    .executeUpdate();
+    public boolean update(int id, List<Article> userHistory) throws DaoException {
+        String sql = "SELECT * FROM Statistics WHERE id = :id";
+        List<Statistics> statsList;
+        try (Connection con = sql2o.open()) {
+            statsList = con.createQuery(sql)
+                    .addParameter("id", id)
+                    .executeAndFetch(Statistics.class);
+            Statistics stat = statsList.get(0);
 
-            return true;
+            double biasTotal = 0;
+            double numArticles = 0;
+            Map<String, Integer> newsSources = new HashMap<>();
+            Map<String, Integer> topics = new HashMap<>();
+
+            for (Article a : userHistory) {
+                biasTotal += a.getBiasRating();
+                numArticles++;
+                Integer i = newsSources.get(a.getNewsSource());
+                newsSources.put(a.getNewsSource(), i == null ? 1 : i + 1);
+                Integer j = topics.get(a.getTopic());
+                topics.put(a.getTopic(), j == null ? 1 : j + 1);
+            }
+
+            Map.Entry<String, Integer> favNews = null;
+            Map.Entry<String, Integer> favTopic = null;
+
+            for (Map.Entry<String, Integer> e : newsSources.entrySet()) {
+                if (favNews == null || e.getValue() > favNews.getValue()) {
+                    favNews = e;
+                }
+            }
+
+            for (Map.Entry<String, Integer> h : topics.entrySet()) {
+                if (favTopic == null || h.getValue() > favTopic.getValue()) {
+                    favTopic = h;
+                }
+            }
+
+            stat.setFavTopic(favTopic.getKey());
+            stat.setFavNewsSource(favNews.getKey());
+            stat.setBiasRating((int) Math.round(biasTotal / numArticles));
+            stat.setBiasName(stat.createBiasName(stat.getBiasRating()));
+            stat.setExecSummary(stat.createExecSummary());
+
+            sql = "UPDATE Statistics SET biasRating = :biasRating, " +
+                    "biasName = :biasName, favNewsSource = :favNewsSource, " +
+                    "favTopic = :favTopic, execSummary = :execSummary " +
+                    "WHERE id = :id";
+
+            con.createQuery(sql)
+                    .addParameter("biasRating", stat.getBiasRating())
+                    .addParameter("biasName", stat.getBiasName())
+                    .addParameter("favNewsSource", stat.getFavNewsSource())
+                    .addParameter("favTopic", stat.getFavTopic())
+                    .addParameter("execSummary", stat.getExecSummary())
+                    .addParameter("id", id)
+                    .executeUpdate();
         }
         catch (Sql2oException ex) {
+            System.out.println(ex.toString());
+            throw new DaoException();
+        }
+
+        return true;
+    }
+
+    @Override
+    public List<Statistics> find(int userID) throws DaoException {
+        String sql = "SELECT * FROM Statistics WHERE userID = :userID";
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .addParameter("userID", userID)
+                    .executeAndFetch(Statistics.class);
+        }
+        catch (Sql2oException ex) {
+            System.out.println("find stats throwing dao ex");
             throw new DaoException();
         }
     }
 
+    //WHAT FOLLOWS ARE THE UPDATE FUNCTIONS FOR UPDATING STATISTICS ROW IN DATABASE
 
-
-    //get a user's bias rating
-    public int getBias(int userID) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String q = "SELECT biasRating FROM Statistics WHERE userID = :userID";
-            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(Integer.class);
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-            System.out.println("TEST IF EXCEPTION");
-        }
-        return -404; //temp return value
-    }
-
-    //get a user's bias name
-    public String getBiasName(int userID) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String q = "SELECT biasNAME FROM Statistics WHERE userID = :userID";
-            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(String.class);
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-            System.out.println("TEST IF EXCEPTION");
-        }
-        return "N/A"; //temp return value
-    }
-
-    //get a user's favorite news source
-    public String getFavNews(int userID) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String q = "SELECT favNewsSource FROM Statistics WHERE userID = :userID";
-            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(String.class);
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-            System.out.println("TEST IF EXCEPTION");
-        }
-        return "N/A"; //temp return value
-    }
-
-    //get a user's favorite topic
-    public String getFavTopic(int userID) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String q = "SELECT favTopic FROM Statistics WHERE userID = :userID";
-            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(String.class);
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-            System.out.println("TEST IF EXCEPTION");
-        }
-        return "N/A"; //temp return value
-    }
-
-    //get a user's summary
-    public String getExecSummary(int userID) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String q = "SELECT execSummary FROM Statistics WHERE userID = :userID";
-            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(String.class);
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-            System.out.println("TEST IF EXCEPTION");
-        }
-        return "N/A"; //temp return value
-    }
 }

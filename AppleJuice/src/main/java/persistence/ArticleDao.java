@@ -32,4 +32,11 @@ public interface ArticleDao {
      * If something goes wrong with query execution, DaoException is thrown.
      */
     boolean update(Article article) throws DaoException;
+
+    /**
+     * finds article in database
+     * If sql query is successfully executed, true is returned
+     * If something goes wrong with query execution, DaoException is thrown.
+     */
+    List<Article> find(int articleID) throws DaoException;
 }

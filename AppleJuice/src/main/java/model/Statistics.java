@@ -12,7 +12,6 @@ public class Statistics {
     private String biasName;
     private String favNewsSource;
     private String favTopic;
-    private List<Article> recentArticles = new ArrayList<>();
     private String execSummary;
     private int userID;
 
@@ -55,6 +54,18 @@ public class Statistics {
 
     public void setID(int id) { this.id = id; }
 
+    public int getID() { return this.id; }
+
+    public void setBiasRating(int biasRating) { this.biasRating = biasRating; }
+
+    public void setFavNewsSource(String favNews) { this.favNewsSource = favNews; }
+
+    public void setFavTopic(String favTopic) { this.favTopic = favTopic; }
+
+    public void setBiasName(String biasName) { this.biasName = biasName; }
+
+    public void setExecSummary(String execSummary) { this.execSummary = execSummary; }
+
     public int getBiasRating() { return this.biasRating; }
 
     public String getBiasName() { return this.biasName; }
@@ -62,8 +73,6 @@ public class Statistics {
     public String getFavNewsSource() { return this.favNewsSource; }
 
     public String getFavTopic() { return this.favTopic; }
-
-    public List<Article> getRecentArticles() { return this.recentArticles; }
 
     public String getExecSummary() { return this.execSummary; }
 
@@ -117,7 +126,8 @@ public class Statistics {
         return text;
     }
 
-    public void updateBiasRating(List<Article> userHistory) {
+    /*
+    public void updateBiasRating(List<UserReadings> userHistory) {
         double biasTotal = 0;
         double numArticles = 0;
 
@@ -133,7 +143,7 @@ public class Statistics {
         this.biasName = createBiasName(this.biasRating);
     }
 
-    public void updateFavNewsSource(List<Article> userHistory) {
+    public void updateFavNewsSource(List<UserReadings> userHistory) {
         Map<String, Integer> map = new HashMap<>();
 
         for (Article a : userHistory) {
@@ -152,12 +162,12 @@ public class Statistics {
         this.favNewsSource = max.getKey();
     }
 
-    public void updateFavTopic(List<Article> userHistory) {
+    public void updateFavTopic(List<UserReadings> userHistory) {
         Map<String, Integer> map = new HashMap<>();
 
-        for (Article a : userHistory) {
-            Integer i = map.get(a.getTopic());
-            map.put(a.getTopic(), i == null ? 1 : i + 1);
+        for (UserReadings r : userHistory) {
+            Integer i = map.get(r.getArticle());
+            map.put(r.getArticle(), i == null ? 1 : i + 1);
         }
 
         Map.Entry<String, Integer> max = null;
@@ -171,17 +181,11 @@ public class Statistics {
         this.favNewsSource = max.getKey();
     }
 
-    public void updateRecentArticles(List<Article> userHistory) {
+    public void updateRecentArticles(List<UserReadings> userHistory) {
         List<Article> recArticles = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            recArticles.add(userHistory.get(userHistory.size() - (1 + i)));
-        }
+            recArticles.add(userHistory.get(userHistory.size()
 
-        this.recentArticles = recArticles;
-    }
-
-    public void updateExecSummary() {
-        this.execSummary = this.createExecSummary();
-    }
+     */
 }

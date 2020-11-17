@@ -17,23 +17,9 @@ public class Sql2oUserDao implements UserDao {
 
     @Override
     public int add(User user) throws DaoException {
-//        try (Connection con = sql2o.open()) {
-//            String name = user.getUserName();
-//            String q = "SELECT userID FROM Users WHERE name = :name";
-//            int i = con.createQuery(q).addParameter("name", name).executeAndFetchFirst(Integer.class);
-//            if (i > 0) {
-//                con.close();
-//                return i;
-//            } else {
-//                con.close();
-//            }
-//        } catch (Sql2oException | NullPointerException e) {
-//            //do nothing
-//        }
         try (Connection con = sql2o.open()) {
             String pass = user.getEncryption();
             String query = "INSERT INTO Users (userName, password) VALUES (:userName, '" + pass + "')";
-
             int id = (int) con.createQuery(query, true)
                     .bind(user)
                     .executeUpdate().getKey();
@@ -69,8 +55,21 @@ public class Sql2oUserDao implements UserDao {
         return "-404"; //temp return value
     }
 
-    //find existing user; return user's id if exists, else -1
-    public int find(User user) throws DaoException {
+    //find existing user by userName; return user
+    @Override
+    public User find(String userName) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            String q = "SELECT * FROM Users WHERE userName = :userName";
+            return con.createQuery(q)
+                    .addParameter("userName", userName)
+                    .executeAndFetchFirst(User.class);
+        } catch (Sql2oException | NullPointerException e) {
+            throw new DaoException();
+        }
+    }
+  
+    //find existing user by User; return user's id if exists, else -1
+    public int findID(User user) throws DaoException {
         try (Connection con = sql2o.open()) {
             String userName = user.getUserName();
             String q = "SELECT userID FROM Users WHERE userName = '" + userName + "'";
@@ -123,10 +122,11 @@ public class Sql2oUserDao implements UserDao {
                     .addParameter("userID", user.getUserID())
                     .executeUpdate();
 
-            return true;
         }
         catch (Sql2oException ex) {
             throw new DaoException();
         }
+
+        return true;
     }
 }

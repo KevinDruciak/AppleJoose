@@ -1,0 +1,20 @@
+#set( $title = "TEST: Manually Add an Article" )
+#parse("public/templates/top.vm")
+
+<h1>Add an article</h1>
+<form action="addarticle" method="post" class="content" onsubmit="return passValues();">
+    <div>
+        <label for="url">Article Topic:</label>
+        <input type="text" placeholder="topic" name="topic" id="topic" />
+    </div>
+    <div>
+        <label for="url">Article Url:</label>
+        <input type="text" placeholder="url" name="url" id="url" />
+    </div>
+    <div id="divSubmit">
+        <input type="submit" value="Enter" class="submit" />
+    </div>
+</form>
+
+<script src="../js/passUrl.js"></script>
+#parse("public/templates/bottom.vm")

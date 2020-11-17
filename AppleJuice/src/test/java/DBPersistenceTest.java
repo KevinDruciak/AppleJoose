@@ -27,6 +27,9 @@ public class DBPersistenceTest {
         sql = "DROP TABLE IF EXISTS Users";
         st.execute(sql);
 
+        sql = "DROP TABLE IF EXISTS UserReadings";
+        st.execute(sql);
+
         sql = "DROP TABLE IF EXISTS Statistics";
         st.execute(sql);
     }
