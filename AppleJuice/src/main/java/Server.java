@@ -152,33 +152,35 @@ public class Server {
 
         // root route; check that a user is logged in
         get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<String, Object>();
-//            if (req.cookie("username") != null) {
-//                model.put("username", req.cookie("username"));
-//                //model.put("password", req.cookie("password"));
-//
-//                String username = req.cookie("username");
-//                User temp = new User(username, null); //changed constrcutor
-//                try {
-//                    int userID = new Sql2oUserDao(sql2o).find(temp);
-//                    //TODO FIX
-//                    if (userID > 0) {
-//                        model.put("added", "true");
-//                        model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
-//                        model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
-//                        model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
-//                        model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
-//                        model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
-//                    }
-//                    else {
-//                        model.put("failedFind", "true");
-//                    }
-//                }
-//                catch (DaoException ex) {
-//                    model.put("failedFind", "true");
-//                }
-//
-//            }
+            Map<String, Object> model = new HashMap<>();
+            if (req.cookie("username") != null) {
+                model.put("username", req.cookie("username"));
+                //model.put("password", req.cookie("password"));
+
+                String username = req.cookie("username");
+                User temp = new User(username, null); //changed constructor
+                try {
+                    //int userID = new Sql2oUserDao(sql2o).find(temp);
+                    int userID = new Sql2oUserDao(sql2o).findNAME(username);
+                    System.out.println(userID);
+                    if (userID > 0) {
+                        model.put("added", "true");
+                        model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
+                        model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
+                        model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
+                        model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
+                        model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
+                    }
+                    else {
+                        model.put("failedFind", "true");
+                    }
+                }
+                catch (DaoException ex) {
+                    model.put("failedFind", "true");
+                    System.out.println("FAILED TRY /");
+                }
+
+            }
             res.status(200);
             res.type("text/html");
             return new ModelAndView(model, "public/templates/index.vm");
@@ -216,7 +218,13 @@ public class Server {
                     String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
                     User user = new User(username, bcryptHash);
                     //userDao.add(user);
-                    new Sql2oUserDao(getSql2o()).add(user);
+                    int userID = new Sql2oUserDao(getSql2o()).add(user);
+
+                    Statistics stats = new Statistics(0, "Neutral Bias",
+                            "N/A", "N/A", "You have" +
+                            " Neutral Bias. Your favorite news source is N/A." +
+                            " Your favorite topic to read about is N/A", userID);
+                    int idStats = new Sql2oStatisticsDao(sql2o).add(stats);
 
                     //Sql2oArticleDao artDao = new Sql2oArticleDao(sql2o);
                     //Article art = new Article(username, bcryptHash, username, 123, username, 123, 123, 123);

@@ -84,6 +84,20 @@ public class Sql2oUserDao implements UserDao {
         return -1;
     }
 
+    public int findNAME(String username) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            String q = "SELECT userID FROM Users WHERE userName = :username";
+            int i = con.createQuery(q).addParameter("userName", username).executeAndFetchFirst(Integer.class);
+            System.out.println(i);
+            if (i > 0) {
+                return i;
+            }
+        } catch (Sql2oException | NullPointerException e) {
+            //do nothing
+        }
+        return -1;
+    }
+
     @Override
     public List<User> listAll() throws DaoException {
         String sql = "SELECT * FROM Users";
