@@ -20,17 +20,24 @@ public class Sql2oArticleDao implements ArticleDao {
 
     @Override
     public String add(Article article) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String query = "INSERT OR IGNORE INTO Articles (articleID, url, title, newsSource, " +
+        try (Connection con = sql2o.beginTransaction()) {
+            String query = "INSERT INTO Articles (url, title, newsSource, " +
                     "biasRating, topic, numWords)" +
-                    "VALUES (NULL, :url, :title, :newsSource, :biasRating, " +
+                    "VALUES (:url, :title, :newsSource, :biasRating, " +
                     ":topic, :numWords)";
             int id = (int) con.createQuery(query, true)
-                    .bind(article)
+                    .addParameter("url", article.getUrl())
+                    .addParameter("title", article.getTitle())
+                    .addParameter("newsSource", article.getNewsSource())
+                    .addParameter("biasRating", (int) article.getBiasRating())
+                    .addParameter("topic", article.getTopic())
+                    .addParameter("numWords", (int) article.getNumWords())
                     .executeUpdate().getKey();
             article.setID(id);
+            con.commit();
             return article.getUrl();
         } catch (Sql2oException ex) {
+            System.out.println(ex.toString());
             throw new DaoException();
         }
     }

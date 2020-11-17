@@ -17,26 +17,15 @@ public class Sql2oUserDao implements UserDao {
 
     @Override
     public int add(User user) throws DaoException {
-        /*try (Connection con = sql2o.open()) {
-            String name = user.getUserName();
-            String q = "SELECT userID FROM Users WHERE name = :name";
-            int i = con.createQuery(q)
-                    .addParameter("name", name)
-                    .executeAndFetchFirst(Integer.class);
-            if (i > 0) {
-                return i;
-            }
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-        }*/
-        try (Connection con = sql2o.open()) {
-            String query = "INSERT OR IGNORE INTO Users (userName)" +
-                    "VALUES (:userName)";
+        try (Connection con = sql2o.beginTransaction()) {
+            String query = "INSERT INTO Users (userName, userPassword)" +
+                    "VALUES (:userName, :userPassword)";
             int id = (int) con.createQuery(query, true)
-                    .bind(user)
+                    .addParameter("userName", user.getUserName())
+                    .addParameter("userPassword", user.getUserPassword())
                     .executeUpdate().getKey();
             user.setUserID(id);
-
+            con.commit();
             return id;
         }
     }
@@ -82,11 +71,9 @@ public class Sql2oUserDao implements UserDao {
     public boolean update(User user) throws DaoException {
         try (Connection con = sql2o.open()) {
             String sql = "UPDATE Users " +
-                    "SET userName = :userName, userStats = :userStats,"+
-                    " userHistory = :userHistory WHERE userID = :userID";
+                    "SET userName = :userName, userHistory = :userHistory WHERE userID = :userID";
             con.createQuery(sql)
                     .addParameter("userName", user.getUserName())
-                    .addParameter("userStats", user.getUserStats())
                     .addParameter("userHistory", user.getUserHistory())
                     .addParameter("userID", user.getUserID())
                     .executeUpdate();

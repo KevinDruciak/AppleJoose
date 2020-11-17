@@ -55,6 +55,7 @@ public class APITests {
         st.execute(sql);
 
     }
+    /*
 
     @Test
     public void testAddUser() throws IOException {
@@ -103,7 +104,7 @@ public class APITests {
                 ":1}]", resBody);
     }
 
-    /*@Test
+    @Test
     public void testAddStatistics() throws IOException {
         RequestBody postBody = new FormBody.Builder()
                 .add("userName", "Kevin Druciak")
@@ -140,5 +141,6 @@ public class APITests {
                 "\"title\":\"Apple Juice\",\"newsSource\":\"NYT\",\"biasRating\":7," +
                 "\"topic\":\"OOSE\",\"timeOnArticle\":0.0,\"numWords\":240,\"timesVisited\"" +
                 ":1}]", resBody);
-    }*/
+    }
+    */
 }

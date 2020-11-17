@@ -9,11 +9,13 @@ import java.util.Objects;
 public class User {
     private int userID;
     private String userName;
-    private Statistics userStats;
+    private String userPassword;
+    private int userStatsID;
     private List<UserReadings> userHistory;
 
-    public User(String userName) {
+    public User(String userName, String Password) {
         this.userName = userName;
+        this.userPassword = Password;
         this.userHistory = new ArrayList<>();
     }
 
@@ -41,11 +43,17 @@ public class User {
         //this.userStats = new Statistics(this.userID);
     }
 
+    public void setUserPassword(String oldPassword, String newPassword) {
+        if (oldPassword == this.userPassword) {
+            this.userPassword = newPassword;
+        }
+    }
+
     public int getUserID() { return this.userID; }
 
     public String getUserName() { return this.userName; }
 
-    public Statistics getUserStats() { return userStats; }
+    public String getUserPassword() { return userPassword; }
 
     public List<UserReadings> getUserHistory() { return this.userHistory; }
 

@@ -13,11 +13,15 @@ import model.Statistics;
 import model.UserReadings;
 import okhttp3.*;
 
+import java.sql.Connection;
 import java.util.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.sql2o.Sql2o;
+import org.sql2o.Sql2oException;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
 import org.xml.sax.InputSource;
@@ -30,21 +34,413 @@ import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 
 import static spark.Spark.*;
+import java.net.*;
+import java.sql.*;
+import java.util.Date;
 
 public class Server {
+    final static int PORT = 7000;
 
-    private static Sql2o getSql2o() {
-        // set on foreign keys
-        SQLiteConfig config = new SQLiteConfig();
-        config.enforceForeignKeys(true);
-        config.setPragma(SQLiteConfig.Pragma.FOREIGN_KEYS, "ON");
-
-        // create data source
-        SQLiteDataSource ds = new SQLiteDataSource(config);
-        ds.setUrl("jdbc:sqlite:AppleJuice.db");
-
-        return new Sql2o(ds);
+    private static int getHerokuAssignedPort() {
+        String herokuPort = System.getenv("PORT");
+        if (herokuPort != null) {
+            return Integer.parseInt(herokuPort);
+        }
+        return PORT;
     }
+
+    private static Connection getConnection() throws URISyntaxException, SQLException, ClassNotFoundException {
+        String databaseUrl = System.getenv("DATABASE_URL");
+
+        URI dbUri = new URI(databaseUrl);
+        Class.forName("org.postgresql.Driver");
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort()
+                + dbUri.getPath() + "?sslmode=require";
+        System.out.println(dbUrl);
+        return DriverManager.getConnection(dbUrl, username, password);
+    }
+
+    private static void workWithDatabase() {
+        try (Connection conn = getConnection()) {
+            String sql;
+            Statement st = conn.createStatement();
+
+            if ("SQLite".equalsIgnoreCase(conn.getMetaData().getDatabaseProductName())) {
+                sql = "CREATE TABLE IF NOT EXISTS Articles (articleID INTEGER PRIMARY KEY, " +
+                        "url VARCHAR(1000) UNIQUE, title VARCHAR(100), newsSource VARCHAR(100), " +
+                        "biasRating INTEGER, topic VARCHAR(50), " +
+                        "numWords INTEGER);";
+                st.execute(sql);
+
+                sql = "CREATE TABLE IF NOT EXISTS Users (userID INTEGER PRIMARY KEY, " +
+                        "userName VARCHAR(50) UNIQUE);";
+                st.execute(sql);
+
+                sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER PRIMARY KEY, biasRating INTEGER, " +
+                        "biasNAME VARCHAR(100), favNewsSource VARCHAR(100), favTopic VARCHAR(50), " +
+                        "execSummary VARCHAR(1000), " +
+                        "userID INTEGER NOT NULL UNIQUE, FOREIGN KEY(userID) REFERENCES Users(userID) " +
+                        "ON UPDATE CASCADE ON DELETE CASCADE);";
+                st.execute(sql);
+
+                sql = "CREATE TABLE IF NOT EXISTS UserReadings (userID INTEGER NOT NULL, " +
+                        "articleID INTEGER NOT NULL, dateRead INTEGER NOT NULL, readingID INTEGER, " +
+                        "FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE)";
+                st.execute(sql);
+
+                sql = "INSERT INTO Users(userID, userName, userPassword, userStatsID)" +
+                        " VALUES (1, 'admin', 'adminPassword', 1);";
+                st.execute(sql);
+
+                sql = "INSERT INTO Statistics (id, biasRating, biasName,favNewsSource," +
+                        " favTopic, execSummary, userID) VALUES (1, 0, 'Minimal Bias'," +
+                        " 'CNN', 'Politics', 'ADMIN SUMMARY', 1);";
+                st.execute(sql);
+            } else {
+                sql = "CREATE TABLE IF NOT EXISTS Articles (articleID serial PRIMARY KEY, " +
+                        "url VARCHAR(1000) UNIQUE, title VARCHAR(1000), newsSource VARCHAR(1000), " +
+                        "biasRating INTEGER, topic VARCHAR(50), " +
+                        "numWords INTEGER);";
+                st.execute(sql);
+
+                sql = "CREATE TABLE IF NOT EXISTS Users (userID serial PRIMARY KEY, " +
+                        "userName VARCHAR(50) UNIQUE, userPassword VARCHAR(50), userStatsID INTEGER UNIQUE);";
+                st.execute(sql);
+
+                sql = "CREATE TABLE IF NOT EXISTS Statistics (id serial PRIMARY KEY, biasRating INT, " +
+                        "biasName TEXT, favNewsSource TEXT, favTopic TEXT, " +
+                        "execSummary VARCHAR(1000), " +
+                        "userID INTEGER NOT NULL UNIQUE, FOREIGN KEY(userID) REFERENCES Users(userID) " +
+                        "ON UPDATE CASCADE ON DELETE CASCADE);";
+                st.execute(sql);
+
+                sql = "CREATE TABLE IF NOT EXISTS UserReadings (articleID INTEGER NOT NULL, " +
+                        "userID INTEGER NOT NULL, dateRead BIGINT NOT NULL, readingID serial, " +
+                        "FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE)";
+                st.execute(sql);
+            }
+        } catch (SQLException | URISyntaxException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Sql2o getSql2o() throws URISyntaxException {
+        /*
+        Get Heroku url for web app
+         */
+        String databaseUrl = System.getenv("DATABASE_URL");
+
+        URI dbUri = new URI(databaseUrl);
+
+        String username = dbUri.getUserInfo().split(":")[0];
+        String password = dbUri.getUserInfo().split(":")[1];
+        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':'
+                + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
+
+        return new Sql2o(dbUrl, username, password);
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+        port(getHerokuAssignedPort());
+        workWithDatabase();
+        Sql2o sql2o = getSql2o();
+
+        staticFiles.location("/public");
+
+        post("/", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+
+            String username = req.queryParams("username");
+            String password = req.queryParams("password");
+            res.cookie("username", username);
+            res.cookie("password", password);
+
+            User user = new User(username, password);
+            System.out.println("entering try");
+            try {
+                Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+                System.out.println("user DAO created");
+                if (userDao.find(user.getUserName()) == null) {
+                    System.out.println("did not find user");
+                    int id = userDao.add(user);
+                    System.out.println("added new user");
+                    Statistics userStats = new Statistics(0, "Neutral Bias",
+                            "New York Times", "Economy", "You have" +
+                            " Neutral. Your favorite news source is New York Times." +
+                            " Your favorite topic to read about is Economy", id);
+
+                    int idStats = new Sql2oStatisticsDao(sql2o).add(userStats);
+                    System.out.println("added new user stats");
+
+                    model.put("addedNewUser", "true");
+                }
+                else {
+                    model.put("existingUser", "true");
+                }
+            }
+            catch (DaoException e) {
+                System.out.println("could not add new user stats");
+                model.put("failed", "true");
+            }
+
+            res.redirect("/");
+            return null;
+        });
+
+        // root route; check that a user is logged in
+        get("/", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+            if (req.cookie("username") != null) {
+                model.put("username", req.cookie("username"));
+                model.put("password", req.cookie("password"));
+
+                String username = req.cookie("username");
+                User u = new Sql2oUserDao(sql2o).find(username);
+
+                if (username != null) {
+                    List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
+                    Statistics stats = extractFromStatsList(statsList);
+
+                    List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
+                    List<Article> articles = new ArrayList<>();
+
+                    if (uReadings != null) {
+                        for (UserReadings ur : uReadings) {
+                            List<Article> artList = new Sql2oArticleDao(sql2o).find(ur.getArticleID());
+                            Article art = extractFromArtsList(artList);
+                            articles.add(art);
+                        }
+                    } else {
+                        articles = null;
+                    }
+
+                    model.put("biasRating", stats.getBiasRating());
+                    model.put("biasName", stats.getBiasName());
+                    model.put("favNews", stats.getFavNewsSource());
+                    model.put("favTopic", stats.getFavTopic());
+                    model.put("execSummary", stats.getExecSummary());
+                    model.put("Articles", articles);
+
+                } /*else {
+                    try {
+
+                        Statistics stats = new Statistics(0, "Neutral Bias",
+                                "New York Times", "Economy", "You have" +
+                                " Neutral. Your favorite news source is New York Times." +
+                                " Your favorite topic to read about is Economy", u.getUserID());
+
+                        int idStats = new Sql2oStatisticsDao(sql2o).add(stats);
+
+                        List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
+                        List<Article> articles = new ArrayList<>();
+
+                        if (uReadings != null) {
+                            for (UserReadings ur : uReadings) {
+                                List<Article> artList = new Sql2oArticleDao(sql2o).find(ur.getArticleID());
+                                Article art = extractFromArtsList(artList);
+                                articles.add(art);
+                            }
+                        }
+
+                        if (idStats > 0) {
+
+                            model.put("added", "true");
+                            model.put("biasRating", stats.getBiasRating());
+                            model.put("biasName", stats.getBiasName());
+                            model.put("favNews", stats.getFavNewsSource());
+                            model.put("favTopic", stats.getFavTopic());
+                            model.put("execSummary", stats.getExecSummary());
+                            model.put("Articles", articles);
+
+                        } else {
+                            model.put("failedFind", "true");
+                        }
+                    } catch (DaoException ex) {
+                        model.put("failedFind", "true");
+                    }
+                }*/
+            }
+
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/index.vm");
+        }, new VelocityTemplateEngine());
+
+        // users route; return list of users as JSON
+        get("/users", (req, res) -> {
+            Sql2oUserDao sql2oUser = new Sql2oUserDao(sql2o);
+            String results = new Gson().toJson(sql2oUser.listAll());
+            res.type("application/json");
+            res.status(200);
+            return results;
+        });
+
+        //adduser route; add a new user
+        post("/adduser", (req, res) -> {
+            String userName = req.queryParams("userName");
+            String password = req.queryParams("password");
+            User u = new User(userName, password);
+            new Sql2oUserDao(sql2o).add(u);
+            res.status(201);
+            res.type("application/json");
+            return new Gson().toJson(u.toString());
+        });
+
+        //deluser route; delete an article
+        post("/deluser", (req, res) -> {
+            int userID = Integer.parseInt(req.queryParams("userID"));
+            new Sql2oUserDao(sql2o).delete(userID);
+            res.status(201);
+            res.type("application/json");
+            return new Gson().toJson(userID);
+        });
+
+        //articles route; return list of articles as JSON
+        get("/articles", (req, res) -> {
+            Sql2oArticleDao article = new Sql2oArticleDao(sql2o);
+            String results = new Gson().toJson(article.listAll());
+            res.type("text/html");
+            res.status(200);
+            return results;
+        });
+
+        //addArticle route;
+        get("/addarticle", (req, res) -> {
+            if(req.cookie("username") == null){
+                res.redirect("/");
+            }
+
+            Map<String, Object> model = new HashMap<String, Object>();
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/addarticle.vm");
+        }, new VelocityTemplateEngine());
+
+        //addarticle route; add a new article
+        post("/addarticle", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+            System.out.println("Article add started");
+            if (req.cookie("username") != null) {
+                model.put("username", req.cookie("username"));
+
+                String username = req.cookie("username");
+                try {
+                    User u = new Sql2oUserDao(sql2o).find(username);
+                    String url = req.queryParams("url"); //chrome.history api call
+                    String articleExtract = extractText(url); //extracts article text as well as title and other info
+                    String[] parsedText = articleExtract.split("\\r?\\n");
+                    /*
+                    Get title from extracted text which is almost always first line
+                    */
+                    String title = parsedText[0];
+
+                    /*
+                    Get news source from extracted url host name
+                     */
+                    String newsSource = new URL(url).getHost();
+                    newsSource = newsSource.replace("www.", "");
+                    newsSource = newsSource.replace(".com", "");
+                    if (newsSource == null) {
+                        newsSource = "News Source could not be identified";
+                    }
+
+                    int biasRating = politicalBiasAPICall(articleExtract);
+                    System.out.println("API call passed");
+                    String topic = req.queryParams("topic");
+                    int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
+                    long currentDate = (new Date().getTime())/ 1000;
+
+
+                    Sql2oArticleDao articleDao = new Sql2oArticleDao(sql2o);
+                    Article article = new Article(url, title, newsSource, biasRating, topic, numWords);
+                    articleDao.add(article);
+                    System.out.println(article.toString());
+                    System.out.println("new article added to DB");
+                    UserReadings userReading = new UserReadings(article.getArticleID(), u.getUserID(), currentDate);
+                    new Sql2oUserReadingsDao(sql2o).add(userReading);
+                    System.out.println("new UReading added to DB");
+                    List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
+                    Statistics stats = extractFromStatsList(statsList);
+                    System.out.println("user stats found");
+                    List<UserReadings> ur = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(u.getUserID());
+                    System.out.println("user readings retrieved");
+                    List<Article> arts = new ArrayList<>();
+                    for(UserReadings r : ur) {
+                        System.out.println(r.getArticleID());
+                        List<Article> artsList = articleDao.find(r.getArticleID());
+                        Article art = extractFromArtsList(artsList);
+                        System.out.println(art.toString());
+                        arts.add(art);
+                        System.out.println("article added");
+                    }
+
+                    new Sql2oStatisticsDao(sql2o).update(stats.getID(), arts);
+                    System.out.println("stats updated");
+              } catch (DaoException ex) {
+                    System.out.print(ex);
+                    model.put("failedFind", "true");
+              }
+            } else {
+                  model.put("failedFind", "true");
+            }
+             
+            res.status(201);
+            res.type("text/html");
+            res.redirect("/");
+            return new ModelAndView(model, "public/templates/addarticle.vm");
+        });
+
+        //delarticle route; delete an article
+        post("/delarticle", (req, res) -> {
+            String url = req.queryParams("url");
+            new Sql2oArticleDao(sql2o).delete("url");
+            res.status(200);
+            res.type("application/json");
+            return new Gson().toJson(url);
+        });
+
+        //stats route; return all user stats
+        get("/stats", (req, res) -> {
+            String username = req.cookie("username");
+            User u = new Sql2oUserDao(sql2o).find(username);
+            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
+
+            String results = new Gson().toJson(sql2oStatsDao.find(u.getUserID()));
+            res.type("text/html");
+            res.status(200);
+            return results;
+        });
+
+        //TODO: Update addstats for automatic updates
+        //addstats route; add stats to database
+//        post("/addstats", (req, res) -> {
+//            int biasRating = Integer.parseInt(req.queryParams("biasRating"));
+//            String biasName = req.queryParams("biasName");
+//            String favNewsSource = req.queryParams("favNewsSource");
+//            String favTopic = req.queryParams("favTopic");
+//            String execSummary = req.queryParams("execSummary");
+//            int userID = Integer.parseInt(req.queryParams("userID"));
+//
+//            Statistics stats = new Statistics(biasRating, biasName, favNewsSource, favTopic, execSummary, userID);
+//            new Sql2oStatisticsDao(sql2o).add(stats);
+//            res.status(201);
+//            res.type("application/json");
+//            return new Gson().toJson(stats.toString());
+//        });
+
+        //delstats route; delete a user's stats
+        post("/delstats", (req, res) -> {
+            int userID = Integer.parseInt(req.queryParams("userID"));
+            new Sql2oStatisticsDao(sql2o).delete(userID);
+            res.status(201);
+            res.type("application/json");
+            return new Gson().toJson(userID);
+        });
+    }
+
+    //HELPER METHODS
 
     public static String extractText(String url) {
         URL urlObj = null;
@@ -77,7 +473,7 @@ public class Server {
     public static Statistics extractFromStatsList(List<Statistics> objList) {
         if (objList.size() > 1) {
             System.out.println("DUPLICATE Statistics");
-        } else {
+        } else if (!objList.isEmpty()) {
             return objList.get(0);
         }
 
@@ -161,302 +557,5 @@ public class Server {
             }
         }
         return wordCount;
-    }
-
-    public static void main(String[] args) {
-
-        // set port number
-        final int PORT_NUM = 7000;
-        port(PORT_NUM);
-
-        Sql2o sql2o = getSql2o();
-
-        staticFiles.location("/public");
-
-
-
-        post("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-
-            String username = req.queryParams("username");
-            String password = req.queryParams("password");
-            res.cookie("username", username);
-            res.cookie("password", password);
-
-            //TEST, inserting users to database
-            User user = new User(username);
-            try {
-                Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
-                if (userDao.find(user.getUserName()) == null) {
-                    int id = userDao.add(user);
-                    Statistics userStats = new Statistics(0, "Neutral Bias",
-                            "New York Times", "Economy", "You have" +
-                            " Neutral. Your favorite news source is New York Times." +
-                            " Your favorite topic to read about is Economy", id);
-                    int idStats = new Sql2oStatisticsDao(sql2o).add(userStats);
-                    System.out.println("added new user stats");
-
-                    model.put("addedNewUser", "true");
-                }
-                else {
-                    model.put("existingUser", "true");
-                }
-            }
-            catch (DaoException e) {
-                model.put("failed", "true");
-            }
-
-            res.redirect("/");
-            return null;
-        });
-
-        // root route; check that a user is logged in
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<String, Object>();
-            if (req.cookie("username") != null) {
-                model.put("username", req.cookie("username"));
-                model.put("password", req.cookie("password"));
-
-                String username = req.cookie("username");
-                User u = new Sql2oUserDao(sql2o).find(username);
-                if (username != null) {
-                    List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
-                    Statistics stats = extractFromStatsList(statsList);
-
-                    List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
-                    List<Article> articles = new ArrayList<>();
-
-                    if (uReadings != null) {
-                        for (UserReadings ur : uReadings) {
-                            List<Article> artList = new Sql2oArticleDao(sql2o).find(ur.getArticleID());
-                            Article art = extractFromArtsList(artList);
-                            articles.add(art);
-                        }
-                    } else {
-                        articles = null;
-                    }
-
-
-                    model.put("biasRating", stats.getBiasRating());
-                    model.put("biasName", stats.getBiasName());
-                    model.put("favNews", stats.getFavNewsSource());
-                    model.put("favTopic", stats.getFavTopic());
-                    model.put("execSummary", stats.getExecSummary());
-                    model.put("Articles", articles);
-
-                } else {
-                    /*
-                    try {
-
-                        Statistics stats = new Statistics(0, "Neutral Bias",
-                                "New York Times", "Economy", "You have" +
-                                " Neutral. Your favorite news source is New York Times." +
-                                " Your favorite topic to read about is Economy", u.getUserID());
-
-                        int idStats = new Sql2oStatisticsDao(sql2o).add(stats);
-
-                        List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
-                        List<Article> articles = new ArrayList<>();
-
-                        if (uReadings != null) {
-                            for (UserReadings ur : uReadings) {
-                                List<Article> artList = new Sql2oArticleDao(sql2o).find(ur.getArticleid());
-                                Article art = extractFromArtsList(artList);
-                                articles.add(art);
-                            }
-                        }
-
-                        if (idStats > 0) {
-
-                            model.put("added", "true");
-                            model.put("biasRating", stats.getBiasRating());
-                            model.put("biasName", stats.getBiasName());
-                            model.put("favNews", stats.getFavNewsSource());
-                            model.put("favTopic", stats.getFavTopic());
-                            model.put("execSummary", stats.getExecSummary());
-                            model.put("Articles", articles);
-
-                        } else {
-                            model.put("failedFind", "true");
-                        }
-                    } catch (DaoException ex) {
-                        model.put("failedFind", "true");
-                    }*/
-                }
-            }
-            res.status(200);
-            res.type("text/html");
-            return new ModelAndView(model, "public/templates/index.vm");
-        }, new VelocityTemplateEngine());
-
-        // users route; return list of users as JSON
-        get("/users", (req, res) -> {
-            Sql2oUserDao sql2oUser = new Sql2oUserDao(sql2o);
-            String results = new Gson().toJson(sql2oUser.listAll());
-            res.type("application/json");
-            res.status(200);
-            return results;
-        });
-
-        //adduser route; add a new user
-        post("/adduser", (req, res) -> {
-            String userName = req.queryParams("userName");
-            User u = new User(userName);
-            new Sql2oUserDao(sql2o).add(u);
-            res.status(201);
-            res.type("application/json");
-            return new Gson().toJson(u.toString());
-        });
-
-        //deluser route; delete an article
-        post("/deluser", (req, res) -> {
-            int userID = Integer.parseInt(req.queryParams("userID"));
-            new Sql2oUserDao(sql2o).delete(userID);
-            res.status(201);
-            res.type("application/json");
-            return new Gson().toJson(userID);
-        });
-
-        //articles route; return list of articles as JSON
-        get("/articles", (req, res) -> {
-            Sql2oArticleDao article = new Sql2oArticleDao(sql2o);
-            String results = new Gson().toJson(article.listAll());
-            res.type("text/html");
-            res.status(200);
-            return results;
-        });
-
-        //addArticle route;
-        get("/addarticle", (req, res) -> {
-            if(req.cookie("username") == null){
-                res.redirect("/");
-            }
-
-            Map<String, Object> model = new HashMap<String, Object>();
-            res.status(200);
-            res.type("text/html");
-            return new ModelAndView(model, "public/templates/addarticle.vm");
-        }, new VelocityTemplateEngine());
-
-        //addarticle route; add a new article
-        post("/addarticle", (req, res) -> {
-            Map<String, Object> model = new HashMap<String, Object>();
-            System.out.println("Article add started");
-            if (req.cookie("username") != null) {
-                model.put("username", req.cookie("username"));
-
-                String username = req.cookie("username");
-                try {
-                    User u = new Sql2oUserDao(sql2o).find(username);
-                    String url = req.queryParams("url"); //chrome.history api call
-                    String articleExtract = extractText(url); //extracts article text as well as title and other info
-                    String[] parsedText = articleExtract.split("\\r?\\n");
-                    /*
-                    Get title from extracted text which is almost always first line
-                    */
-                    String title = parsedText[0];
-
-                    /*
-                    Get news source from extracted url host name
-                     */
-                    String newsSource = new URL(url).getHost();
-                    newsSource = newsSource.replace("www.", "");
-                    newsSource = newsSource.replace(".com", "");
-                    if (newsSource == null) {
-                        newsSource = "News Source could not be identified";
-                    }
-
-                    int biasRating = politicalBiasAPICall(articleExtract);
-                    System.out.println("API call passed");
-                    String topic = req.queryParams("topic");
-                    int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
-                    long currentDate = (new Date().getTime())/ 1000;
-
-
-                    Sql2oArticleDao articleDao = new Sql2oArticleDao(sql2o);
-                    Article article = new Article(url, title, newsSource, biasRating, topic, numWords);
-                    articleDao.add(article);
-                    System.out.println(article.toString());
-                    System.out.println("new article added to DB");
-                    UserReadings userReading = new UserReadings(u.getUserID(), article.getArticleID(), currentDate);
-                    new Sql2oUserReadingsDao(sql2o).add(userReading);
-                    System.out.println("new UReading added to DB");
-                    List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
-                    Statistics stats = extractFromStatsList(statsList);
-                    System.out.println("user stats found");
-                    List<UserReadings> ur = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(u.getUserID());
-                    System.out.println("user readings retrieved");
-                    List<Article> arts = new ArrayList<>();
-                    for(UserReadings r : ur) {
-                        System.out.println(r.getArticleID());
-                        List<Article> artsList = articleDao.find(r.getArticleID());
-                        Article art = extractFromArtsList(artsList);
-                        System.out.println(art.toString());
-                        arts.add(art);
-                        System.out.println("article added");
-                    }
-
-                    new Sql2oStatisticsDao(sql2o).update(stats.getID(), arts);
-                    System.out.println("stats updated");
-              } catch (DaoException ex) {
-                    System.out.print("catch statement");
-                    model.put("failedFind", "true");
-              }
-            } else {
-                  model.put("failedFind", "true");
-            }
-             
-            res.status(201);
-            res.type("text/html");
-            res.redirect("/");
-            return new ModelAndView(model, "public/templates/addarticle.vm");
-        });
-
-        //delarticle route; delete an article
-        post("/delarticle", (req, res) -> {
-            String url = req.queryParams("url");
-            new Sql2oArticleDao(sql2o).delete("url");
-            res.status(200);
-            res.type("application/json");
-            return new Gson().toJson(url);
-        });
-
-        //stats route; return all user stats
-        get("/stats", (req, res) -> {
-            String username = req.cookie("username");
-            User u = new Sql2oUserDao(sql2o).find(username);
-            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
-
-            String results = new Gson().toJson(sql2oStatsDao.find(u.getUserID()));
-            res.type("text/html");
-            res.status(200);
-            return results;
-        });
-
-        //TODO: Update addstats for automatic updates
-        //addstats route; add stats to database
-//        post("/addstats", (req, res) -> {
-//            int biasRating = Integer.parseInt(req.queryParams("biasRating"));
-//            String biasName = req.queryParams("biasName");
-//            String favNewsSource = req.queryParams("favNewsSource");
-//            String favTopic = req.queryParams("favTopic");
-//            String execSummary = req.queryParams("execSummary");
-//            int userID = Integer.parseInt(req.queryParams("userID"));
-//
-//            Statistics stats = new Statistics(biasRating, biasName, favNewsSource, favTopic, execSummary, userID);
-//            new Sql2oStatisticsDao(sql2o).add(stats);
-//            res.status(201);
-//            res.type("application/json");
-//            return new Gson().toJson(stats.toString());
-//        });
-
-        //delstats route; delete a user's stats
-        post("/delstats", (req, res) -> {
-            int userID = Integer.parseInt(req.queryParams("userID"));
-            new Sql2oStatisticsDao(sql2o).delete(userID);
-            res.status(201);
-            res.type("application/json");
-            return new Gson().toJson(userID);
-        });
     }
 }
