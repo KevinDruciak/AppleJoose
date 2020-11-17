@@ -160,8 +160,7 @@ public class Server {
                 String username = req.cookie("username");
                 User temp = new User(username, null); //changed constructor
                 try {
-                    //int userID = new Sql2oUserDao(sql2o).find(temp);
-                    int userID = new Sql2oUserDao(sql2o).findNAME(username);
+                    int userID = new Sql2oUserDao(sql2o).find(temp);
                     System.out.println(userID);
                     if (userID > 0) {
                         model.put("added", "true");
