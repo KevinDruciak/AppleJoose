@@ -16,6 +16,12 @@ public class User {
         this.userName = userName;
         this.userHistory = new ArrayList<>();
     }
+    
+    public User(String userName, String password) {
+        this.password = password;
+        this.userName = userName;
+        this.userHistory = new ArrayList<>();
+    }
 
     @Override
     public boolean equals(Object o) {
