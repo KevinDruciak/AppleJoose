@@ -134,6 +134,20 @@ public class Server {
                         model.put("username", username);
                         res.cookie("username", username); //set this only if success
 
+                        User temp = new User(username, null); //changed constructor
+                        int userID = new Sql2oUserDao(sql2o).find(temp);
+                        if (userID > 0) {
+                            model.put("added", "true");
+                            model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
+                            model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
+                            model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
+                            model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
+                            model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
+                        }
+                        else {
+                            model.put("failedFind", "true");
+                        }
+
                     }
                 }
                 else {
@@ -146,6 +160,8 @@ public class Server {
 
             res.status(201);
             res.type("text/html");
+//            return new ModelAndView(model, "public/templates/index.vm");
+//        }, new VelocityTemplateEngine());
             ModelAndView mdl = new ModelAndView(model, "public/templates/index.vm");
             return new VelocityTemplateEngine().render(mdl);
         });
@@ -153,37 +169,39 @@ public class Server {
         // root route; check that a user is logged in
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            if (req.cookie("username") != null) {
-                model.put("username", req.cookie("username"));
-                //model.put("password", req.cookie("password"));
-
-                String username = req.cookie("username");
-                User temp = new User(username, null); //changed constructor
-                try {
-                    int userID = new Sql2oUserDao(sql2o).find(temp);
-                    System.out.println(userID);
-                    if (userID > 0) {
-                        model.put("added", "true");
-                        model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
-                        model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
-                        model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
-                        model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
-                        model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
-                    }
-                    else {
-                        model.put("failedFind", "true");
-                    }
-                }
-                catch (DaoException ex) {
-                    model.put("failedFind", "true");
-                    System.out.println("FAILED TRY /");
-                }
-
-            }
+//            if (req.cookie("username") != null) {
+//                model.put("username", req.cookie("username"));
+//                //model.put("password", req.cookie("password"));
+//
+//                String username = req.cookie("username");
+//                User temp = new User(username, null); //changed constructor
+//                try {
+//                    int userID = new Sql2oUserDao(sql2o).find(temp);
+//                    System.out.println(userID + "find");
+//                    if (userID > 0) {
+//                        model.put("added", "true");
+//                        model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
+//                        model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
+//                        model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
+//                        model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
+//                        model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
+//                    }
+//                    else {
+//                        model.put("failedFind", "true");
+//                    }
+//                }
+//                catch (DaoException ex) {
+//                    model.put("failedFind", "true");
+//                    System.out.println("FAILED TRY /");
+//                }
+//            }
             res.status(200);
             res.type("text/html");
-            return new ModelAndView(model, "public/templates/index.vm");
-        }, new VelocityTemplateEngine());
+//            return new ModelAndView(model, "public/templates/index.vm");
+//        }, new VelocityTemplateEngine());
+            ModelAndView mdl = new ModelAndView(model, "public/templates/index.vm");
+            return new VelocityTemplateEngine().render(mdl);
+        });
 
         //signup page
         get("/signup", (req, res) -> {
