@@ -73,8 +73,10 @@ public class Sql2oUserDao implements UserDao {
     public int find(User user) throws DaoException {
         try (Connection con = sql2o.open()) {
             String userName = user.getUserName();
-            String q = "SELECT userID FROM Users WHERE userName = :userName";
-            int i = con.createQuery(q).addParameter("userName", userName).executeAndFetchFirst(Integer.class);
+            String q = "SELECT userID FROM Users WHERE userName = '" + userName + "'";
+            int i = con.createQuery(q).executeAndFetchFirst(Integer.class);
+            //int i = con.createQuery(q).addParameter("userName", userName).executeAndFetchFirst(Integer.class);
+
             if (i > 0) {
                 return i;
             }
