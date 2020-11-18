@@ -8,11 +8,13 @@ import java.util.Objects;
 
 public class User {
     private int userID;
+    private final String password;
     private String userName;
     private Statistics userStats;
     private List<UserReadings> userHistory;
 
-    public User(String userName) {
+    public User(String userName, String password) {
+        this.password = password;
         this.userName = userName;
         this.userHistory = new ArrayList<>();
     }
@@ -36,11 +38,16 @@ public class User {
         return "User{" +
                 "userID=" + userID +
                 ", userName='" + userName + '\'' +
-                "}";
+                ", password='" + password + '\'' +
+                '}';
+    }
+
+    public String getEncryption() {
+        return this.password;
     }
 
     @Override
-    public int hashCode() { return Objects.hash(userID, userName); }
+    public int hashCode() { return Objects.hash(userID, userName, password); }
 
     public void setUserID(int id) {
         this.userID = id;

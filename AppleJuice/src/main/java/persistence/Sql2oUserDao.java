@@ -17,31 +17,45 @@ public class Sql2oUserDao implements UserDao {
 
     @Override
     public int add(User user) throws DaoException {
-        /*try (Connection con = sql2o.open()) {
-            String name = user.getUserName();
-            String q = "SELECT userID FROM Users WHERE name = :name";
-            int i = con.createQuery(q)
-                    .addParameter("name", name)
-                    .executeAndFetchFirst(Integer.class);
-            if (i > 0) {
-                return i;
-            }
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-        }*/
         try (Connection con = sql2o.open()) {
-            String query = "INSERT OR IGNORE INTO Users (userName)" +
-                    "VALUES (:userName)";
+            String pass = user.getEncryption();
+            String query = "INSERT INTO Users (userName, password) VALUES (:userName, '" + pass + "')";
             int id = (int) con.createQuery(query, true)
                     .bind(user)
                     .executeUpdate().getKey();
             user.setUserID(id);
-
             return id;
         }
     }
 
-    //find existing user; return user's id if exists, else -1
+    //get a user's encrypted password
+    public String getPassword(int userID) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            String q = "SELECT password FROM Users WHERE userID = :userID";
+            //System.out.println(userID);
+            return con.createQuery(q).addParameter("userID", userID).executeAndFetchFirst(String.class);
+        } catch (Sql2oException | NullPointerException e) {
+            //do nothing
+            System.out.println("TEST IF EXCEPTION");
+        }
+        return "-404"; //temp return value
+    }
+
+    public String getTemp(String userName) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            String q = "SELECT password FROM Users WHERE userName = :userName";
+            //System.out.println(userID);
+            String temp = con.createQuery(q).addParameter("userName", userName).executeAndFetchFirst(String.class);
+            System.out.println(temp + " sql");
+            return temp;
+        } catch (Sql2oException | NullPointerException e) {
+            //do nothing
+            System.out.println("TEST IF EXCEPTION");
+        }
+        return "-404"; //temp return value
+    }
+
+    //find existing user by userName; return user
     @Override
     public User find(String userName) throws DaoException {
         try (Connection con = sql2o.open()) {
@@ -52,6 +66,23 @@ public class Sql2oUserDao implements UserDao {
         } catch (Sql2oException | NullPointerException e) {
             throw new DaoException();
         }
+    }
+  
+    //find existing user by User; return user's id if exists, else -1
+    public int findID(User user) throws DaoException {
+        try (Connection con = sql2o.open()) {
+            String userName = user.getUserName();
+            String q = "SELECT userID FROM Users WHERE userName = '" + userName + "'";
+            int i = con.createQuery(q).executeAndFetchFirst(Integer.class);
+            //int i = con.createQuery(q).addParameter("userName", userName).executeAndFetchFirst(Integer.class);
+
+            if (i > 0) {
+                return i;
+            }
+        } catch (Sql2oException | NullPointerException e) {
+            //do nothing
+        }
+        return -1;
     }
 
     @Override

@@ -1,0 +1,7 @@
+#set( $title = "Signup Successful Page" )
+#parse("public/templates/top.vm")
+
+<h1>Account created successfully!</h1>
+<a href="/" class="button">Back to login</a> ##change css later maybe
+
+#parse("public/templates/bottom.vm")

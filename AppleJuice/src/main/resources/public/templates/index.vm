@@ -1,7 +1,7 @@
 #set( $title = "Welcome Page" )
 #parse("public/templates/top.vm")
 
-#if($username)
+#if($existinguser)
 <h1>Hello $username,</h1>
     #if($biasRating < 0)
         <p class="linkIntro">Your bias rating is:</p>
@@ -47,6 +47,7 @@
         <input type="submit" value="Sign in" class="submit" />
     </div>
 </form>
+<a href="/signup" class="button">Create new account</a> ##change css later maybe
 <script src="../js/validate.js"></script>
 #end
 

@@ -1,3 +1,4 @@
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
 import de.l3s.boilerpipe.sax.InputSourceable;
 import exception.DaoException;
@@ -180,23 +181,34 @@ public class Server {
 
             String username = req.queryParams("username");
             String password = req.queryParams("password");
-            res.cookie("username", username);
-            res.cookie("password", password);
 
             //TEST, inserting users to database
-            User user = new User(username);
+            User user = new User(username, null);
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
-                if (userDao.find(user.getUserName()) == null) {
-                    int id = userDao.add(user);
-                    Statistics userStats = new Statistics(0, "Neutral Bias",
-                            "New York Times", "Economy", "You have" +
-                            " Neutral. Your favorite news source is New York Times." +
-                            " Your favorite topic to read about is Economy", id);
-                    int idStats = new Sql2oStatisticsDao(sql2o).add(userStats);
-                    System.out.println("added new user stats");
+                if (userDao.findID(user) > 0) {
+                    BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.getPassword(userDao.find(user)));
+                    //if (userDao.getPassword(userDao.find(user)).equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))) {
+                    if (result.verified) {
+                        model.put("existinguser", "true");
+                        model.put("username", username);
+                        res.cookie("username", username); //set this only if success
 
-                    model.put("addedNewUser", "true");
+                        User temp = new User(username, null); //changed constructor
+                        int userID = new Sql2oUserDao(sql2o).find(temp);
+                        if (userID > 0) {
+                            model.put("added", "true");
+                            model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
+                            model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
+                            model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
+                            model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
+                            model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
+                        }
+                        else {
+                            model.put("failedFind", "true");
+                        }
+
+                    }
                 }
                 else {
                     model.put("existingUser", "true");
@@ -206,93 +218,120 @@ public class Server {
                 model.put("failed", "true");
             }
 
-            res.redirect("/");
-            return null;
+            res.status(201);
+            res.type("text/html");
+//            return new ModelAndView(model, "public/templates/index.vm");
+//        }, new VelocityTemplateEngine());
+            ModelAndView mdl = new ModelAndView(model, "public/templates/index.vm");
+            return new VelocityTemplateEngine().render(mdl);
         });
 
         // root route; check that a user is logged in
         get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<String, Object>();
-            if (req.cookie("username") != null) {
-                model.put("username", req.cookie("username"));
-                model.put("password", req.cookie("password"));
-
-                String username = req.cookie("username");
-                User u = new Sql2oUserDao(sql2o).find(username);
-                if (username != null) {
-                    List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
-                    Statistics stats = extractFromStatsList(statsList);
-
-                    List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
-                    List<Article> articles = new ArrayList<>();
-
-                    if (uReadings != null) {
-                        for (UserReadings ur : uReadings) {
-                            List<Article> artList = new Sql2oArticleDao(sql2o).find(ur.getArticleID());
-                            Article art = extractFromArtsList(artList);
-                            articles.add(art);
-                        }
-                    } else {
-                        articles = null;
-                    }
-
-
-                    model.put("biasRating", stats.getBiasRating());
-                    model.put("biasName", stats.getBiasName());
-                    model.put("favNews", stats.getFavNewsSource());
-                    model.put("favTopic", stats.getFavTopic());
-                    model.put("execSummary", stats.getExecSummary());
-                    model.put("Articles", articles);
-
-                } else {
-                    /*
-                    try {
-
-                        Statistics stats = new Statistics(0, "Neutral Bias",
-                                "New York Times", "Economy", "You have" +
-                                " Neutral. Your favorite news source is New York Times." +
-                                " Your favorite topic to read about is Economy", u.getUserID());
-
-                        int idStats = new Sql2oStatisticsDao(sql2o).add(stats);
-
-                        List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
-                        List<Article> articles = new ArrayList<>();
-
-                        if (uReadings != null) {
-                            for (UserReadings ur : uReadings) {
-                                List<Article> artList = new Sql2oArticleDao(sql2o).find(ur.getArticleid());
-                                Article art = extractFromArtsList(artList);
-                                articles.add(art);
-                            }
-                        }
-
-                        if (idStats > 0) {
-
-                            model.put("added", "true");
-                            model.put("biasRating", stats.getBiasRating());
-                            model.put("biasName", stats.getBiasName());
-                            model.put("favNews", stats.getFavNewsSource());
-                            model.put("favTopic", stats.getFavTopic());
-                            model.put("execSummary", stats.getExecSummary());
-                            model.put("Articles", articles);
-
-                        } else {
-                            model.put("failedFind", "true");
-                        }
-                    } catch (DaoException ex) {
-                        model.put("failedFind", "true");
-                    }*/
-                }
-            }
+            Map<String, Object> model = new HashMap<>();
+//            if (req.cookie("username") != null) {
+//                model.put("username", req.cookie("username"));
+//                //model.put("password", req.cookie("password"));
+//
+//                String username = req.cookie("username");
+//                User temp = new User(username, null); //changed constructor
+//                try {
+//                    int userID = new Sql2oUserDao(sql2o).find(temp);
+//                    System.out.println(userID + "find");
+//                    if (userID > 0) {
+//                        model.put("added", "true");
+//                        model.put("biasRating", new Sql2oStatisticsDao(sql2o).getBias(userID));
+//                        model.put("biasName", new Sql2oStatisticsDao(sql2o).getBiasName(userID));
+//                        model.put("favNews", new Sql2oStatisticsDao(sql2o).getFavNews(userID));
+//                        model.put("favTopic", new Sql2oStatisticsDao(sql2o).getFavTopic(userID));
+//                        model.put("execSummary", new Sql2oStatisticsDao(sql2o).getExecSummary(userID));
+//                    }
+//                    else {
+//                        model.put("failedFind", "true");
+//                    }
+//                }
+//                catch (DaoException ex) {
+//                    model.put("failedFind", "true");
+//                    System.out.println("FAILED TRY /");
+//                }
+//            }
             res.status(200);
             res.type("text/html");
-            return new ModelAndView(model, "public/templates/index.vm");
+//            return new ModelAndView(model, "public/templates/index.vm");
+//        }, new VelocityTemplateEngine());
+            ModelAndView mdl = new ModelAndView(model, "public/templates/index.vm");
+            return new VelocityTemplateEngine().render(mdl);
+        });
+
+        //signup page
+        get("/signup", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/signup.vm");
         }, new VelocityTemplateEngine());
+
+        post("/signup", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+
+            String username = req.queryParams("username");
+            String password = req.queryParams("password");
+            String confirmPW = req.queryParams("confirmPW");
+
+            User user2 = new User(username, null); //changed constrcutor
+            try {
+                Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+                if (userDao.findID(user2) > 0) {
+                    model.put("userExists", "true");
+//                    res.status(201);
+//                    res.type("text/html");
+//                    ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
+//                    return new VelocityTemplateEngine().render(mdl);
+                }
+                else {
+
+                    model.put("userExists", "false");
+                    model.put("added", "true");
+                    String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+                    User user = new User(username, bcryptHash);
+                    //userDao.add(user);
+                    int userID = new Sql2oUserDao(getSql2o()).add(user);
+
+                    Statistics stats = new Statistics(0, "Neutral Bias",
+                            "N/A", "N/A", "You have" +
+                            " Neutral Bias. Your favorite news source is N/A." +
+                            " Your favorite topic to read about is N/A", userID);
+                    int idStats = new Sql2oStatisticsDao(sql2o).add(stats);
+
+                    //Sql2oArticleDao artDao = new Sql2oArticleDao(sql2o);
+                    //Article art = new Article(username, bcryptHash, username, 123, username, 123, 123, 123);
+                    //artDao.add(art);
+                }
+            }
+            catch (DaoException e) {
+                model.put("failed", "true");
+            }
+
+//            if (userExists) {
+//                res.status(201);
+//                res.type("text/html");
+//                ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
+//                return new VelocityTemplateEngine().render(mdl);
+//            }
+//
+//            String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+
+            res.status(201);
+            res.type("text/html");
+            ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
+            return new VelocityTemplateEngine().render(mdl);
+        });
+
 
         // users route; return list of users as JSON
         get("/users", (req, res) -> {
-            Sql2oUserDao sql2oUser = new Sql2oUserDao(sql2o);
-            String results = new Gson().toJson(sql2oUser.listAll());
+            Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+            String results = new Gson().toJson(userDao.listAll());
             res.type("application/json");
             res.status(200);
             return results;
@@ -301,8 +340,12 @@ public class Server {
         //adduser route; add a new user
         post("/adduser", (req, res) -> {
             String userName = req.queryParams("userName");
+
+//             User u = new User(userName, null); //changed construftor
+//             new Sql2oUserDao(getSql2o()).add(u);
             User u = new User(userName);
             new Sql2oUserDao(sql2o).add(u);
+
             res.status(201);
             res.type("application/json");
             return new Gson().toJson(u.toString());

@@ -43,7 +43,8 @@ public class Main {
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Users (userID INTEGER PRIMARY KEY, " +
-                "userName VARCHAR(50) UNIQUE);";
+                "userName VARCHAR(50) UNIQUE, " +
+                "password VARCHAR(1000));";
         st.execute(sql);
 
         sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER PRIMARY KEY, biasRating INTEGER, " +
@@ -82,6 +83,6 @@ public class Main {
 
         Server.main(new String[]{"Server Running"});
 
-        //conn.close();
+        conn.close();
     }
 }
