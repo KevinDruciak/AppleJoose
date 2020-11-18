@@ -26,7 +26,16 @@ iterations), a test Statistics object was inserted using the constructor: Statis
 (note that this is reflected in the actual constructor, which is commented out). This was done primarily to show an example of how it will appear when future implementations
 are completed, and to show that it is properly functioning.
 * To check this part, run the Main.java file and open http://localhost:7000/. Then sign in using any username (placeholder password for now) and the page with the user's stats
-should show up. 
+should show up.
+
+Iteration 3 Notes:
+* For this iteration we worked on improving the architecture of our Databases and classes. We implemented the UserReadings object in order to connect each Article to a specific user. In this way, we don't store the same article over and over if different users read it. Rather, we store one instance of the article, and store UserReading objects in a Database everytime someone decides to read that article. If an article is being read for the first time, we add an article to the Articles database as well as a UserReading to the UserReadings database.
+* This architectural redesign allows us to implement many useful methods. Namely, we now have convenient methods for returning a list of the last n articles a user has read.
+* However, there are still some issues with our redesigned architecture. Certain post and get calls to our API no longer work, due to changes in the parameters required to build certain objects. This will be addressed in our upcoming iteration.
+* Due to changes in the architecture for our Databases and classes, some of the features we implemented for this iteration are not entirely functional. For example, our Google Chrome extension now interfaces with our Database and stores each URL you visit. However, due to the change in the way Articles/UserReadings are stored, the extension is not compatible with our current design. This is a small fix that will be completed in Iteration 4.
+* Furthermore, we implemented a functional login page. A user can create an account with a username and password. This password is encrypted and stored in our database. When the user logs in, we check that the passwords match before allowing them to enter. However, due to a highly rare bug where insertions were always set to null, we didn't manage to merge this change onto our main branch.
+* Our front-end now draws data from the database, rather than being manually populated.
+* We implemented an add article button for manually adding in articles. Once an article gets added in (either manually or by /addArticle endpoint), the endpoint automatically extracts the article title and text, and calculates the bias score for that article. We are working on further improvements to increase the likelihood it selects the correct title for the article.
 
 Work Done:
 
@@ -64,3 +73,18 @@ Montese
 * Created add articles page, allow us to see the project in action in realtime
 * Parsing article title, bias ranking and source now show up on the front page
 * UI is way more fleshed out for the home page and closer to the final look of the project
+
+Connor
+* Made it so Chrome extension writes all visited URLs to article data base.
+* Fixed APITests to reflect changes in article class and spl2oDao.
+* Implemented sitesVisited update for articles.
+
+Kevin/Simon
+* Worked on secure login using BCrypt with Simon (discovered bug that makes this impossible??)
+  * Unable to insert encrypted String into Users table (always NULL).
+  * Does not work using hardcoded Strings either...
+* Signup post/get to create account initially
+* Login functionality (still in progress, will complete by iteration 4)
+
+Joao
+* Continued implementing DAO functions and building out database in order to support connection between front-end and back-end
