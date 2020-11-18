@@ -1,4 +1,3 @@
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
 import de.l3s.boilerpipe.sax.InputSourceable;
 import exception.DaoException;
@@ -161,13 +160,15 @@ public class Server {
 
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
-                if (userDao.find(username).getUserID() > 0) {
-                    BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.find(username).getUserPassword());
+                if (userDao.find(username) != null) {
+
+                    //BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.find(username).getUserPassword());
                     //if (userDao.getPassword(userDao.find(user)).equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))) {
-                    if (result.verified) {
-                        model.put("existing user", "true");
+                    if (userDao.find(username).getUserPassword().equals(password)) {
+                        model.put("existinguser", "true");
                         model.put("username", username);
-                        res.cookie("username", username); //set this only if success
+                        res.cookie("username", username);
+                        res.cookie("password", password); //set this only if success
 
                         int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
                         List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
@@ -187,7 +188,7 @@ public class Server {
                         }
 
                     } else {
-                        model.put("not existing user", "true");
+                        model.put("notexistinguser", "true");
                     }
                 }
             } catch (DaoException e) {
@@ -204,6 +205,7 @@ public class Server {
         // root route; check that a user is logged in
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
+            /*
             if (req.cookie("username") != null) {
                 model.put("username", req.cookie("username"));
                 model.put("password", req.cookie("password"));
@@ -236,7 +238,7 @@ public class Server {
                     model.put("Articles", articles);
 
                 } //TODO: Handle else scenario
-            }
+            }*/
 
             res.status(200);
             res.type("text/html");
@@ -263,19 +265,18 @@ public class Server {
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
 
-                if (userDao.find(username).getUserID() > 0) {
+                if (userDao.find(username) != null) {
                     model.put("userExists", "true");
 //                    res.status(201);
 //                    res.type("text/html");
 //                    ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
 //                    return new VelocityTemplateEngine().render(mdl);
-                }
-                else {
-
+                } else {
+                    System.out.println("no user found, creating new one");
                     model.put("userExists", "false");
                     model.put("added", "true");
-                    String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-                    User user = new User(username, bcryptHash);
+                    //String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+                    User user = new User(username, password);
                     //userDao.add(user);
                     int userID = new Sql2oUserDao(getSql2o()).add(user);
 
