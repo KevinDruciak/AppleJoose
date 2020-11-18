@@ -22,16 +22,21 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
 
     @Override
     public int add(UserReadings userReading) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String query = "INSERT INTO UserReadings (userID, articleID, dateRead, readingID) " +
-                    "VALUES (:userID, :articleID, :dateRead, NULL)";
+        try (Connection con = sql2o.beginTransaction()) {
+            System.out.println(userReading.toString());
+            String query = "INSERT INTO UserReadings (articleID, userID, dateRead) " +
+                    "VALUES (:articleID, :userID, :dateRead)";
             int id = (int) con.createQuery(query, true)
-                    .bind(userReading)
+                    .addParameter("articleID", (int) userReading.getArticleID())
+                    .addParameter("userID", (int) userReading.getUserID())
+                    .addParameter("dateRead", (long) userReading.getDateRead())
                     .executeUpdate().getKey();
             userReading.setReadingID(id);
+            con.commit();
             return userReading.getReadingID();
         }
         catch (Sql2oException ex) {
+            System.out.println(ex.toString());
             throw new DaoException();
         }
     }

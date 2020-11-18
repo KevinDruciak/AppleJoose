@@ -18,26 +18,33 @@ public class Sql2oStatisticsDao implements StatisticsDao {
 
     @Override
     public int add(Statistics stats) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String query = "INSERT OR IGNORE INTO Statistics (id, biasRating, biasName, " +
-                    "favNewsSource, favTopic, execSummary, userID)" +
-                    "VALUES (NULL, :biasRating, :biasName, :favNewsSource," +
+        try (Connection con = sql2o.beginTransaction()) {
+            String statistics = " Statistics ";
+            String query = "INSERT INTO" + statistics +" (biasRating, biasName, favNewsSource, favTopic, execSummary, userID)" +
+                    " VALUES (:biasRating, :biasName, :favNewsSource," +
                     " :favTopic, :execSummary, :userID)";
             int id = (int) con.createQuery(query, true)
-                    .bind(stats)
+                    .addParameter("biasRating", (int) stats.getBiasRating())
+                    .addParameter("biasName", stats.getBiasName())
+                    .addParameter("favNewsSource", stats.getFavNewsSource())
+                    .addParameter("favTopic", stats.getFavTopic())
+                    .addParameter("execSummary", stats.getExecSummary())
+                    .addParameter("userID", (int) stats.getUserID())
                     .executeUpdate().getKey();
             stats.setID(id);
+            con.commit();
             return id;
         }
         catch (Sql2oException ex) {
-            System.out.print("add user stats throwing DAOEX");
+            System.out.println(ex.toString());
             throw new DaoException();
         }
     }
 
     @Override
     public List<Statistics> listAll() throws DaoException {
-        String sql = "SELECT * FROM Statistics";
+        String statistics = " Statistics ";
+        String sql = "SELECT * FROM" + statistics;
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql).executeAndFetch(Statistics.class);
         }
@@ -49,7 +56,8 @@ public class Sql2oStatisticsDao implements StatisticsDao {
     @Override
     public boolean delete(int userID) throws DaoException {
         try (Connection con = sql2o.open()){
-            String sql = "DELETE FROM Statistics WHERE userID = :userID";
+            String statistics = " Statistics ";
+            String sql = "DELETE FROM" + statistics +"WHERE userID = :userID";
             con.createQuery(sql)
                     .addParameter("userID", userID)
                     .executeUpdate();
@@ -63,7 +71,8 @@ public class Sql2oStatisticsDao implements StatisticsDao {
 
     @Override
     public boolean update(int id, List<Article> userHistory) throws DaoException {
-        String sql = "SELECT * FROM Statistics WHERE id = :id";
+        String statistics = " Statistics ";
+        String sql = "SELECT * FROM" + statistics + "WHERE id = :id ";
         List<Statistics> statsList;
         try (Connection con = sql2o.open()) {
             statsList = con.createQuery(sql)
@@ -106,7 +115,7 @@ public class Sql2oStatisticsDao implements StatisticsDao {
             stat.setBiasName(stat.createBiasName(stat.getBiasRating()));
             stat.setExecSummary(stat.createExecSummary());
 
-            sql = "UPDATE Statistics SET biasRating = :biasRating, " +
+            sql = "UPDATE" + statistics +"SET biasRating = :biasRating, " +
                     "biasName = :biasName, favNewsSource = :favNewsSource, " +
                     "favTopic = :favTopic, execSummary = :execSummary " +
                     "WHERE id = :id";
@@ -130,7 +139,8 @@ public class Sql2oStatisticsDao implements StatisticsDao {
 
     @Override
     public List<Statistics> find(int userID) throws DaoException {
-        String sql = "SELECT * FROM Statistics WHERE userID = :userID";
+        String statistics = " Statistics ";
+        String sql = "SELECT * FROM" + statistics + "WHERE userID = :userID";
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
                     .addParameter("userID", userID)

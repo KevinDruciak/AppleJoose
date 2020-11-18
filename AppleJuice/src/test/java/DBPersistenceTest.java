@@ -68,7 +68,7 @@ public class DBPersistenceTest {
 
     @Test
     public void testInsertNewUser() throws SQLException {
-        User u = new User("Joao Kawase");
+        User u = new User("Joao Kawase", "password");
         String sql = "INSERT INTO Users(userName) VALUES (?);";
 
         PreparedStatement pst = conn.prepareStatement(sql);

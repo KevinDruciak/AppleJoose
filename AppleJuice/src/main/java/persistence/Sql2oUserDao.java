@@ -17,13 +17,17 @@ public class Sql2oUserDao implements UserDao {
 
     @Override
     public int add(User user) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String pass = user.getEncryption();
-            String query = "INSERT INTO Users (userName, password) VALUES (:userName, '" + pass + "')";
+
+        try (Connection con = sql2o.beginTransaction()) {
+            String query = "INSERT INTO Users (userName, userPassword)" +
+                    "VALUES (:userName, :userPassword)";
+
             int id = (int) con.createQuery(query, true)
-                    .bind(user)
+                    .addParameter("userName", user.getUserName())
+                    .addParameter("userPassword", user.getUserPassword())
                     .executeUpdate().getKey();
             user.setUserID(id);
+            con.commit();
             return id;
         }
     }
@@ -67,23 +71,6 @@ public class Sql2oUserDao implements UserDao {
             throw new DaoException();
         }
     }
-  
-    //find existing user by User; return user's id if exists, else -1
-    public int findID(User user) throws DaoException {
-        try (Connection con = sql2o.open()) {
-            String userName = user.getUserName();
-            String q = "SELECT userID FROM Users WHERE userName = '" + userName + "'";
-            int i = con.createQuery(q).executeAndFetchFirst(Integer.class);
-            //int i = con.createQuery(q).addParameter("userName", userName).executeAndFetchFirst(Integer.class);
-
-            if (i > 0) {
-                return i;
-            }
-        } catch (Sql2oException | NullPointerException e) {
-            //do nothing
-        }
-        return -1;
-    }
 
     @Override
     public List<User> listAll() throws DaoException {
@@ -112,12 +99,11 @@ public class Sql2oUserDao implements UserDao {
     @Override
     public boolean update(User user) throws DaoException {
         try (Connection con = sql2o.open()) {
-            String sql = "UPDATE Users " +
-                    "SET userName = :userName, userStats = :userStats,"+
-                    " userHistory = :userHistory WHERE userID = :userID";
+            String sql = "UPDATE Users SET userName = :userName, " +
+                    "userPassword = :userPassword, userHistory = :userHistory WHERE userID = :userID";
             con.createQuery(sql)
                     .addParameter("userName", user.getUserName())
-                    .addParameter("userStats", user.getUserStats())
+                    .addParameter("userPassword", user.getUserPassword())
                     .addParameter("userHistory", user.getUserHistory())
                     .addParameter("userID", user.getUserID())
                     .executeUpdate();
