@@ -2,6 +2,9 @@
 Group Repo for team Apple jOOSE
 
 To run our project: 
+1. Acess this URL: apple-joose.herokuapp.com
+2. If URL doesn't work, run Gradle build tasks clean, jar, deploy Heroku. In other words, this is how you manually deploy our application, however, it should be running to begin with.
+IGNORE
 1. Go to chrome://extensions/ and enable developer settings for extensions.
 2. Once step 1 is complete, click 'Load Unpacked' button on the chrome://extensions/ page and then select the AppleJuice/src/main
 folder as the extension source. (Cloning the repo or downloadign a copy is necessary for this to work)
@@ -10,6 +13,8 @@ folder as the extension source. (Cloning the repo or downloadign a copy is neces
 5. Finally, for the server side of the project, simply run the main method of the Main.java file under AppleJuice/src/main/java folder. Running this file should
 create the database and establish the server connection to localhost:7000.
 6. The app is now up and running and as features expand, this set up should work without having to change anything apart from running Main.java to establish the conenction with the server side and visiting chrome://extensions/ to make sure the extension has been updated to the most recent version. (Updating the extension simply consists of clicking the refresh button which will show up in the bottom of the extensions card)
+IGNORE
+
 
 Iteration 1 Notes:
 * We definitely did not achieve all of our functional requirements as we are still lacking some
@@ -36,6 +41,14 @@ Iteration 3 Notes:
 * Furthermore, we implemented a functional login page. A user can create an account with a username and password. This password is encrypted and stored in our database. When the user logs in, we check that the passwords match before allowing them to enter. However, due to a highly rare bug where insertions were always set to null, we didn't manage to merge this change onto our main branch.
 * Our front-end now draws data from the database, rather than being manually populated.
 * We implemented an add article button for manually adding in articles. Once an article gets added in (either manually or by /addArticle endpoint), the endpoint automatically extracts the article title and text, and calculates the bias score for that article. We are working on further improvements to increase the likelihood it selects the correct title for the article.
+
+Iteration 4 Notes:
+* For this iteration, we managed to deploy our application to Heroku. As a result, our website is now remotely hosted.
+* Additioanlly, we spent a lot of work merging our login feature into our product. We have a signup get and post endpoint to create a user account. We ensure that the username is unique and that the password matches the confirm password box. On success, it will add the username to the users table, as well as create a corresponding userStatistics object for the new user. In addition, the password gets stored in the database as an encrypted piece of text, increasing our application's security.
+* Furthermore, we began implementing additional API endpoints to accomodate the Chrome Extension. Specifically, we needed a way for an add article post call to pass in the username of the person posting, that way their article can be linked back to the user that read it.
+* Additionally, we ditched SQLLite and moved to PostgreSQL. This transition took some time as we had to reconfigure all database transactions to work with PostgreSQL.
+* We also changed the view models. For the login page and sign-in page, we made the style of the user interface more consistent with our home page design. As a result, our view models are now more refined and polished.
+* Notes for next iteration: we still are ironing out our underlying database operations. For some reason, we are still getting errors with our endpoints. This is due to constantly changing environments and class architectures. Every time we update our classes, it breaks our endpoints. Furthermore, when we moved to Heroku it broke our endpoints. Thus, much of our work has been devoted purely to getting our application into a stable viewable state. Once we have reached a stable version of our application, we can truly focus on implementing actual features and ways for the user to explore their own data. Hopefully, we can make this big push on our final iteration.
 
 Work Done:
 
@@ -88,3 +101,17 @@ Kevin/Simon
 
 Joao
 * Continued implementing DAO functions and building out database in order to support connection between front-end and back-end
+
+iter4:
+Connor
+* Updated API endpoints so Chrome Extension can make addarticle calls.
+* Began integrating the ability to login through the Chrome Extension.
+
+Montese
+* Updated view model HTML.
+
+Kevin/Simon
+* Integrated log-in feature
+
+Joao:
+* Got Heroku hosting to work with our application.
