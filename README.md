@@ -37,6 +37,14 @@ Iteration 3 Notes:
 * Our front-end now draws data from the database, rather than being manually populated.
 * We implemented an add article button for manually adding in articles. Once an article gets added in (either manually or by /addArticle endpoint), the endpoint automatically extracts the article title and text, and calculates the bias score for that article. We are working on further improvements to increase the likelihood it selects the correct title for the article.
 
+Iteration 4 Notes:
+* For this iteration, we managed to deploy our application to Heroku. As a result, our website is now remotely hosted.
+* Additioanlly, we spent a lot of work merging our login feature into our product. We have a signup get and post endpoint to create a user account. We ensure that the username is unique and that the password matches the confirm password box. On success, it will add the username to the users table, as well as create a corresponding userStatistics object for the new user. In addition, the password gets stored in the database as an encrypted piece of text, increasing our application's security.
+* Furthermore, we began implementing additional API endpoints to accomodate the Chrome Extension. Specifically, we needed a way for an add article post call to pass in the username of the person posting, that way their article can be linked back to the user that read it.
+* Additionally, we ditched SQLLite and moved to PostgreSQL. This transition took some time as we had to reconfigure all database transactions to work with PostgreSQL.
+* We also changed the view models. For the login page and sign-in page, we made the style of the user interface more consistent with our home page design. As a result, our view models are now more refined and polished.
+* Notes for next iteration: we still are ironing out our underlying database operations. For some reason, we are still getting errors with our endpoints. This is due to constantly changing environments and class architectures. Every time we update our classes, it breaks our endpoints. Furthermore, when we moved to Heroku it broke our endpoints. Thus, much of our work has been devoted purely to getting our application into a stable viewable state. Once we have reached a stable version of our application, we can truly focus on implementing actual features and ways for the user to explore their own data. Hopefully, we can make this big push on our final iteration.
+
 Work Done:
 
 iter1:
@@ -88,3 +96,17 @@ Kevin/Simon
 
 Joao
 * Continued implementing DAO functions and building out database in order to support connection between front-end and back-end
+
+iter4:
+Connor
+* Updated API endpoints so Chrome Extension can make addarticle calls.
+* Began integrating the ability to login through the Chrome Extension.
+
+Montese
+* Updated view model HTML.
+
+Kevin/Simon
+* Integrated log-in feature
+
+Joao:
+* Got Heroku hosting to work with our application.
