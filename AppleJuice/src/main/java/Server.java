@@ -172,6 +172,7 @@ public class Server {
                             " Your favorite topic to read about is Economy", id);
 
                     int idStats = new Sql2oStatisticsDao(sql2o).add(userStats);
+
                     System.out.println("added new user stats");
 
                     model.put("addedNewUser", "true");

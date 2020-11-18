@@ -70,10 +70,11 @@ public class Sql2oUserDao implements UserDao {
     @Override
     public boolean update(User user) throws DaoException {
         try (Connection con = sql2o.open()) {
-            String sql = "UPDATE Users " +
-                    "SET userName = :userName, userHistory = :userHistory WHERE userID = :userID";
+            String sql = "UPDATE Users SET userName = :userName, " +
+                    "userPassword = :userPassword, userHistory = :userHistory WHERE userID = :userID";
             con.createQuery(sql)
                     .addParameter("userName", user.getUserName())
+                    .addParameter("userPassword", user.getUserPassword())
                     .addParameter("userHistory", user.getUserHistory())
                     .addParameter("userID", user.getUserID())
                     .executeUpdate();
