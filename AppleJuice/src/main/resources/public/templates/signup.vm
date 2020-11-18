@@ -3,7 +3,7 @@
 
 #if ($added)
 <h1>Account created successfully!</h1>
-<a href="/" class="button">Back to login</a> ##change css later maybe
+<a href="/" class="SignUpbutton"> < Back to login</a>
 #else
 <h1>Create Your Account</h1>
 
@@ -12,23 +12,37 @@
 #end
 
 <form action="/signup" method="post" class="content" onsubmit="return validateSignup();">
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" placeholder="username" name="username" id="username" />
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" placeholder="password" name="password" id="password" />
-    </div>
-    <div>
-        <label for="confirmPW">Confirm Password:</label>
-        <input type="password" placeholder="re-enter password" name="confirmPW" id="confirmPW" />
-    </div>
-    <div id="divSubmit">
-        <input type="submit" value="Create Account" class="submit" />
+    <div class="Q1Box">
+        <div class="row">
+            <div class="col-25">
+                <label for="username">Username:</label>
+            </div>
+            <div class="col-75">
+                <input type="text" placeholder="username" name="username" id="username" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="password">Password:</label>
+            </div>
+            <div class="col-75">
+                <input type="password" placeholder="password" name="password" id="password" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="confirmPW">Confirm Password:</label>
+            </div>
+            <div class="col-75">
+                <input type="password" placeholder="re-enter password" name="confirmPW" id="confirmPW" />
+            </div>
+        </div>
+        <div class="row" id="divSubmit">
+            <input class="submit" type="submit" value="Create Account" class="submit" />
+        </div>
     </div>
 </form>
-<a href="/" class="button">Back to login</a> ##change css later maybe
+<a href="/" class="SignUpbutton">< Back to login</a>
 <script src="../js/validate.js"></script>
 #end
 
