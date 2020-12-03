@@ -32,7 +32,7 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
                     .addParameter("dateRead", (long) userReading.getDateRead())
                     .executeUpdate().getKey();
             userReading.setReadingID(id);
-            con.commit();
+            //con.commit();
             return userReading.getReadingID();
         }
         catch (Sql2oException ex) {

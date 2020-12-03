@@ -40,7 +40,7 @@ import java.util.Date;
 
 public class Server {
 
-    static boolean LOCAL = true;
+    static boolean LOCAL = false; //set FALSE if deploying/running on heroku, TRUE if testing locally
     static Connection conn;
     static Statement st;
 
@@ -173,6 +173,7 @@ public class Server {
             st = conn.createStatement();
             String sql;
 
+            //COMMENT THIS OUT IF YOU WANT TO HAVE PERSISTENCE
             sql = "DROP TABLE IF EXISTS Articles";
             st.execute(sql);
             sql = "DROP TABLE IF EXISTS Users";

@@ -32,7 +32,7 @@ public class Sql2oStatisticsDao implements StatisticsDao {
                     .addParameter("userID", (int) stats.getUserID())
                     .executeUpdate().getKey();
             stats.setID(id);
-            con.commit();
+            //con.commit();
             return id;
         }
         catch (Sql2oException ex) {
