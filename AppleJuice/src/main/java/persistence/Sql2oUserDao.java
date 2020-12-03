@@ -6,6 +6,7 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class Sql2oUserDao implements UserDao {
@@ -18,7 +19,7 @@ public class Sql2oUserDao implements UserDao {
     @Override
     public int add(User user) throws DaoException {
 
-        try (Connection con = sql2o.beginTransaction()) {
+        try (Connection con = sql2o.open()) { //beginTransaction
             String query = "INSERT INTO Users (userName, userPassword)" +
                     "VALUES (:userName, :userPassword)";
 
@@ -27,10 +28,30 @@ public class Sql2oUserDao implements UserDao {
                     .addParameter("userPassword", user.getUserPassword())
                     .executeUpdate().getKey();
             user.setUserID(id);
-            con.commit();
+//            con.commit();
             return id;
         }
     }
+//    @Override
+//    public int add(User user) throws DaoException {
+//        Connection con = null;
+//        try { //beginTransaction
+//            con = sql2o.open();
+//            con.getJdbcConnection().setAutoCommit(false);
+//            String query = "INSERT INTO Users (userName, userPassword)" +
+//                    "VALUES (:userName, :userPassword)";
+//
+//            int id = (int) con.createQuery(query, true)
+//                    .addParameter("userName", user.getUserName())
+//                    .addParameter("userPassword", user.getUserPassword())
+//                    .executeUpdate().getKey();
+//            user.setUserID(id);
+//            con.commit();
+//            return id;
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+//    }
 
     //get a user's encrypted password
     public String getPassword(int userID) throws DaoException {

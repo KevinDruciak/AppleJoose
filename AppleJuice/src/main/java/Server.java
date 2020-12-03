@@ -39,8 +39,12 @@ import java.sql.*;
 import java.util.Date;
 
 public class Server {
-    final static int PORT = 7000;
 
+    static boolean LOCAL = false; //set FALSE if deploying/running on heroku, TRUE if testing locally
+    static Connection conn;
+    static Statement st;
+
+    final static int PORT = 7000;
     private static int getHerokuAssignedPort() {
         String herokuPort = System.getenv("PORT");
         if (herokuPort != null) {
@@ -142,10 +146,76 @@ public class Server {
         return new Sql2o(dbUrl, username, password);
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        port(getHerokuAssignedPort());
-        workWithDatabase();
-        Sql2o sql2o = getSql2o();
+    private static Sql2o getSql2oLOCAL() {
+        // set on foreign keys
+        SQLiteConfig config = new SQLiteConfig();
+        config.enforceForeignKeys(true);
+        config.setPragma(SQLiteConfig.Pragma.FOREIGN_KEYS, "ON");
+
+        // create data source
+        SQLiteDataSource ds = new SQLiteDataSource(config);
+        ds.setUrl("jdbc:sqlite:AppleJuice.db");
+
+        return new Sql2o(ds);
+    }
+
+    public static void main(String[] args) throws URISyntaxException, SQLException {
+        Sql2o sql2o;
+        if (!LOCAL) {
+            port(getHerokuAssignedPort());
+            workWithDatabase();
+            sql2o = getSql2o();
+        }
+        else {
+            port(PORT);
+
+            conn = DriverManager.getConnection("jdbc:sqlite:AppleJuice.db");
+            st = conn.createStatement();
+            String sql;
+
+            //COMMENT THIS OUT IF YOU WANT TO HAVE PERSISTENCE
+            sql = "DROP TABLE IF EXISTS Articles";
+            st.execute(sql);
+            sql = "DROP TABLE IF EXISTS Users";
+            st.execute(sql);
+            sql = "DROP TABLE IF EXISTS Statistics";
+            st.execute(sql);
+            sql = "DROP TABLE IF EXISTS UserReadings";
+            st.execute(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS Articles (articleID INTEGER PRIMARY KEY, " +
+                    "url VARCHAR(1000) UNIQUE, title VARCHAR(100), newsSource VARCHAR(100), " +
+                    "biasRating INTEGER, topic VARCHAR(50), " +
+                    "numWords INTEGER);";
+            st.execute(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS Users (userID INTEGER PRIMARY KEY, " +
+                    "userName VARCHAR(50) UNIQUE, userPassword VARCHAR(1000), userStatsID INTEGER);";
+            st.execute(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER PRIMARY KEY, biasRating INTEGER, " +
+                    "biasNAME VARCHAR(100), favNewsSource VARCHAR(100), favTopic VARCHAR(50), " +
+                    "execSummary VARCHAR(1000), " +
+                    "userID INTEGER NOT NULL UNIQUE, FOREIGN KEY(userID) REFERENCES Users(userID) " +
+                    "ON UPDATE CASCADE ON DELETE CASCADE);";
+            st.execute(sql);
+
+            sql = "CREATE TABLE IF NOT EXISTS UserReadings (userID INTEGER NOT NULL, " +
+                    "articleID INTEGER NOT NULL, dateRead INTEGER NOT NULL, readingID INTEGER, " +
+                    "FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE)";
+            st.execute(sql);
+
+            sql = "INSERT INTO Users(userID, userName, userPassword, userStatsID)" +
+                    " VALUES (1, 'admin', 'adminPassword', 1);";
+            st.execute(sql);
+
+            sql = "INSERT INTO Statistics (id, biasRating, biasName,favNewsSource," +
+                    " favTopic, execSummary, userID) VALUES (1, 0, 'Minimal Bias'," +
+                    " 'CNN', 'Politics', 'ADMIN SUMMARY', 1);";
+            st.execute(sql);
+
+            sql2o = getSql2oLOCAL();
+        }
 
         staticFiles.location("/public");
 
@@ -278,7 +348,8 @@ public class Server {
                     //String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
                     User user = new User(username, password);
                     //userDao.add(user);
-                    int userID = new Sql2oUserDao(getSql2o()).add(user);
+//                    int userID = new Sql2oUserDao(getSql2o()).add(user);
+                    int userID = new Sql2oUserDao(sql2o).add(user);
 
                     Statistics stats = new Statistics(0, "Neutral Bias",
                             "N/A", "N/A", "You have" +
