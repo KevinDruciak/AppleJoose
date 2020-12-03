@@ -22,7 +22,7 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
 
     @Override
     public int add(UserReadings userReading) throws DaoException {
-        try (Connection con = sql2o.beginTransaction()) {
+        try (Connection con = sql2o.open()) { //beginTransaction
             System.out.println(userReading.toString());
             String query = "INSERT INTO UserReadings (articleID, userID, dateRead) " +
                     "VALUES (:articleID, :userID, :dateRead)";

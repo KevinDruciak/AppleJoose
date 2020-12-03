@@ -20,7 +20,7 @@ public class Sql2oArticleDao implements ArticleDao {
 
     @Override
     public String add(Article article) throws DaoException {
-        try (Connection con = sql2o.beginTransaction()) {
+        try (Connection con = sql2o.open()) { //beginTransaction
             String query = "INSERT INTO Articles (url, title, newsSource, " +
                     "biasRating, topic, numWords)" +
                     "VALUES (:url, :title, :newsSource, :biasRating, " +

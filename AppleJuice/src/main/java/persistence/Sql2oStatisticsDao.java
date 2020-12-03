@@ -18,7 +18,7 @@ public class Sql2oStatisticsDao implements StatisticsDao {
 
     @Override
     public int add(Statistics stats) throws DaoException {
-        try (Connection con = sql2o.beginTransaction()) {
+        try (Connection con = sql2o.open()) {//beginTransaction
             String statistics = " Statistics ";
             String query = "INSERT INTO" + statistics +" (biasRating, biasName, favNewsSource, favTopic, execSummary, userID)" +
                     " VALUES (:biasRating, :biasName, :favNewsSource," +
