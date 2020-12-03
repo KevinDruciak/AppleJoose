@@ -436,6 +436,74 @@ public class Server {
             return new ModelAndView(model, "public/templates/addarticle.vm");
         });
 
+        post("/chromeaddarticle", (req, res) -> {
+
+            Map<String, Object> model = new HashMap<>();
+            try{
+
+                String username = req.queryParams("username");
+                User u = new Sql2oUserDao(sql2o).find(username);
+                String url = req.queryParams("url"); //chrome.history api call
+                String articleExtract = extractText(url); //extracts article text as well as title and other info
+                String[] parsedText = articleExtract.split("\\r?\\n");
+                    /*
+                    Get title from extracted text which is almost always first line
+                    */
+                String title = parsedText[0];
+
+                    /*
+                    Get news source from extracted url host name
+                     */
+                String newsSource = new URL(url).getHost();
+                newsSource = newsSource.replace("www.", "");
+                newsSource = newsSource.replace(".com", "");
+                if (newsSource == null) {
+                    newsSource = "News Source could not be identified";
+                }
+
+                int biasRating = politicalBiasAPICall(articleExtract);
+                System.out.println("API call passed");
+                String topic = req.queryParams("topic");
+                int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
+                long currentDate = (new Date().getTime())/ 1000;
+
+
+                Sql2oArticleDao articleDao = new Sql2oArticleDao(sql2o);
+                Article article = new Article(url, title, newsSource, biasRating, topic, numWords);
+                articleDao.add(article);
+                System.out.println(article.toString());
+                System.out.println("new article added to DB");
+                UserReadings userReading = new UserReadings(article.getArticleID(), u.getUserID(), currentDate);
+                new Sql2oUserReadingsDao(sql2o).add(userReading);
+                System.out.println("new UReading added to DB");
+                List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
+                Statistics stats = extractFromStatsList(statsList);
+                System.out.println("user stats found");
+                List<UserReadings> ur = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(u.getUserID());
+                System.out.println("user readings retrieved");
+                List<Article> arts = new ArrayList<>();
+                for(UserReadings r : ur) {
+                    System.out.println(r.getArticleID());
+                    List<Article> artsList = articleDao.find(r.getArticleID());
+                    Article art = extractFromArtsList(artsList);
+                    System.out.println(art.toString());
+                    arts.add(art);
+                    System.out.println("article added");
+                }
+
+                new Sql2oStatisticsDao(sql2o).update(stats.getID(), arts);
+                System.out.println("stats updated");
+
+            } catch (DaoException ex) {
+                System.out.print(ex);
+                model.put("failedFind", "true");
+            }
+            res.status(201);
+            res.type("text/html");
+            res.redirect("/");
+            return new ModelAndView(model, "public/templates/addarticle.vm");
+        });
+
         //delarticle route; delete an article
         post("/delarticle", (req, res) -> {
             String url = req.queryParams("url");
