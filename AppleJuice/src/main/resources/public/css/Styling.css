@@ -47,10 +47,10 @@ a:link {
 }
 
 .buttonBiasRating {
-     background-color: #D2E3FF; /* Green */
-     border: 2px solid #005EFF;
+     background-color: var(--color2);
+     border: 2px solid var(--color1);
      border-radius: 8px;
-     color: #005EFF;
+     color: var(--color1);
      padding: 2px 12px 8px 12px;
      text-align: center;
      font-family: "Segoe UI", sans-serif;
@@ -58,10 +58,10 @@ a:link {
      display: inline-block;
  }
 .buttonBiasRating:hover {
-    background-color: #005EFF; /* Green */
-    border: 2px solid #005EFF;
+    background-color:  var(--color1);
+    border: 2px solid  var(--color1);
     border-radius: 8px;
-    color: #D2E3FF;
+    color:  var(--color2);
     padding: 2px 12px 8px 12px;
     text-align: center;
     font-family: "Segoe UI", sans-serif;
@@ -70,10 +70,10 @@ a:link {
 }
 
 .buttonBigNews {
-    background-color: #D2E3FF; /* Green */
-    border: 2px solid #005EFF;
+    background-color:  var(--color2);
+    border: 2px solid  var(--color1);
     border-radius: 8px;
-    color: #005EFF;
+    color:  var(--color1);
     padding: 2px 12px 8px 12px;
     text-align: center;
     font-family: "Segoe UI", sans-serif;
@@ -81,10 +81,10 @@ a:link {
     display: inline-block;
 }
 .buttonBigNews:hover {
-    background-color: #005EFF; /* Green */
-    border: 2px solid #005EFF;
+    background-color:  var(--color1);
+    border: 2px solid  var(--color1);
     border-radius: 8px;
-    color: #D2E3FF;
+    color:  var(--color2);
     padding: 2px 12px 8px 12px;
     text-align: center;
     font-family: "Segoe UI", sans-serif;
@@ -92,51 +92,6 @@ a:link {
     display: inline-block;
 }
 
-.buttonBiasRatingR {
-    background-color: #b39696; /* Green */
-    border: 2px solid #ff0000;
-    border-radius: 8px;
-    color: #ff0000;
-    padding: 2px 12px 8px 12px;
-    text-align: center;
-    font-family: "Segoe UI", sans-serif;
-    font-size: 18pt;
-    display: inline-block;
-}
-.buttonBiasRatingR:hover {
-    background-color: #ff0000; /* Green */
-    border: 2px solid #ff0000;
-    border-radius: 8px;
-    color: #b39696;
-    padding: 2px 12px 8px 12px;
-    text-align: center;
-    font-family: "Segoe UI", sans-serif;
-    font-size: 18pt;
-    display: inline-block;
-}
-
-.buttonBigNewsR {
-    background-color: #b39696; /* Green */
-    border: 2px solid #ff0000;
-    border-radius: 8px;
-    color: #ff0000;
-    padding: 2px 12px 8px 12px;
-    text-align: center;
-    font-family: "Segoe UI", sans-serif;
-    font-size: 18pt;
-    display: inline-block;
-}
-.buttonBigNewsR:hover {
-    background-color: #ff0000; /* Green */
-    border: 2px solid #ff0000;
-    border-radius: 8px;
-    color: #b39696;
-    padding: 2px 12px 8px 12px;
-    text-align: center;
-    font-family: "Segoe UI", sans-serif;
-    font-size: 18pt;
-    display: inline-block;
-}
 
 p {
     margin: 8px;
@@ -172,10 +127,10 @@ p {
 }
 
 .newsSourceSm {
-    background-color: #D2E3FF; /* Green */
-    border: 2px solid #005EFF;
+    background-color:  var(--color4);
+    border: 2px solid  var(--color3);
     border-radius: 8px;
-    color: #005EFF;
+    color:  var(--color3);
     padding: 8px;
     text-align: center;
     font-family: "Segoe UI", sans-serif;
@@ -184,43 +139,19 @@ p {
 }
 
 .artScore {
-    background-color: #D2E3FF; /* Green */
-    border: 2px solid #005EFF;
+    background-color:  var(--color4);
+    border: 2px solid  var(--color3);
     border-radius: 8px;
-    color: #005EFF;
+    color:  var(--color3);
     padding: 8px 12px 8px 12px;
     text-align: center;
     font-family: "Segoe UI", sans-serif;
     font-size: 16pt;
     align-self: baseline;
-}
-
-.artScoreR {
-    background-color: #b39696; /* Green */
-    border: 2px solid #ff0000;
-    border-radius: 8px;
-    color: #ff0000;
-    padding: 8px 12px 8px 12px;
-    text-align: center;
-    font-family: "Segoe UI", sans-serif;
-    font-size: 16pt;
-    align-self: baseline;
-}
-
-.newsSourceSmR {
-    background-color: #b39696; /* Green */
-    border: 2px solid #ff0000;
-    border-radius: 8px;
-    color: #ff0000;
-    padding: 8px;
-    text-align: center;
-    font-family: "Segoe UI", sans-serif;
-    font-size: 16pt;
-    align-self: flex-start;
 }
 
 .buttonDev {
-    background-color: #cde5ce; /* Green */
+    background-color: #cde5ce;
     border: 2px solid #009229;
     border-radius: 8px;
     color: #009229;
@@ -232,7 +163,7 @@ p {
     display: inline-block;
 }
 .buttonDev:hover {
-    background-color: #009229; /* Green */
+    background-color: #009229;
     border: 2px solid #cde5ce;
     border-radius: 8px;
     color: #cde5ce;
@@ -280,7 +211,7 @@ p {
 }
 
 .showMore {
-    background-color: #D2E3FF; /* Green */
+    background-color: #D2E3FF;
     border: 2px solid #005EFF;
     border-radius: 8px;
     color: #005EFF;
@@ -387,5 +318,38 @@ p {
     font-size: 16pt;
     margin-left: 24px;
     margin-top: 24px;
+}
 
+label {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 18pt;
+    color: #707070;
+    text-align: left;
+    display: inline-block;
+    width: 160px;
+}
+
+input[type="text"] {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 18pt;
+    color: #707070;
+    width: 200px;
+    padding: 6px;
+    display: inline-block;
+    border: 1px solid #005EFF;
+    border-radius: 6px;
+}
+
+input[type="password"] {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 18pt;
+    color: #707070;
+    width: 200px;
+    padding: 6px;
+    display: inline-block;
+    border: 1px solid #005EFF;
+    border-radius: 6px;
 }
