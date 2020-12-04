@@ -40,11 +40,12 @@ import java.util.Date;
 
 public class Server {
 
-    static boolean LOCAL = false; //set FALSE if deploying/running on heroku, TRUE if testing locally
+    static boolean LOCAL = true; //set FALSE if deploying/running on heroku, TRUE if testing locally
     static Connection conn;
     static Statement st;
 
     final static int PORT = 7000;
+
     private static int getHerokuAssignedPort() {
         String herokuPort = System.getenv("PORT");
         if (herokuPort != null) {
@@ -71,60 +72,28 @@ public class Server {
             String sql;
             Statement st = conn.createStatement();
 
-            if ("SQLite".equalsIgnoreCase(conn.getMetaData().getDatabaseProductName())) {
-                sql = "CREATE TABLE IF NOT EXISTS Articles (articleID INTEGER PRIMARY KEY, " +
-                        "url VARCHAR(1000) UNIQUE, title VARCHAR(100), newsSource VARCHAR(100), " +
-                        "biasRating INTEGER, topic VARCHAR(50), " +
-                        "numWords INTEGER);";
-                st.execute(sql);
+            sql = "CREATE TABLE IF NOT EXISTS Articles (articleID serial PRIMARY KEY, " +
+                    "url VARCHAR(1000) UNIQUE, title VARCHAR(1000), newsSource VARCHAR(1000), " +
+                    "biasRating INTEGER, topic VARCHAR(50), " +
+                    "numWords INTEGER);";
+            st.execute(sql);
 
-                sql = "CREATE TABLE IF NOT EXISTS Users (userID INTEGER PRIMARY KEY, " +
-                        "userName VARCHAR(50) UNIQUE);";
-                st.execute(sql);
+            sql = "CREATE TABLE IF NOT EXISTS Users (userID serial PRIMARY KEY, " +
+                    "userName VARCHAR(50) UNIQUE, userPassword VARCHAR(50), userStatsID INTEGER UNIQUE);";
+            st.execute(sql);
 
-                sql = "CREATE TABLE IF NOT EXISTS Statistics (id INTEGER PRIMARY KEY, biasRating INTEGER, " +
-                        "biasNAME VARCHAR(100), favNewsSource VARCHAR(100), favTopic VARCHAR(50), " +
-                        "execSummary VARCHAR(1000), " +
-                        "userID INTEGER NOT NULL UNIQUE, FOREIGN KEY(userID) REFERENCES Users(userID) " +
-                        "ON UPDATE CASCADE ON DELETE CASCADE);";
-                st.execute(sql);
+            sql = "CREATE TABLE IF NOT EXISTS Statistics (id serial PRIMARY KEY, biasRating INT, " +
+                    "biasName TEXT, favNewsSource TEXT, favTopic TEXT, " +
+                    "execSummary VARCHAR(1000), " +
+                    "userID INTEGER NOT NULL UNIQUE, FOREIGN KEY(userID) REFERENCES Users(userID) " +
+                    "ON UPDATE CASCADE ON DELETE CASCADE);";
+            st.execute(sql);
 
-                sql = "CREATE TABLE IF NOT EXISTS UserReadings (userID INTEGER NOT NULL, " +
-                        "articleID INTEGER NOT NULL, dateRead INTEGER NOT NULL, readingID INTEGER, " +
-                        "FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE)";
-                st.execute(sql);
+            sql = "CREATE TABLE IF NOT EXISTS UserReadings (articleID INTEGER NOT NULL, " +
+                    "userID INTEGER NOT NULL, dateRead BIGINT NOT NULL, readingID serial, " +
+                    "FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE)";
+            st.execute(sql);
 
-                sql = "INSERT INTO Users(userID, userName, userPassword, userStatsID)" +
-                        " VALUES (1, 'admin', 'adminPassword', 1);";
-                st.execute(sql);
-
-                sql = "INSERT INTO Statistics (id, biasRating, biasName,favNewsSource," +
-                        " favTopic, execSummary, userID) VALUES (1, 0, 'Minimal Bias'," +
-                        " 'CNN', 'Politics', 'ADMIN SUMMARY', 1);";
-                st.execute(sql);
-            } else {
-                sql = "CREATE TABLE IF NOT EXISTS Articles (articleID serial PRIMARY KEY, " +
-                        "url VARCHAR(1000) UNIQUE, title VARCHAR(1000), newsSource VARCHAR(1000), " +
-                        "biasRating INTEGER, topic VARCHAR(50), " +
-                        "numWords INTEGER);";
-                st.execute(sql);
-
-                sql = "CREATE TABLE IF NOT EXISTS Users (userID serial PRIMARY KEY, " +
-                        "userName VARCHAR(50) UNIQUE, userPassword VARCHAR(50), userStatsID INTEGER UNIQUE);";
-                st.execute(sql);
-
-                sql = "CREATE TABLE IF NOT EXISTS Statistics (id serial PRIMARY KEY, biasRating INT, " +
-                        "biasName TEXT, favNewsSource TEXT, favTopic TEXT, " +
-                        "execSummary VARCHAR(1000), " +
-                        "userID INTEGER NOT NULL UNIQUE, FOREIGN KEY(userID) REFERENCES Users(userID) " +
-                        "ON UPDATE CASCADE ON DELETE CASCADE);";
-                st.execute(sql);
-
-                sql = "CREATE TABLE IF NOT EXISTS UserReadings (articleID INTEGER NOT NULL, " +
-                        "userID INTEGER NOT NULL, dateRead BIGINT NOT NULL, readingID serial, " +
-                        "FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE)";
-                st.execute(sql);
-            }
         } catch (SQLException | URISyntaxException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -173,7 +142,7 @@ public class Server {
             st = conn.createStatement();
             String sql;
 
-            //COMMENT THIS OUT IF YOU WANT TO HAVE PERSISTENCE
+            //COMMENT THIS OUT IF YOU WANT TO HAVE PERSISTENCE FOR TESTING
             sql = "DROP TABLE IF EXISTS Articles";
             st.execute(sql);
             sql = "DROP TABLE IF EXISTS Users";
@@ -225,15 +194,13 @@ public class Server {
             String username = req.queryParams("username");
             String password = req.queryParams("password");
 
-            //TEST, inserting users to database
-            User user = new User(username, null);
-
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
                 if (userDao.find(username) != null) {
 
                     //BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.find(username).getUserPassword());
                     //if (userDao.getPassword(userDao.find(user)).equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))) {
+
                     if (userDao.find(username).getUserPassword().equals(password)) {
                         model.put("existinguser", "true");
                         model.put("username", username);
@@ -245,18 +212,15 @@ public class Server {
                         Statistics stats = extractFromStatsList(statsList);
 
                         if (userID > 0) {
-
                             model.put("added", "true");
                             model.put("biasRating", stats.getBiasRating());
                             model.put("biasName", stats.getBiasName());
                             model.put("favNews", stats.getFavNewsSource());
                             model.put("favTopic", stats.getFavTopic());
                             model.put("execSummary", stats.getExecSummary());
-
                         } else {
                             model.put("failedFind", "true");
                         }
-
                     } else {
                         model.put("notexistinguser", "true");
                     }
@@ -275,41 +239,6 @@ public class Server {
         // root route; check that a user is logged in
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
-            /*
-            if (req.cookie("username") != null) {
-                model.put("username", req.cookie("username"));
-                model.put("password", req.cookie("password"));
-
-                String username = req.cookie("username");
-                User u = new Sql2oUserDao(sql2o).find(username);
-
-                if (username != null) {
-                    List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
-                    Statistics stats = extractFromStatsList(statsList);
-
-                    List<UserReadings> uReadings = new Sql2oUserReadingsDao(sql2o).getMostRecentUserReadings(u.getUserID(), 5);
-                    List<Article> articles = new ArrayList<>();
-
-                    if (uReadings != null) {
-                        for (UserReadings ur : uReadings) {
-                            List<Article> artList = new Sql2oArticleDao(sql2o).find(ur.getArticleID());
-                            Article art = extractFromArtsList(artList);
-                            articles.add(art);
-                        }
-                    } else {
-                        articles = null;
-                    }
-
-                    model.put("biasRating", stats.getBiasRating());
-                    model.put("biasName", stats.getBiasName());
-                    model.put("favNews", stats.getFavNewsSource());
-                    model.put("favTopic", stats.getFavTopic());
-                    model.put("execSummary", stats.getExecSummary());
-                    model.put("Articles", articles);
-
-                } //TODO: Handle else scenario
-            }*/
-
             res.status(200);
             res.type("text/html");
             ModelAndView mdl = new ModelAndView(model, "public/templates/index.vm");
@@ -331,24 +260,17 @@ public class Server {
             String password = req.queryParams("password");
             String confirmPW = req.queryParams("confirmPW");
 
-            User user2 = new User(username, null); //changed constrcutor
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
 
                 if (userDao.find(username) != null) {
                     model.put("userExists", "true");
-//                    res.status(201);
-//                    res.type("text/html");
-//                    ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
-//                    return new VelocityTemplateEngine().render(mdl);
                 } else {
                     System.out.println("no user found, creating new one");
                     model.put("userExists", "false");
                     model.put("added", "true");
                     //String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
                     User user = new User(username, password);
-                    //userDao.add(user);
-//                    int userID = new Sql2oUserDao(getSql2o()).add(user);
                     int userID = new Sql2oUserDao(sql2o).add(user);
 
                     Statistics stats = new Statistics(0, "Neutral Bias",
@@ -356,24 +278,11 @@ public class Server {
                             " Neutral Bias. Your favorite news source is N/A." +
                             " Your favorite topic to read about is N/A", userID);
                     int idStats = new Sql2oStatisticsDao(sql2o).add(stats);
-
-                    //Sql2oArticleDao artDao = new Sql2oArticleDao(sql2o);
-                    //Article art = new Article(username, bcryptHash, username, 123, username, 123, 123, 123);
-                    //artDao.add(art);
                 }
             }
             catch (DaoException e) {
                 model.put("failed", "true");
             }
-
-//            if (userExists) {
-//                res.status(201);
-//                res.type("text/html");
-//                ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
-//                return new VelocityTemplateEngine().render(mdl);
-//            }
-//
-//            String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
 
             res.status(201);
             res.type("text/html");
@@ -595,23 +504,6 @@ public class Server {
             res.status(200);
             return results;
         });
-
-        //TODO: Update addstats for automatic updates
-        //addstats route; add stats to database
-//        post("/addstats", (req, res) -> {
-//            int biasRating = Integer.parseInt(req.queryParams("biasRating"));
-//            String biasName = req.queryParams("biasName");
-//            String favNewsSource = req.queryParams("favNewsSource");
-//            String favTopic = req.queryParams("favTopic");
-//            String execSummary = req.queryParams("execSummary");
-//            int userID = Integer.parseInt(req.queryParams("userID"));
-//
-//            Statistics stats = new Statistics(biasRating, biasName, favNewsSource, favTopic, execSummary, userID);
-//            new Sql2oStatisticsDao(sql2o).add(stats);
-//            res.status(201);
-//            res.type("application/json");
-//            return new Gson().toJson(stats.toString());
-//        });
 
         //delstats route; delete a user's stats
         post("/delstats", (req, res) -> {
