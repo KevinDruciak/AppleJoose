@@ -375,3 +375,17 @@ p {
     margin-top: 24px;
 
 }
+.SignUpbutton:hover {
+    display: inline-block;
+    background-color: #005EFF;
+    border: 2px solid #D2E3FF;
+    border-radius: 8px;
+    color: #D2E3FF;
+    padding: 8px 12px 8px 12px;
+    text-align: left;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 16pt;
+    margin-left: 24px;
+    margin-top: 24px;
+
+}
