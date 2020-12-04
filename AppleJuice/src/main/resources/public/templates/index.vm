@@ -3,6 +3,7 @@
 
 #if($existinguser)
 <h1>Hello $username,</h1>
+    ## Make a grey option here for 0 results
     #if($biasRating < 0)
         <p class="linkIntro">Your bias rating is:</p>
         <a href="/stats" class="buttonBiasRating">$biasRating</a>
@@ -29,7 +30,7 @@
         <a href="/stats" class="buttonBigNewsR">$favTopic</a>
     #end
 
-#parse("public/templates/ArticleCards.vm")
+    #parse("public/templates/ArticleCards.vm")
 
 #else
 <h1>Login to Apple Joose</h1>

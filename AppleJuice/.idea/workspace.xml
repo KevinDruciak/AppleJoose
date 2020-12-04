@@ -24,13 +24,12 @@
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:origin/master" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:origin/testLocalServer" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="65d9d39c-4a16-4f9d-9fd6-cac93b5b8616" name="Default Changelist" comment="Commits:&#10;Added a functional add articles page. The /addarticles route successfully adds a url, passes that url  &#10;to the API and parses all article params EXCEPT timesVisited and timeOnArticle.&#10;&#10;TODO:&#10;* Add a link button to /addarticles on home page.&#10;* Update ArticleCards with live information&#10;* Create individual article pages">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/public/js/delArticle.js" afterDir="false" />
+    <list default="true" id="65d9d39c-4a16-4f9d-9fd6-cac93b5b8616" name="Default Changelist" comment="Dynamic Login / Signup page,&#10;Making the design more consistent with the rest of the site.">
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/fileContent/fileContent.lock" afterDir="false" />
@@ -44,18 +43,18 @@
       <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AppleJuice.db" beforeDir="false" afterPath="$PROJECT_DIR$/AppleJuice.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/Server.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/model/Article.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/model/Article.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/model/Statistics.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/model/Statistics.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oArticleDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oArticleDao.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oStatisticsDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oStatisticsDao.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oUserDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oUserDao.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/css/Styling.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/css/Styling.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/js/passUrl.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/js/passUrl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/persistence/Sql2oUserReadingsDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/persistence/Sql2oUserReadingsDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/public/templates/ArticleCards.vm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/templates/ArticleCards.vm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/public/templates/index.vm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/templates/index.vm" afterDir="false" />
+    </list>
+    <list id="66551b8f-28e8-4fa0-a986-c470daae24be" name="small change to server and continued improvement on Statisitcs class and DAO" comment="small change to server and continued improvement on Statisitcs class and DAO&#10;&#10;(cherry picked from commit 465851aae54cddfb680c4533e33c3fcc2348b4c3)">
+      <changelist_data name="joaokawase" email="jkawase1@jhu.edu" date="1604546001000" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +72,28 @@
         <task path="$PROJECT_DIR$">
           <activation />
         </task>
-        <projects_view />
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AppleJuice" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AppleJuice" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="AppleJuice" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
       </state>
     </system>
   </component>
@@ -88,7 +108,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="master" />
+        <entry key="$PROJECT_DIR$/.." value="testLocalServer" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -101,7 +121,10 @@
     </option>
   </component>
   <component name="ProjectId" id="1iVEf6hbOFwAuX7q4H5qbV4Gmc1" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -118,14 +141,7 @@
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
   <component name="RunManager" selected="Application.Server">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="AppleJuice.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Server" type="Application" factoryName="Application">
+    <configuration name="Server" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="Server" />
       <module name="AppleJuice.main" />
       <method v="2">
@@ -200,32 +216,51 @@
       <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="APITests.testAddUser" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="AppleJuice [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--tests &quot;APITests.testAddUser&quot;" />
+        <option name="scriptParameters" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value=":test" />
+            <option value="clean" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="AppleJuice [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.AppleJuice [jar]" />
+        <item itemvalue="Gradle.AppleJuice [clean]" />
         <item itemvalue="Gradle.APITests.testAddStatistics" />
-        <item itemvalue="Gradle.APITests" />
         <item itemvalue="Gradle.APITests.testAddArticle" />
-        <item itemvalue="Gradle.APITests.testAddUser" />
-        <item itemvalue="Application.Main" />
+        <item itemvalue="Gradle.APITests" />
       </list>
     </recent_temporary>
   </component>
@@ -240,6 +275,13 @@
       <workItem from="1601984460121" duration="403000" />
       <workItem from="1604446689161" duration="3857000" />
       <workItem from="1604514002832" duration="14583000" />
+      <workItem from="1605639821267" duration="1824000" />
+      <workItem from="1605646756507" duration="3298000" />
+      <workItem from="1605668007630" duration="3688000" />
+      <workItem from="1605742404576" duration="166000" />
+      <workItem from="1605750018706" duration="158000" />
+      <workItem from="1607037702785" duration="100000" />
+      <workItem from="1607037835286" duration="4765000" />
     </task>
     <task id="LOCAL-00001" summary="Commits:&#10;Added a functional add articles page. The /addarticles route successfully adds a url, passes that url  &#10;to the API and parses all article params EXCEPT timesVisited and timeOnArticle.&#10;&#10;TODO:&#10;* Add a link button to /addarticles on home page.&#10;* Update ArticleCards with live information&#10;* Create individual article pages">
       <created>1604516818756</created>
@@ -248,7 +290,21 @@
       <option name="project" value="LOCAL" />
       <updated>1604516818756</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Dynamic Login page">
+      <created>1605668934618</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1605668934618</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Dynamic Login / Signup page,&#10;Making the design more consistent with the rest of the site.">
+      <created>1605671669001</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1605671669001</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -265,7 +321,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/master" />
+                        <option value="origin/testLocalServer" />
                       </list>
                     </value>
                   </entry>
@@ -280,7 +336,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Commits:&#10;Added a functional add articles page. The /addarticles route successfully adds a url, passes that url  &#10;to the API and parses all article params EXCEPT timesVisited and timeOnArticle.&#10;&#10;TODO:&#10;* Add a link button to /addarticles on home page.&#10;* Update ArticleCards with live information&#10;* Create individual article pages" />
-    <option name="LAST_COMMIT_MESSAGE" value="Commits:&#10;Added a functional add articles page. The /addarticles route successfully adds a url, passes that url  &#10;to the API and parses all article params EXCEPT timesVisited and timeOnArticle.&#10;&#10;TODO:&#10;* Add a link button to /addarticles on home page.&#10;* Update ArticleCards with live information&#10;* Create individual article pages" />
+    <MESSAGE value="Dynamic Login page" />
+    <MESSAGE value="Dynamic Login / Signup page,&#10;Making the design more consistent with the rest of the site." />
+    <option name="LAST_COMMIT_MESSAGE" value="Dynamic Login / Signup page,&#10;Making the design more consistent with the rest of the site." />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="127" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601984839402">
@@ -291,49 +349,96 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1047" y="224" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1602038847826" />
-    <state x="1373" y="100" width="1094" height="1207" key="DiffContextDialog" timestamp="1604528686260">
+    <state x="1040" y="401" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1607037717866">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1373" y="100" width="1094" height="1207" key="DiffContextDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1604528686260" />
+    <state x="1040" y="401" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1607037717866" />
+    <state x="1373" y="100" width="1094" height="1207" key="DiffContextDialog" timestamp="1605670804797">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1373" y="100" width="1094" height="1207" key="DiffContextDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1605670804797" />
     <state x="1220" y="274" key="FileChooserDialogImpl" timestamp="1602027671683">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1220" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1602027671683" />
-    <state width="1234" height="304" key="GridCell.Tab.0.bottom" timestamp="1604529303810">
+    <state width="1788" height="492" key="GridCell.Tab.0.bottom" timestamp="1607042495287">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
-    <state width="1234" height="304" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1604529303810" />
+    <state width="1788" height="492" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495287" />
     <state width="1398" height="231" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1601984862964" />
-    <state width="1234" height="304" key="GridCell.Tab.0.center" timestamp="1604529303810">
+    <state width="1788" height="492" key="GridCell.Tab.0.center" timestamp="1607042495287">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
-    <state width="1234" height="304" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1604529303810" />
+    <state width="1788" height="492" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495287" />
     <state width="1398" height="231" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1601984862963" />
-    <state width="1234" height="304" key="GridCell.Tab.0.left" timestamp="1604529303810">
+    <state width="1788" height="492" key="GridCell.Tab.0.left" timestamp="1607042495286">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
-    <state width="1234" height="304" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1604529303810" />
+    <state width="1788" height="492" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495286" />
     <state width="1398" height="231" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1601984862963" />
-    <state width="1234" height="304" key="GridCell.Tab.0.right" timestamp="1604529303810">
+    <state width="1788" height="492" key="GridCell.Tab.0.right" timestamp="1607042495287">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
-    <state width="1234" height="304" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1604529303810" />
+    <state width="1788" height="492" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495287" />
     <state width="1398" height="231" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1601984862963" />
-    <state width="196" height="457" key="HiddenNamespacesPopup" timestamp="1604523562124">
+    <state width="1788" height="492" key="GridCell.Tab.1.bottom" timestamp="1607042495287">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="196" height="457" key="HiddenNamespacesPopup/0.0.2560.1400@0.0.2560.1400" timestamp="1604523562124" />
-    <state x="1686" y="424" key="RollbackChangesDialog" timestamp="1604433632378">
+    <state width="1788" height="492" key="GridCell.Tab.1.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495287" />
+    <state width="1788" height="492" key="GridCell.Tab.1.center" timestamp="1607042495287">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1686" y="424" key="RollbackChangesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1604433632378" />
-    <state x="872" y="433" key="Vcs.Push.Dialog.v2" timestamp="1604528232058">
+    <state width="1788" height="492" key="GridCell.Tab.1.center/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495287" />
+    <state width="1788" height="492" key="GridCell.Tab.1.left" timestamp="1607042495287">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="872" y="433" key="Vcs.Push.Dialog.v2/0.0.2560.1400@0.0.2560.1400" timestamp="1604528232058" />
+    <state width="1788" height="492" key="GridCell.Tab.1.left/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495287" />
+    <state width="1788" height="492" key="GridCell.Tab.1.right" timestamp="1607042495287">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1788" height="492" key="GridCell.Tab.1.right/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495287" />
+    <state width="196" height="457" key="HiddenNamespacesPopup" timestamp="1605143101462">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="196" height="457" key="HiddenNamespacesPopup/0.0.2560.1400@0.0.2560.1400" timestamp="1605143101462" />
+    <state x="57" y="154" key="MergeDialog" timestamp="1605669092364">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="57" y="154" key="MergeDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1605669092364" />
+    <state x="278" y="465" key="MultipleFileMergeDialog" timestamp="1605669092369">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="278" y="465" key="MultipleFileMergeDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1605669092369" />
+    <state x="1686" y="424" key="RollbackChangesDialog" timestamp="1605670470345">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1686" y="424" key="RollbackChangesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1605670470345" />
+    <state x="872" y="433" key="Vcs.Push.Dialog.v2" timestamp="1605671675653">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="872" y="433" key="Vcs.Push.Dialog.v2/0.0.2560.1400@0.0.2560.1400" timestamp="1605671675653" />
+    <state x="1322" y="133" width="1094" height="1207" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1605669784739">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1322" y="133" width="1094" height="1207" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1605669784739" />
+    <state x="93" y="100" width="1094" height="1207" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1605669784739">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="93" y="100" width="1094" height="1207" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1605669784739" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/Server.java</url>
+          <line>259</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

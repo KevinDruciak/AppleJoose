@@ -121,7 +121,7 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
             throw new DaoException();
         }
 
-        if (numArticles > 0 && in == null) {
+        if (numArticles > 0 && in != null) {
             if (out.size() < numArticles) {
                 numArticles = out.size();
             }
