@@ -1,0 +1,25 @@
+For our project, we are using a client-server architecture. We developed the entirety of the backend API to deliver the appropriate data/information necessary for the specific page the user is viewing. Upon initially entering out website, the user will be prompted to log in. If they do not have login information, they can create an account. When the user accesses these pages, get requests are made to our backend, which deliver the appropriate view model for that page. We use view models, as the information displayed on the page depends on the data we have stored for that specific user. For example, when the user enters the dashboard, they will see their own personal bias rating, favorite news source, favorite topic, and the 5 most recent articles they read. We use view models as these statistics change over time and change with each user. Thus, a view model was the best approach to designing this application.
+
+In regards to the SOLID design principles, we adhere to them well. Each class has one responsibilty. Our user class simply connects a user to their respective statistics and userReadings. Our Statistics class simply stores all the statistics we have calculated for one user. Our Articles class stores all the information about one article (source, url, title, bias rating, num words, etc.). Lastly, the UserReadings class connects an article to a user. We do this so that we are not storing many instances of the same article for different users. Rather, we can just store all the information about one article (source, url, title, etc.) and then use the UserReading class to connect that article to a user. Furthermore, the UserReadings class stores the date the user read the article, so we can display their 5 most recently read articles. All in all, each class has one main responsibility, and does not take on responsibilties which should be designated to the other classes.
+
+Our code follows the Open-Closed principle. Our backend is designed so you can request all the information you may need to implement new features. For example, we plan on implementing a feature which would graph how the user's bias rating changes over time. Since our UserReadings class stores the date on which a user read an article, we can easily calculate how the user's bias rating has changed over time. At the beginning of our project, we spent a lot of time changing our API so that it would be robust enough to add features without having to change the underlying API. We are now at the stage where we can easily add features to our project without having to change a lot of the underlying code.
+
+For the most part, our code does not need to adhere to the Liskov substitution principle, since none of our main classes extend any other classes. The only classes which implement other classes are our Dao and Sql2o classes. In this case, there isn't an instance in which we need to substitute in something which implements the interface for a parameter which asks for an instance of the interface class.
+
+Once again, we come across another principle which isn't entirely relevant to our project, since of none of our main classes implement an interface. I am talking about the Interface Segregation Principle. However, the interfaces which we do implement, which occurs in our Dao and Sql2o classes, each one has a single responsibility. Specifically, each interface is responsible for defining the methods for interacting with our database for each of our specific classes. Thus, we have an interface for adding, deleting, etc. for Articles, Users, Statistics, and UserReadings. Therefore, each of our interfaces only has one responsibility.
+
+Lastly, we have the Dependency Inversion principle. However, this doesn't really apply to our project since none of our main classes extend any other classes.
+
+In regards to Code Smells, we have gone over our code base and eliminated many code smells. First of all, we don't have large classes. Furthermore, we removed much of the repeated code where we could, thus making our program more efficient. Many of our methods are long, however this length isn't due to poor programming, but rather due to necessity.
+
+In regards to design patterns, we have touched upon some of the ones we have used, but I will explicitly list them here: DAO design pattern and MVC pattern.
+
+Lastly, I will mention what each person did for our code review.
+Kevin - Wrote entirety of Java Documentation for every class and method. Uses official Java documentation syntax to clearly define parameters, return types, deprecated features, and more. Furthermore, he implemented some minor code fixes.
+Simon - Refactored code. Removed redundant/repeated pieces of code. Removed unused methods. Removed excessive comments/comments we no longer needed.
+Connor - Did anlaysis on SOLID design principles, code smells, code architecture, and wrote this entire write up.
+Joao - Removed further redundant comments, and fixed many code issues.
+
+General:
+Changed == to .equals() for string comparisons
+Removed updateArticle() function from Sql2oArticleDao
