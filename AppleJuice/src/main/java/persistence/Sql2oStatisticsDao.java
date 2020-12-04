@@ -18,7 +18,7 @@ public class Sql2oStatisticsDao implements StatisticsDao {
 
     @Override
     public int add(Statistics stats) throws DaoException {
-        try (Connection con = sql2o.open()) {//beginTransaction
+        try (Connection con = sql2o.open()) {
             String statistics = " Statistics ";
             String query = "INSERT INTO" + statistics +" (biasRating, biasName, favNewsSource, favTopic, execSummary, userID)" +
                     " VALUES (:biasRating, :biasName, :favNewsSource," +
@@ -32,7 +32,6 @@ public class Sql2oStatisticsDao implements StatisticsDao {
                     .addParameter("userID", (int) stats.getUserID())
                     .executeUpdate().getKey();
             stats.setID(id);
-            //con.commit();
             return id;
         }
         catch (Sql2oException ex) {
@@ -151,7 +150,5 @@ public class Sql2oStatisticsDao implements StatisticsDao {
             throw new DaoException();
         }
     }
-
-    //WHAT FOLLOWS ARE THE UPDATE FUNCTIONS FOR UPDATING STATISTICS ROW IN DATABASE
 
 }
