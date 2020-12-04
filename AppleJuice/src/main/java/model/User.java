@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a User.
+ */
 public class User {
     private int userID;
     private String userName;
@@ -13,13 +16,22 @@ public class User {
     private int userStatsID;
     private List<UserReadings> userHistory;
 
+    /**
+     * The constructor for User.
+     * @param userName the user's userName
+     * @param password the user's password
+     */
     public User(String userName, String password) {
         this.userPassword = password;
         this.userName = userName;
         this.userHistory = new ArrayList<>();
     }
 
-
+    /**
+     * Checks if User is equal to another User.
+     * @param o the other User
+     * @return true if equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -28,6 +40,10 @@ public class User {
         return userID == u1.userID;
     }
 
+    /**
+     * Presents User in String form.
+     * @return the String form of User
+     */
     @Override
     public String toString() {
         return "User{" +
@@ -37,32 +53,81 @@ public class User {
                 '}';
     }
 
+    /**
+     * Hashes the User.
+     * @return the hashcode of the hashed User
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(userID, userName, userPassword);
+    }
+
+    /**
+     * Gets the encrypted password.
+     * @deprecated
+     * @return the encrypted password
+     */
     public String getEncryption() {
         return this.userPassword;
     }
 
-    @Override
-    public int hashCode() { return Objects.hash(userID, userName, userPassword); }
-
+    /**
+     * Sets id of User.
+     * @param id the value to set id
+     */
     public void setUserID(int id) {
         this.userID = id;
         //this.userStats = new Statistics(this.userID);
     }
 
+    /**
+     * Sets userPassword of User.
+     * @param oldPassword the User's old password
+     * @param newPassword the new password to set
+     */
     public void setUserPassword(String oldPassword, String newPassword) {
-        if (oldPassword == this.userPassword) {
+        if (oldPassword.equals(this.userPassword)) {
             this.userPassword = newPassword;
         }
     }
 
-    public int getUserID() { return this.userID; }
+    /**
+     * Gets userID of User.
+     * @return the userID
+     */
+    public int getUserID() {
+        return this.userID;
+    }
 
-    public String getUserName() { return this.userName; }
+    /**
+     * Gets userName of User.
+     * @return the userName
+     */
+    public String getUserName() {
+        return this.userName;
+    }
 
-    public String getUserPassword() { return userPassword; }
+    /**
+     * Gets userPassword of User.
+     * @return the userPassword
+     */
+    public String getUserPassword() {
+        return userPassword;
+    }
 
-    public List<UserReadings> getUserHistory() { return this.userHistory; }
+    /**
+     * Gets userHistory of User.
+     * @return the userHistory
+     */
+    public List<UserReadings> getUserHistory() {
+        return this.userHistory;
+    }
 
-    public void setUserName(String userName) { this.userName = userName; }
-
+    /**
+     * Sets usernName of User.
+     * @param userName the value to set userName
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }

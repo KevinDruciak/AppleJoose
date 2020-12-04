@@ -7,37 +7,41 @@ import java.util.List;
 
 public interface UserDao {
     /**
-     * Adds user to database
-     * Returns userID if successful
-     * Throws DaoException if no connection can be established with database
+     * Adds user to database.
+     * @param user the User to add
+     * @return userID if successful
+     * @throws DaoException if no connection can be established with database
      */
     int add(User user) throws DaoException;
 
     /**
-     * Lists all users in database
-     * Returns list of users if successful
-     * Throws DaoException if no connection can be established with database
+     * Lists all users in database.
+     * @return list of users if successful
+     * @throws DaoException if no connection can be established with database
      */
     List<User> listAll();
 
     /**
-     * Deletes users from database based on userID and userName
-     * If sql query is successfully executed, true is returned
-     * If something goes wrong with query execution, DaoException is thrown.
+     * Deletes users from database based on userID and userName.
+     * @param userID the userID of the user to delete
+     * @return If sql query is successfully executed, true is returned
+     * @throws DaoException if no connection can be established with database
      */
     boolean delete(int userID) throws DaoException;
 
     /**
-     * Updates user in database
-     * If sql query is successfully executed, true is returned
-     * If something goes wrong with query execution, DaoException is thrown.
+     * Updates user in database.
+     * @param user the User to update
+     * @return If sql query is successfully executed, true is returned
+     * @throws DaoException if no connection can be established with database
      */
     boolean update(User user) throws DaoException;
 
     /**
-     * find user in database
-     * If sql query is successfully executed, true is returned
-     * If something goes wrong with query execution, DaoException is thrown.
+     * Find user in database.
+     * @param username the username of the User to find
+     * @return return found User
+     * @throws DaoException if no connection can be established with database
      */
     User find(String username) throws DaoException;
 }
