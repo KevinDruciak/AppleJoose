@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.HashMap;
 
+/**
+ * Represents a statistics container.
+ */
 public class Statistics {
     private int id;
     private int biasRating;
@@ -15,6 +18,15 @@ public class Statistics {
     private String execSummary;
     private int userID;
 
+    /**
+     * The constructor for Statistics.
+     * @param biasRating the biasRating statistic
+     * @param biasName the name associated with the biasRating
+     * @param favNewsSource the most visited news source
+     * @param favTopic the most visited topic
+     * @param execSummary summary of an Article
+     * @param userID the id of the user associated to this Statistics
+     */
     public Statistics(int biasRating, String biasName, String favNewsSource, String favTopic, String execSummary, int userID) {
         this.biasRating = biasRating;
         this.biasName = biasName;
@@ -29,6 +41,11 @@ public class Statistics {
 //        this.execSummary = this.createExecSummary();
     }
 
+    /**
+     * Checks if Statistics is equal to another Statistics.
+     * @param o the other Statistics
+     * @return true if equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,6 +54,10 @@ public class Statistics {
         return userID == stats.userID;
     }
 
+    /**
+     * Presents statistics in String form.
+     * @return the String form of Statistics
+     */
     @Override
     public String toString() {
         return "Statistics{" +
@@ -44,40 +65,101 @@ public class Statistics {
                 ", biasName='" + biasName + '\'' +
                 ", favNewsSource='" + favNewsSource + '\'' +
                 ", favTopic=" + favTopic + '\'' +
-               // ", recentArticles=" + recentArticles.toString() + '\'' +
+                // ", recentArticles=" + recentArticles.toString() + '\'' +
                 ", execSummary=" + execSummary + '\'' +
                 '}';
     }
 
+    /**
+     * Hashes the Statistics.
+     * @return the hashcode of the hashed Statistics
+     */
     @Override
     public int hashCode() { return Objects.hash(userID); }
 
+    /**
+     * Sets id of Statistics.
+     * @param id the value to set id
+     */
     public void setID(int id) { this.id = id; }
 
+    /**
+     * Gets id of Statistics.
+     * @return the id
+     */
     public int getID() { return this.id; }
 
+    /**
+     * Sets biasRating of Statistics.
+     * @param biasRating the value to set biasRating
+     */
     public void setBiasRating(int biasRating) { this.biasRating = biasRating; }
 
+    /**
+     * Sets favNews of Statistics.
+     * @param favNews the value to set favNews
+     */
     public void setFavNewsSource(String favNews) { this.favNewsSource = favNews; }
 
+    /**
+     * Sets favTopic of Statistics.
+     * @param favTopic the value to set favTopic
+     */
     public void setFavTopic(String favTopic) { this.favTopic = favTopic; }
 
+    /**
+     * Sets biasName of Statistics.
+     * @param biasName the value to set biasName
+     */
     public void setBiasName(String biasName) { this.biasName = biasName; }
 
+    /**
+     * Sets execSummary of Statistics.
+     * @param execSummary the value to set execSummary
+     */
     public void setExecSummary(String execSummary) { this.execSummary = execSummary; }
 
+    /**
+     * Gets biasRating of Statistics.
+     * @return the biasRating
+     */
     public int getBiasRating() { return this.biasRating; }
 
+    /**
+     * Gets biasName of Statistics.
+     * @return the biasName
+     */
     public String getBiasName() { return this.biasName; }
 
+    /**
+     * Gets favNewsSource of Statistics.
+     * @return the favNewsSource
+     */
     public String getFavNewsSource() { return this.favNewsSource; }
 
+    /**
+     * Gets favTopic of Statistics.
+     * @return the favTopic
+     */
     public String getFavTopic() { return this.favTopic; }
 
+    /**
+     * Gets execSummary of Statistics.
+     * @return the execSummary
+     */
     public String getExecSummary() { return this.execSummary; }
 
+    /**
+     * Gets userID of Statistics.
+     * @return the userID
+     */
     public int getUserID() { return this.userID; }
 
+    /**
+     * Associates a name to the integer valued biasRating.
+     * @param bias the biasRating
+     * @return the name of the biasRating
+     */
     public String createBiasName(int bias) {
         String name;
         bias = bias / 8;
@@ -117,11 +199,15 @@ public class Statistics {
         return name;
     }
 
+    /**
+     * Creates a summary of these Statistics.
+     * @return return the summary
+     */
     public String createExecSummary() {
         String text;
 
         text = "You have " + biasName + ". Your favorite news source is " +
-        favNewsSource + ". Your favorite topic to read about is " + favTopic + ".";
+                favNewsSource + ". Your favorite topic to read about is " + favTopic + ".";
 
         return text;
     }
