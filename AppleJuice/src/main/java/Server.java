@@ -40,7 +40,7 @@ import java.util.Date;
 
 public class Server {
 
-    static boolean LOCAL = false; //set FALSE if deploying/running on heroku, TRUE if testing locally
+    static boolean LOCAL = true; //set FALSE if deploying/running on heroku, TRUE if testing locally
     static Connection conn;
     static Statement st;
 
@@ -258,7 +258,7 @@ public class Server {
                         }
 
                     } else {
-                        model.put("notexistinguser", "true");
+                        model.put("existinguser", "false");
                     }
                 }
             } catch (DaoException e) {
@@ -309,7 +309,33 @@ public class Server {
 
                 } //TODO: Handle else scenario
             }*/
+            if(req.cookie("username") != null){
 
+                String username = req.cookie("username");
+                model.put("username", username);
+                model.put("existinguser", true);
+                int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
+                List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
+                Statistics stats = extractFromStatsList(statsList);
+                if (userID > 0) {
+
+                    model.put("added", "true");
+                    model.put("biasRating", stats.getBiasRating());
+                    model.put("biasName", stats.getBiasName());
+                    model.put("favNews", stats.getFavNewsSource());
+                    model.put("favTopic", stats.getFavTopic());
+                    model.put("execSummary", stats.getExecSummary());
+
+                } else {
+                    model.put("failedFind", "true");
+                }
+
+            }
+            else{
+
+                model.put("existinguser", false);
+
+            }
             res.status(200);
             res.type("text/html");
             ModelAndView mdl = new ModelAndView(model, "public/templates/index.vm");
