@@ -24,7 +24,7 @@ public interface ArticleDao {
      * Deletes article from database.
      * @param url the url of the Article to delete
      * @return If sql query is successfully executed, true is returned
-     * If something goes wrong with query execution, DaoException is thrown.
+     * @throws DaoException if no connection can be established with database
      */
     boolean delete(String url) throws DaoException;
 
@@ -32,7 +32,8 @@ public interface ArticleDao {
      * Updates article in database.
      * @param article the Article object to be updated
      * @return If sql query is successfully executed, true is returned
-     * If something goes wrong with query execution, DaoException is thrown.
+     * @throws DaoException if no connection can be established with database
+     * @deprecated not used
      */
     boolean update(Article article) throws DaoException;
 
