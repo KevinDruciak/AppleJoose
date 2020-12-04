@@ -20,7 +20,7 @@ public class Sql2oArticleDao implements ArticleDao {
 
     @Override
     public String add(Article article) throws DaoException {
-        try (Connection con = sql2o.open()) { //beginTransaction
+        try (Connection con = sql2o.open()) {
             String query = "INSERT INTO Articles (url, title, newsSource, " +
                     "biasRating, topic, numWords)" +
                     "VALUES (:url, :title, :newsSource, :biasRating, " +
@@ -34,7 +34,6 @@ public class Sql2oArticleDao implements ArticleDao {
                     .addParameter("numWords", (int) article.getNumWords())
                     .executeUpdate().getKey();
             article.setID(id);
-            //con.commit();
             return article.getUrl();
         } catch (Sql2oException ex) {
             System.out.println(ex.toString());
@@ -68,6 +67,7 @@ public class Sql2oArticleDao implements ArticleDao {
 
     @Override
     public boolean update(Article article) throws DaoException {
+        //UNUSED METHOD
         /*
         try (Connection con = sql2o.open()) {
             String sql = "UPDATE Articles " +
