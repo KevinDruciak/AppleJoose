@@ -222,7 +222,7 @@ public class Server {
                             model.put("failedFind", "true");
                         }
                     } else {
-                        model.put("notexistinguser", "true");
+                        model.put("existinguser", "false");
                     }
                 }
             } catch (DaoException e) {
@@ -239,6 +239,35 @@ public class Server {
         // root route; check that a user is logged in
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
+          
+            if(req.cookie("username") != null){
+
+                String username = req.cookie("username");
+                model.put("username", username);
+                model.put("existinguser", true);
+                int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
+                List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
+                Statistics stats = extractFromStatsList(statsList);
+                if (userID > 0) {
+
+                    model.put("added", "true");
+                    model.put("biasRating", stats.getBiasRating());
+                    model.put("biasName", stats.getBiasName());
+                    model.put("favNews", stats.getFavNewsSource());
+                    model.put("favTopic", stats.getFavTopic());
+                    model.put("execSummary", stats.getExecSummary());
+
+                } else {
+                    model.put("failedFind", "true");
+                }
+
+            }
+            else{
+
+                model.put("existinguser", false);
+
+            }
+
             res.status(200);
             res.type("text/html");
             ModelAndView mdl = new ModelAndView(model, "public/templates/index.vm");
