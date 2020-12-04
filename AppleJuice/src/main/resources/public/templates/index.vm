@@ -1,56 +1,58 @@
 #set( $title = "Welcome Page" )
 #parse("public/templates/top.vm")
-
+<!html--->
 #if($existinguser)
 <h1>Hello $username,</h1>
-    #if($biasRating < 0)
-        <p class="linkIntro">Your bias rating is:</p>
-        <a href="/stats" class="buttonBiasRating">$biasRating</a>
-        <br />
-        <p class="linkIntro">This type of bias is:</p>
-        <a href="/stats" class="buttonBigNews">$biasName</a>
-        <br />
-        <p class="linkIntro">Your favorite news source is:</p>
-        <a href="/stats" class="buttonBigNews">$favNews</a>
-        <br />
-        <p class="linkIntro">Your favorite topic is:</p>
-        <a href="/stats" class="buttonBigNews">$favTopic</a>
+    ## Account Color Variables
+    #if($biasRating == 0)
+        <style>
+            :root {
+                --color1: black;
+                --color2: #acacac;
+            }
+        </style>
+    #elseif($biasRating < 0)
+        <style>
+            :root {
+                --color1: #005EFF;
+                --color2: #D2E3FF;
+            }
+        </style>
     #else
-        <p class="linkIntro">Your bias rating is:</p>
-        <a href="/stats" class="buttonBiasRatingR">$biasRating</a>
-        <br />
-        <p class="linkIntro">This type of bias is:</p>
-        <a href="/stats" class="buttonBigNewsR">$biasName</a>
-        <br />
-        <p class="linkIntro">Your favorite news source is:</p>
-        <a href="/stats" class="buttonBigNewsR">$favNews</a>
-        <br />
-        <p class="linkIntro">Your favorite topic is:</p>
-        <a href="/stats" class="buttonBigNewsR">$favTopic</a>
+        <style>
+            :root {
+                --color1: #ffcccc;
+                --color2: #ff0000;
+            }
+        </style>
     #end
 
-#parse("public/templates/ArticleCards.vm")
+    <p class="linkIntro">Your bias rating is:</p>
+    <a href="/stats" class="buttonBiasRating">$biasRating</a>
+    <br />
+    <p class="linkIntro">This type of bias is:</p>
+    <a href="/stats" class="buttonBigNews">$biasName</a>
+    <br />
+    <p class="linkIntro">Your favorite news source is:</p>
+    <a href="/stats" class="buttonBigNews">$favNews</a>
+    <br />
+    <p class="linkIntro">Your favorite topic is:</p>
+    <a href="/stats" class="buttonBigNews">$favTopic</a>
+
+    #parse("public/templates/ArticleCards.vm")
 
 #else
 <h1>Login to Apple Joose</h1>
 <form action="/" method="post" class="content" onsubmit="return validateUsername();">
     <div class="Q1Box">
-        <div class="row">
-            <div class="col-25">
-                <label for="username">Username:</label>
-            </div>
-            <div class="col-75">
-                <input type="text" placeholder="username" name="username" id="username" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-25">
-                <label for="password">Password:</label>
-            </div>
-            <div class="col-75">
-                <input type="password" placeholder="password" name="password" id="password" />
-            </div>
-        </div>
+        <p>
+            <label for="username">Username:</label>
+            <input type="text" placeholder="username" name="username" id="username" />
+        </p>
+        <p>
+            <label for="password">Password:</label>
+            <input type="password" placeholder="password" name="password" id="password" />
+        </p>
         <div class="row" id="divSubmit">
             <input type="submit" value="Sign in" class="submit" />
         </div>

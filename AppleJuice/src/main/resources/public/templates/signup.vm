@@ -13,30 +13,18 @@
 
 <form action="/signup" method="post" class="content" onsubmit="return validateSignup();">
     <div class="Q1Box">
-        <div class="row">
-            <div class="col-25">
-                <label for="username">Username:</label>
-            </div>
-            <div class="col-75">
-                <input type="text" placeholder="username" name="username" id="username" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-25">
-                <label for="password">Password:</label>
-            </div>
-            <div class="col-75">
-                <input type="password" placeholder="password" name="password" id="password" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-25">
-                <label for="confirmPW">Confirm Password:</label>
-            </div>
-            <div class="col-75">
-                <input type="password" placeholder="re-enter password" name="confirmPW" id="confirmPW" />
-            </div>
-        </div>
+        <p>
+            <label for="username">Username:</label>
+            <input type="text" placeholder="username" name="username" id="username" />
+        </p>
+        <p>
+            <label for="password">Password:</label>
+            <input type="password" placeholder="password" name="password" id="password" />
+        </p>
+        <p>
+            <label for="confirmPW">Confirm Password:</label>
+            <input type="password" placeholder="re-enter password" name="confirmPW" id="confirmPW" />
+        </p>
         <div class="row" id="divSubmit">
             <input class="submit" type="submit" value="Create Account" class="submit" />
         </div>

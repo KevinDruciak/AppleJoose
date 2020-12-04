@@ -2,21 +2,42 @@
 <a href="/addarticle" class="buttonDev">[ Manually add an article ]</a>
 
 <div class="quickArticles">
-    #foreach($Article in $Articles)
-        #if($Article.getBiasRating() < 0)
+    #if($Articles)
+        #foreach($Article in $Articles)
+            ## Article Color Variables
+            #if($Article.getBiasRating() == 0)
+                <style>
+                    :root {
+                        --color3: black;
+                        --color4: #acacac;
+                    }
+                </style>
+            #elseif($Article.getBiasRating() < 0)
+                <style>
+                    :root {
+                        --color3: #005EFF;
+                        --color4: #D2E3FF;
+                    }
+                </style>
+            #else
+                <style>
+                    :root {
+                        --color3: #ffcccc;
+                        --color4: #ff0000;
+                    }
+                </style>
+            #end
+
             <div class="container">
                 <h4>$Article.getTitle()</h4>
                 <p class="newsSourceSm">$Article.getNewsSource()</p>
                 <p class="artScore">$Article.getBiasRating()</p>
                 <a href="$Article.getUrl()" class="articleLink">View Article -></a>
             </div>
-        #else
-            <div class="container">
-                <h4>$Article.getTitle()</h4>
-                <p class="newsSourceSmR">$Article.getNewsSource()</p>
-                <p class="artScoreR">$Article.getBiasRating()</p>
-                <a href="$Article.getUrl()" class="articleLink">View Article -></a>
-            </div>
+
         #end
+    #else
+        <h4>No Recent Articles</h4>
     #end
+
 </div>

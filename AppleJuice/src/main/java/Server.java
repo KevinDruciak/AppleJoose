@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang.ObjectUtils;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
 import org.sqlite.SQLiteConfig;
@@ -211,6 +212,18 @@ public class Server {
                         List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
                         Statistics stats = extractFromStatsList(statsList);
 
+                        // Get 5 most recent user readings and retrieve articles by ID
+                        List<UserReadings> readings = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(userID);
+                        List<Article> articles = new ArrayList<>();
+
+                        if (readings != null) {
+                            for (UserReadings read : readings) {
+                                List<Article> list  = new Sql2oArticleDao(sql2o).find(read.getArticleID());
+                                Article article = extractFromArtsList(list);
+                                articles.add(article);
+                            }
+                        }
+
                         if (userID > 0) {
                             model.put("added", "true");
                             model.put("biasRating", stats.getBiasRating());
@@ -218,6 +231,8 @@ public class Server {
                             model.put("favNews", stats.getFavNewsSource());
                             model.put("favTopic", stats.getFavTopic());
                             model.put("execSummary", stats.getExecSummary());
+                            model.put("Articles", articles);
+
                         } else {
                             model.put("failedFind", "true");
                         }
