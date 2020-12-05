@@ -1,4 +1,4 @@
-#set( $title = "Welcome Page" )
+#set($title = "Welcome Page" )
 #parse("public/templates/top.vm")
 <!html--->
 #if($existinguser)
@@ -42,24 +42,48 @@
     #parse("public/templates/ArticleCards.vm")
 
 #else
-<h1>Login to Apple Joose</h1>
+<style>
+    body {
+        background: linear-gradient(-45deg, #3578f6, #002d69);
+        background-size: 400% 400%;
+        animation: gradient 20s ease infinite;
+    }
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+</style>
 <form action="/" method="post" class="content" onsubmit="return validateUsername();">
     <div class="Q1Box">
+        <p class="boxHeader">Login to Apple Joose</p>
         <p>
-            <label for="username">Username:</label>
-            <input type="text" placeholder="username" name="username" id="username" />
+            <label for="username">Username</label>
         </p>
         <p>
-            <label for="password">Password:</label>
-            <input type="password" placeholder="password" name="password" id="password" />
+            <input type="text" placeholder="Enter your username" name="username" id="username" />
         </p>
-        <div class="row" id="divSubmit">
-            <input type="submit" value="Sign in" class="submit" />
-        </div>
+        <p>
+            <label for="password">Password</label>
+        </p>
+        <p>
+            <input type="password" placeholder="Enter your password" name="password" id="password" />
+        </p>
+        <p>
+            <a href="/signup" class="SignUpbutton">Create a new account</a>
+            <input type="submit" value="Sign in" class="submit" id="divSubmit"/>
+        </p>
     </div>
 
 </form>
-<a href="/signup" class="SignUpbutton">Create new account</a>
+
 <script src="../js/validate.js"></script>
 #end
 

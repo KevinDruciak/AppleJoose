@@ -1,11 +1,30 @@
 #set( $title = "Signup Page" )
 #parse("public/templates/top.vm")
 
+<style>
+    body {
+        background: linear-gradient(-45deg, #3578f6, #002d69);
+        background-size: 400% 400%;
+        animation: gradient 20s ease infinite;
+    }
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+</style>
+
 #if ($added)
 <h1>Account created successfully!</h1>
 <a href="/" class="SignUpbutton"> < Back to login</a>
 #else
-<h1>Create Your Account</h1>
 
 #if ($userExists)
 <h1>Username already taken!</h1> ##change css to make this red/smaller
@@ -13,24 +32,31 @@
 
 <form action="/signup" method="post" class="content" onsubmit="return validateSignup();">
     <div class="Q1Box">
+        <p class="boxHeader">Create your Account</p>
         <p>
-            <label for="username">Username:</label>
-            <input type="text" placeholder="username" name="username" id="username" />
+            <label for="username">Username</label>
         </p>
         <p>
-            <label for="password">Password:</label>
-            <input type="password" placeholder="password" name="password" id="password" />
+            <input type="text" placeholder="Enter your username" name="username" id="username" />
         </p>
         <p>
-            <label for="confirmPW">Confirm Password:</label>
-            <input type="password" placeholder="re-enter password" name="confirmPW" id="confirmPW" />
+            <label for="password">Password</label>
         </p>
-        <div class="row" id="divSubmit">
-            <input class="submit" type="submit" value="Create Account" class="submit" />
-        </div>
+        <p>
+            <input type="password" placeholder="Enter your password" name="password" id="password" />
+        </p>
+        <p>
+            <label for="confirmPW">Confirm Password</label>
+        </p>
+        <p>
+            <input type="password" placeholder="Confirm your password" name="confirmPW" id="confirmPW" />
+        </p>
+        <p>
+            <a href="/" class="SignUpbutton">< Back to login</a>
+            <input type="submit" value="Create account" class="submit" id="divSubmit"/>
+        </p>
     </div>
 </form>
-<a href="/" class="SignUpbutton">< Back to login</a>
 <script src="../js/validate.js"></script>
 #end
 
