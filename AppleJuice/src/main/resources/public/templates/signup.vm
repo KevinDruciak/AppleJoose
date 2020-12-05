@@ -32,7 +32,7 @@
 
 <form action="/signup" method="post" class="content" onsubmit="return validateSignup();">
     <div class="Q1Box">
-        <p class="boxHeader">Create your Account</p>
+        <p class="boxHeader">Create Your Account</p>
         <p>
             <label for="username">Username</label>
         </p>
