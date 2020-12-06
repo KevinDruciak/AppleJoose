@@ -237,12 +237,12 @@ public class Server {
                             model.put("failedFind", "true");
                         }
                     } else {
-                        model.put("existinguser", "false");
+                        model.put("invalidLogin", "true");
                     }
                 }
             } catch (DaoException e) {
                 System.out.println("could not add new user stats");
-                model.put("failed", "true");
+                model.put("invalidLogin", "true");
             }
 
             res.status(201);
