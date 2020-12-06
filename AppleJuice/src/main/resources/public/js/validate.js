@@ -3,9 +3,15 @@ function validateUsername() {
     if (name.value.length < 1) {
         alert("Username cannot be empty!");
         return false;
-    } else {
-        return true;
     }
+
+    const pw = document.getElementById("password");
+    if (pw.value.length < 1) {
+        alert("Password cannot be empty!");
+        return false;
+    }
+
+    return true;
 }
 
 function validateSignup() {
