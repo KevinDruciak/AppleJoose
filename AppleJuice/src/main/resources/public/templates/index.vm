@@ -27,16 +27,16 @@
         </style>
     #end
 
-    <p class="linkIntro">Your bias rating is:</p>
-    <a href="/stats" class="buttonBiasRating">$biasRating</a>
+    <p class="linkIntro">Your bias rating is: </p>
+    <a href="/stats" class="buttonBigNews">$biasRating</a>
     <br />
-    <p class="linkIntro">This type of bias is:</p>
+    <p class="linkIntro">This type of bias is: </p>
     <a href="/stats" class="buttonBigNews">$biasName</a>
     <br />
-    <p class="linkIntro">Your favorite news source is:</p>
+    <p class="linkIntro">Your favorite news source is: </p>
     <a href="/stats" class="buttonBigNews">$favNews</a>
     <br />
-    <p class="linkIntro">Your favorite topic is:</p>
+    <p class="linkIntro">Your favorite topic is: </p>
     <a href="/stats" class="buttonBigNews">$favTopic</a>
 
     #parse("public/templates/ArticleCards.vm")

@@ -22,8 +22,10 @@
 </style>
 
 #if ($added)
-<h1>Account created successfully!</h1>
-<a href="/" class="SignUpbutton"> < Back to login</a>
+    <div class="Q1Box">
+        <p class="boxHeader">Account created successfully!</p>
+        <a href="/" class="SignUpbutton"> < Back to login</a>
+    </div>
 #else
 
 #if ($userExists)
