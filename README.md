@@ -5,6 +5,8 @@ To run our project:
 REMOTELY
 1. Acess this URL: apple-joose.herokuapp.com
 2. If URL doesn't work, in Server.java set the static boolean LOCAL variable to false. Then, run Gradle build tasks clean, jar, deploy Heroku. In other words, this is how you manually deploy our application, however, it should be running to begin with.
+3. If you'd like the Chrome Extension work with the remotely deployed application, you must change the URL we are sending post requests to, from "http://localhost:7000/chromeaddarticle" to "http://apple-joose.herokuapp.com/chromeaddarticle"
+4. Furthermore, you must change the username parameter on line 7 to the username for your account.
 
 LOCALLY
 1. In Server.java set the static boolean LOCAL variable to true. Then run Server.java.
