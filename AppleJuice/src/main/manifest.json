@@ -10,13 +10,12 @@
   ],
   "browser_action": {
 
-    "default_title": "Bear"
+    "default_title": "AppleJOOSE"
 
   },
   "background": {
     "scripts": ["./javaScript/background.js"]
-
   },
   "manifest_version": 2,
-  "permissions": ["tabs"]
+  "permissions": ["tabs", "cookies"]
 }

@@ -562,7 +562,7 @@ public class Server {
         });
 
         post("/chromeaddarticle", (req, res) -> {
-
+            System.out.println("Extension article added");
             Map<String, Object> model = new HashMap<>();
             try{
 
