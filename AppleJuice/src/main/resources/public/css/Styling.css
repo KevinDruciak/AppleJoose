@@ -5,6 +5,7 @@ h1 {
     color: #707070;
     padding-left: 24px;
     text-align: left;
+    font-weight: 500;
 }
 
 h3 {
@@ -16,6 +17,7 @@ h3 {
     padding-top: 32px;
     text-align: left;
     margin: 0;
+    font-weight: 500;
 }
 
 h4 {
@@ -32,6 +34,87 @@ h4 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+}
+
+.main {
+    margin-left: 260px;
+}
+
+.sidebar {
+    background: rgb(2,43,244);
+    background: linear-gradient(0deg, rgba(2,43,244,1) 0%, rgba(0,164,255,1) 100%);
+    height: 100%;
+    width: 260px;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+}
+
+.sidebar > header {
+    color: #005EFF;
+    margin: 36px;
+    padding: 8px;
+    background: #D2E3FF;
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 24pt;
+    text-align: center;
+    border-radius: 8px;
+
+}
+
+.sidebar > p {
+    margin: 0 0 0 74px;
+    padding: 8px 65px 8px 24px;
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 24pt;
+    text-align: left;
+}
+
+.pagelink {
+    background: rgba(0, 0, 0, 0);
+    color: #FFFFFF;
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 24pt;
+    text-align: center;
+}
+
+.pagelink[id="selected"] {
+    background: rgb(2,43,244);
+    border-radius: 8px 0 0 8px;
+}
+
+.sideBottom {
+    position: absolute;
+    bottom: 36px;
+    left: 36px;
+    background: #D2E3FF;
+    border-radius: 8px;
+    padding: 8px;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.sideBottom > p {
+    color: #005EFF;
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 18pt;
+    text-align: center;
+    float: none;
+}
+
+.sideBottom > p[id=name] {
+    text-decoration: underline;
+}
+
+.sideBottom .submit {
+    align-self: flex-end;
+    float: none;
 }
 
 /* Scrollbar styling */

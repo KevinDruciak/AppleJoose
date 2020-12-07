@@ -1,0 +1,18 @@
+<div class="sidebar">
+    <header>Apple Joose</header>
+
+    #if($title == "Welcome Page")
+        <p class="pagelink" id="selected"> Overview </p>
+        <p class="pagelink"> Stats </p>
+    #else
+        <p class="pagelink"> Overview </p>
+        <p class="pagelink"> Stats </p>
+    #end
+
+
+    <div class="sideBottom">
+        <p>Logged in as:</p>
+        <p id="name">$username</p>
+        <p><input type="submit" value="Logout" class="submit" id="divLogOut"/></p>
+    </div>
+</div>

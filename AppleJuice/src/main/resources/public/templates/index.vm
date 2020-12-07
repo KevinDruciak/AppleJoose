@@ -2,45 +2,48 @@
 #parse("public/templates/top.vm")
 <!html--->
 #if($existinguser)
-<h1>Hello $username,</h1>
-    ## Account Color Variables
-    #if($biasRating == 0)
-        <style>
-            :root {
-                --color1: black;
-                --color2: #acacac;
-            }
-        </style>
-    #elseif($biasRating < 0)
-        <style>
-            :root {
-                --color1: #005EFF;
-                --color2: #D2E3FF;
-            }
-        </style>
-    #else
-        <style>
-            :root {
-                --color1: #ffcccc;
-                --color2: #ff0000;
-            }
-        </style>
-    #end
+    #parse("public/templates/sidebar.vm")
 
-    <p class="linkIntro">Your bias rating is: </p>
-    <a href="/stats" class="buttonBigNews">$biasRating</a>
-    <br />
-    <p class="linkIntro">This type of bias is: </p>
-    <a href="/stats" class="buttonBigNews">$biasName</a>
-    <br />
-    <p class="linkIntro">Your favorite news source is: </p>
-    <a href="/stats" class="buttonBigNews">$favNews</a>
-    <br />
-    <p class="linkIntro">Your favorite topic is: </p>
-    <a href="/stats" class="buttonBigNews">$favTopic</a>
+    <div class="main">
+        <h1>Hello $username,</h1>
+        ## Account Color Variables
+        #if($biasRating == 0)
+            <style>
+                :root {
+                    --color1: black;
+                    --color2: #acacac;
+                }
+            </style>
+        #elseif($biasRating < 0)
+            <style>
+                :root {
+                    --color1: #005EFF;
+                    --color2: #D2E3FF;
+                }
+            </style>
+        #else
+            <style>
+                :root {
+                    --color1: #ffcccc;
+                    --color2: #ff0000;
+                }
+            </style>
+        #end
 
-    #parse("public/templates/ArticleCards.vm")
+        <p class="linkIntro">Your bias rating is: </p>
+        <a href="/stats" class="buttonBigNews">$biasRating</a>
+        <br />
+        <p class="linkIntro">This type of bias is: </p>
+        <a href="/stats" class="buttonBigNews">$biasName</a>
+        <br />
+        <p class="linkIntro">Your favorite news source is: </p>
+        <a href="/stats" class="buttonBigNews">$favNews</a>
+        <br />
+        <p class="linkIntro">Your favorite topic is: </p>
+        <a href="/stats" class="buttonBigNews">$favTopic</a>
 
+        #parse("public/templates/ArticleCards.vm")
+    </div>
 #else
 <style>
     body {
