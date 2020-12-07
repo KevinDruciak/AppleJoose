@@ -2,7 +2,7 @@
 #parse("public/templates/top.vm")
 <!html--->
 #if($existinguser)
-    #parse("public/templates/sidebar.vm")
+    ##parse("public/templates/sidebar.vm")
 
     <div class="main">
         <h1>Hello $username,</h1>
@@ -34,7 +34,7 @@
         <a href="/statsBIAS" class="buttonBigNews">$biasRating</a>
         <br />
         <p class="linkIntro">This type of bias is: </p>
-        <a href="/stats" class="buttonBigNews">$biasName</a>
+        <a href="/statsBIAS" class="buttonBigNews">$biasName</a>
         <br />
         <p class="linkIntro">Your favorite news source is: </p>
         <a href="/favNews" class="buttonBigNews">$favNews</a>

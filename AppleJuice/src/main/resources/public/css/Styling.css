@@ -37,7 +37,8 @@ h4 {
 }
 
 .main {
-    margin-left: 260px;
+    /*margin-left: 260px;*/
+    margin-left: 20px;
 }
 
 .sidebar {
