@@ -1,20 +1,20 @@
 # 2020-fall-group-apple-jOOSE
 Group Repo for team Apple jOOSE
 
-To run our project: 
+To run our project:
+REMOTELY
 1. Acess this URL: apple-joose.herokuapp.com
-2. If URL doesn't work, run Gradle build tasks clean, jar, deploy Heroku. In other words, this is how you manually deploy our application, however, it should be running to begin with.
-IGNORE
-1. Go to chrome://extensions/ and enable developer settings for extensions.
-2. Once step 1 is complete, click 'Load Unpacked' button on the chrome://extensions/ page and then select the AppleJuice/src/main
-folder as the extension source. (Cloning the repo or downloadign a copy is necessary for this to work)
-3. Now the extension should show up on the chrome://extensions/ page as a viable option, with a button to enable it for use on your chrome browser, click it.
-4. Whenever you visit a website, the extension logs the URL to a webpage. Click on the extension icon in the top right hand corner to access this webpage.
-5. Finally, for the server side of the project, simply run the main method of the Main.java file under AppleJuice/src/main/java folder. Running this file should
-create the database and establish the server connection to localhost:7000.
-6. The app is now up and running and as features expand, this set up should work without having to change anything apart from running Main.java to establish the conenction with the server side and visiting chrome://extensions/ to make sure the extension has been updated to the most recent version. (Updating the extension simply consists of clicking the refresh button which will show up in the bottom of the extensions card)
-IGNORE
+2. If URL doesn't work, in Server.java set the static boolean LOCAL variable to false. Then, run Gradle build tasks clean, jar, deploy Heroku. In other words, this is how you manually deploy our application, however, it should be running to begin with.
 
+LOCALLY
+1. In Server.java set the static boolean LOCAL variable to true. Then run Server.java.
+2. If you would like to use the Chrome Extension, simply go to background.js and enter the username for your account on line 7 in place of Connor. We will change the extension so it automatically grabs your username in the future. For now, you must enter it manually.
+3. Go to chrome://extensions/ and enable developer settings for extensions.
+4. Click 'Load Unpacked' button on the chrome://extensions/ page and then select the AppleJuice/src/main
+folder as the extension source. (Cloning the repo or downloadign a copy is necessary for this to work)
+5. Now the extension should show up on the chrome://extensions/ page as a viable option, with a button to enable it for use on your chrome browser, click it.
+6. Whenever you visit a website, the extension logs the URL to a webpage.
+7. You should now be able to access the website through localhost:7000.
 
 Iteration 1 Notes:
 * We definitely did not achieve all of our functional requirements as we are still lacking some
