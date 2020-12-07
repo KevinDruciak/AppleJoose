@@ -1,0 +1,116 @@
+#set($title = "Welcome Page" )
+
+<var id="data" style="font-size:0px">$data</var>
+<var id="type" style="font-size:0px">$type</var>
+
+#parse("public/templates/top.vm")
+<!html--->
+<p>
+<a href="/" class="SignUpbutton" style="position:absolute; top:32px; left:32px; z-index: 1;">Back to Dashboard</a>
+</p>
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<style>
+    body {
+        color: #005EFF;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #chart-one {
+        height: 75%;
+        width: 80%;
+        margin: 0 auto;
+    }
+</style>
+
+
+
+<body>
+<div id="chart-one"></div>
+<script>
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+
+    let data = document.getElementById("data")
+    let data2 = []
+    let tempString = data.innerText.substring(1, data.innerText.length-1)
+    let stringArray = tempString.split(", ")
+    index = 0
+    stringArray.forEach(myFunction);
+    function myFunction(item, index) {
+        let stringArray2 = item.split("=")
+        data2.push([stringArray2[0], parseInt(stringArray2[1])])
+    }
+
+    chartOneData = {}
+    let type = document.getElementById("type").innerText
+    if (type === "topic") {
+        chartOneData = {
+            type: "bar",
+            title: {
+                text: "Favorite Topics For All Users",
+                adjustLayout: true
+            },
+            tooltip: {
+                text: 'Topic: %kt<br>Frequency: %v'
+            },
+            scaleX: {
+                label: {
+                    text: 'Favorite Topics'
+                },
+                item: {
+                    angle: '-45'
+                }
+            },
+            scaleY: {
+                label: {
+                    text: 'Frequency'
+                }
+            },
+            series: [{
+                values: data2
+            }],
+            plotarea: {
+                margin: 'dynamic'
+            }
+        };
+    } else {
+        chartOneData = {
+            type: "bar",
+            title: {
+                text: "Favorite News Sources For All Users",
+                adjustLayout: true
+            },
+            tooltip: {
+                text: 'Source: %kt<br>Frequency: %v'
+            },
+            scaleX: {
+                label: {
+                    text: 'Favorite News Sources'
+                },
+                item: {
+                    angle: '-45'
+                }
+            },
+            scaleY: {
+                label: {
+                    text: 'Frequency'
+                }
+            },
+            series: [{
+                values: data2
+            }],
+            plotarea: {
+                margin: 'dynamic'
+            }
+        };
+    }
+    zingchart.render({
+        id: "chart-one",
+        data: chartOneData,
+        height: "100%",
+        width: "100%"
+    });
+</script>
+</body>
