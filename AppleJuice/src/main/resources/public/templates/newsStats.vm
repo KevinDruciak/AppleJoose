@@ -1,7 +1,12 @@
-#set($title = "Welcome Page" )
-
 <var id="data" style="font-size:0px">$data</var>
 <var id="type" style="font-size:0px">$type</var>
+
+#if($type == "topic")
+    #set($title = "Favorite Topics Statistics" )
+#elseif($type == "news")
+    #set($title = "Favorite News Sources Statistics" )
+#end
+
 
 #parse("public/templates/top.vm")
 <!html--->
