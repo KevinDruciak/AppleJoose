@@ -265,6 +265,9 @@ public class Server {
                             }
                         }
 
+                        // Put articles in most recent first order
+                        Collections.reverse(articles);
+
                         if (userID > 0) {
                             model.put("added", "true");
                             model.put("biasRating", stats.getBiasRating());
@@ -295,7 +298,7 @@ public class Server {
         // root route; check that a user is logged in
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
-          
+
             if(req.cookie("username") != null){
 
                 String username = req.cookie("username");
@@ -304,14 +307,29 @@ public class Server {
                 int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
                 List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
                 Statistics stats = extractFromStatsList(statsList);
-                if (userID > 0) {
+                // Get 5 most recent user readings and retrieve articles by ID
+                List<UserReadings> readings = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(userID);
+                List<Article> articles = new ArrayList<>();
 
+                if (readings != null) {
+                    for (UserReadings read : readings) {
+                        List<Article> list  = new Sql2oArticleDao(sql2o).find(read.getArticleID());
+                        Article article = extractFromArtsList(list);
+                        articles.add(article);
+                    }
+                }
+
+                // Put articles in most recent first order
+                Collections.reverse(articles);
+
+                if (userID > 0) {
                     model.put("added", "true");
                     model.put("biasRating", stats.getBiasRating());
                     model.put("biasName", stats.getBiasName());
                     model.put("favNews", stats.getFavNewsSource());
                     model.put("favTopic", stats.getFavTopic());
                     model.put("execSummary", stats.getExecSummary());
+                    model.put("Articles", articles);
 
                 } else {
                     model.put("failedFind", "true");
@@ -528,14 +546,14 @@ public class Server {
 
                     new Sql2oStatisticsDao(sql2o).update(stats.getID(), arts);
                     System.out.println("stats updated");
-              } catch (DaoException ex) {
+                } catch (DaoException ex) {
                     System.out.print(ex);
                     model.put("failedFind", "true");
-              }
+                }
             } else {
-                  model.put("failedFind", "true");
+                model.put("failedFind", "true");
             }
-             
+
             res.status(201);
             res.type("text/html");
             res.redirect("/");

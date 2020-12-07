@@ -1,38 +1,30 @@
 <h3>Your most recent articles</h3>
-<a href="/addarticle" class="buttonDev">[ Manually add an article ]</a>
-
+<p>
+    <a href="/addarticle" class="buttonDev">[ Manually add an article ]</a>
+</p>
+<div class="quickArticlesWrap">
 <div class="quickArticles">
-    #if($Articles)
+    #if($Articles.size() != 0)
         #foreach($Article in $Articles)
             ## Article Color Variables
             #if($Article.getBiasRating() == 0)
-                <style>
-                    :root {
-                        --color3: black;
-                        --color4: #acacac;
-                    }
-                </style>
+                #set($color1 = "#000000")
+                #set($color2 = "#acacac")
             #elseif($Article.getBiasRating() < 0)
-                <style>
-                    :root {
-                        --color3: #005EFF;
-                        --color4: #D2E3FF;
-                    }
-                </style>
+                #set($color1 = "#005EFF")
+                #set($color2 = "#D2E3FF")
             #else
-                <style>
-                    :root {
-                        --color3: #ffcccc;
-                        --color4: #ff0000;
-                    }
-                </style>
+                #set($color1 = "#ffcccc")
+                #set($color2 = "#ff0000")
             #end
 
             <div class="container">
                 <h4>$Article.getTitle()</h4>
-                <p class="newsSourceSm">$Article.getNewsSource()</p>
-                <p class="artScore">$Article.getBiasRating()</p>
-                <a href="$Article.getUrl()" class="articleLink">View Article -></a>
+                <div class="bottom-wrap">
+                <p class="newsSourceSm" style="background-color:$color2;color:$color1;border: 2px solid  $color1">$Article.getNewsSource()</p>
+                <p class="artScore" style="background-color:$color2;color:$color1;border: 2px solid  $color1">$Article.getBiasRating()</p>
+                <a href="$Article.getUrl()" class="articleLink">View Article <i class="fas fa-external-link-alt"></i> </a>
+                </div>
             </div>
 
         #end
@@ -40,4 +32,5 @@
         <h4>No Recent Articles</h4>
     #end
 
+</div>
 </div>
