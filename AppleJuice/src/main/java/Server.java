@@ -205,7 +205,7 @@ public class Server {
             st.execute(sql);
 
             sql = "INSERT INTO Users(userID, userName, userPassword, userStatsID)" +
-                    " VALUES (1, 'admin', 'adminPassword', 1);";
+                    " VALUES (1, 'Politics', 'adminPassword', 1);";
             st.execute(sql);
 
             sql = "INSERT INTO Statistics (id, biasRating, biasName,favNewsSource," +
@@ -256,6 +256,7 @@ public class Server {
                         // Get 5 most recent user readings and retrieve articles by ID
                         List<UserReadings> readings = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(userID);
                         List<Article> articles = new ArrayList<>();
+
 
                         if (readings != null) {
                             for (UserReadings read : readings) {
@@ -649,6 +650,54 @@ public class Server {
             return results;
         });
 
+        //favTopic route; displays fav Topic stats
+        get("/favTopic", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
+
+            Map<String, Integer> data = new HashMap<>();
+
+            List<User> users = new Sql2oUserDao(sql2o).listAll();
+            for (User user : users) {
+                Integer freq = data.get(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic());
+                freq = (freq == null) ? 1 : ++freq;
+                if (!sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic().equals("N/A")) {
+                    data.put(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic(), freq);
+                }
+            }
+
+            model.put("data", data);
+            model.put("type", "topic");
+            //String results = new Gson().toJson(sql2oStatsDao.find(u.getUserID()));
+            res.type("text/html");
+            res.status(200);
+            return new ModelAndView(model, "public/templates/newsStats.vm");
+        }, new VelocityTemplateEngine());
+
+        //favNews route; displays fav News stats
+        get("/favNews", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
+
+            Map<String, Integer> data = new HashMap<>();
+
+            List<User> users = new Sql2oUserDao(sql2o).listAll();
+            for (User user : users) {
+                Integer freq = data.get(sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource());
+                freq = (freq == null) ? 1 : ++freq;
+                if (!sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource().equals("N/A")) {
+                    data.put(sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource(), freq);
+                }
+            }
+
+            model.put("data", data);
+            model.put("type", "news");
+
+            res.type("text/html");
+            res.status(200);
+            return new ModelAndView(model, "public/templates/newsStats.vm");
+        }, new VelocityTemplateEngine());
+
         //delstats route; delete a user's stats
         post("/delstats", (req, res) -> {
             int userID = Integer.parseInt(req.queryParams("userID"));
@@ -658,6 +707,8 @@ public class Server {
             return new Gson().toJson(userID);
         });
     }
+
+
 
     //HELPER METHODS
 
