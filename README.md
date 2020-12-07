@@ -50,6 +50,13 @@ Iteration 4 Notes:
 * We also changed the view models. For the login page and sign-in page, we made the style of the user interface more consistent with our home page design. As a result, our view models are now more refined and polished.
 * Notes for next iteration: we still are ironing out our underlying database operations. For some reason, we are still getting errors with our endpoints. This is due to constantly changing environments and class architectures. Every time we update our classes, it breaks our endpoints. Furthermore, when we moved to Heroku it broke our endpoints. Thus, much of our work has been devoted purely to getting our application into a stable viewable state. Once we have reached a stable version of our application, we can truly focus on implementing actual features and ways for the user to explore their own data. Hopefully, we can make this big push on our final iteration.
 
+Iteration 5 Notes:
+* For this iteration, we added the ability to view how the bias rating of all users on the site has changed over time. We plan on implementing a seecond line on this graph to display how your individual rating has changed over time as well. We also added a bar graph to track the most frequent topics for articles read by all users, as well as most frequent news sources for all users. We also plan on adding the individual user's topics and news sources to the bar graph, so that they can compare their reading habits to the rest of the users on the site.
+* The Chrome Extension now fully writes all websites you visit to the database as articles. However, we are still working on getting it to retrieve the user's username automatically. As of now, it simply writes whatever website you visit to the article database under a specific user. This will be addressed prior to our final presentation.
+* We had to create a few more VMs in order to display the aforementioned graphs. Additionally, we created additional endpoints to our API to load these pages with the statistics.
+* We also managed to get our locally hosted applicatin to run, as per Debanik's request. So, hopefully grading will be easier. Please look at the top of the README for instructions on how to run our application locally.
+* We also added cosmetic changes to the manual add articles page, as well as improving the design of our login page, 5 most recent articles, and more.
+
 Work Done:
 
 iter1:
@@ -115,3 +122,25 @@ Kevin/Simon
 
 Joao:
 * Got Heroku hosting to work with our application.
+
+iter5:
+Connor
+* Implemented Chrome Extension to add any website you visit to the articles database.
+* Helped with CSS formatting issues.
+* Fixed Server.java API endpoint for adding Chrome Article.
+
+Simon
+* Added statistics page which shows average bias rating over time for all users on the site.
+* Helped with CSS formatting issues.
+* Fixed various user/password issues, which broke the displaying of statistics and whatnot.
+* Modified application so that it can run locally.
+
+Kevin
+* Added statistics to display the favorite news sources and topics of all users on the site.
+
+Montese
+* Additions and modifications to UI
+* Made formatting for article cards more aesthetically pleasing.
+
+Joao
+* In process of fixing a bug in which the same article can not be added for different users.
