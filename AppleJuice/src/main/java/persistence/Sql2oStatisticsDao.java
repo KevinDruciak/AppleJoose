@@ -7,9 +7,7 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Sql2oStatisticsDao implements StatisticsDao {
     private final Sql2o sql2o;
@@ -149,6 +147,26 @@ public class Sql2oStatisticsDao implements StatisticsDao {
             System.out.println("find stats throwing dao ex");
             throw new DaoException();
         }
+    }
+
+    public ArrayList<Integer> listBIAS() throws DaoException {
+        String sql = "SELECT biasRating FROM Statistics";
+        try (Connection con = sql2o.open()) {
+            ArrayList<Integer> biasList = (ArrayList<Integer>) con.createQuery(sql).executeAndFetch(Integer.class);
+            Collections.sort(biasList);
+            return biasList;
+        }
+        catch (Sql2oException ex) {
+            throw new DaoException();
+        }
+    }
+
+    public float avgBIAS(ArrayList<Integer> biasList) {
+        float average = 0;
+        for(int i : biasList) {
+            average += i;
+        }
+        return average / biasList.size();
     }
 
 }
