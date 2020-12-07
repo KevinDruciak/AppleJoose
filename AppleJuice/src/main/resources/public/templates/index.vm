@@ -28,7 +28,7 @@
     #end
 
     <p class="linkIntro">Your bias rating is:</p>
-    <a href="/stats" class="buttonBiasRating">$biasRating</a>
+    <a href="/statsBIAS" class="buttonBiasRating">$biasRating</a>
     <br />
     <p class="linkIntro">This type of bias is:</p>
     <a href="/stats" class="buttonBigNews">$biasName</a>

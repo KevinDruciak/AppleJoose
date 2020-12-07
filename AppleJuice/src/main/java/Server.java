@@ -1,5 +1,4 @@
 import com.google.gson.Gson;
-import de.l3s.boilerpipe.sax.InputSourceable;
 import exception.DaoException;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.document.TextDocument;
@@ -14,15 +13,13 @@ import model.UserReadings;
 import okhttp3.*;
 
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.commons.lang.ObjectUtils;
 import org.sql2o.Sql2o;
-import org.sql2o.Sql2oException;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
 import org.xml.sax.InputSource;
@@ -38,6 +35,9 @@ import static spark.Spark.*;
 import java.net.*;
 import java.sql.*;
 import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Server {
 
@@ -129,6 +129,35 @@ public class Server {
         return new Sql2o(ds);
     }
 
+    static ArrayList<Float> dailyAvgBias = new ArrayList<>();
+    static ArrayList<String> dailyAvgDates = new ArrayList<>();
+//    static int tempDate = 0;
+
+    private static void updateDailyAvgBias(Sql2o stats) {
+        try {
+            Sql2oStatisticsDao sql2oStats = new Sql2oStatisticsDao(stats);
+
+            if (sql2oStats.listBIAS().size() == 0) {
+                return;
+            }
+
+            float dailyAvg = sql2oStats.avgBIAS(sql2oStats.listBIAS());
+            dailyAvgBias.add(dailyAvg);
+            dailyAvgDates.add(LocalDate.now().toString());
+
+//            dailyAvgBias.add((float) Math.random());
+//            dailyAvgDates.add(Integer.toString(tempDate));
+//            tempDate++;
+
+            for (float i : dailyAvgBias) {
+                System.out.println("TEST DAILY AVG BIAS: " + i);
+            }
+
+        } catch (NullPointerException e) {
+            //do nothing
+        }
+    }
+
     public static void main(String[] args) throws URISyntaxException, SQLException {
         Sql2o sql2o;
         if (!LOCAL) {
@@ -188,6 +217,18 @@ public class Server {
         }
 
         staticFiles.location("/public");
+
+        //
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                updateDailyAvgBias(sql2o);
+            }
+        };
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.DAYS);
+//        scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
 
         post("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
@@ -331,6 +372,47 @@ public class Server {
             res.status(201);
             res.type("text/html");
             ModelAndView mdl = new ModelAndView(model, "public/templates/signup.vm");
+            return new VelocityTemplateEngine().render(mdl);
+        });
+
+        // root route; check that a user is logged in
+        get("/statsBIAS", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+
+            if(req.cookie("username") != null){
+                String username = req.cookie("username");
+                model.put("username", username);
+                model.put("existinguser", true);
+
+                int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
+                List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
+                Statistics stats = extractFromStatsList(statsList);
+
+                if (userID > 0) {
+                    model.put("added", "true");
+                    model.put("biasRating", stats.getBiasRating());
+                    model.put("biasName", stats.getBiasName());
+
+                    ArrayList<Integer> biasList = new Sql2oStatisticsDao(sql2o).listBIAS();
+                    model.put("minBias", biasList.get(0));
+                    model.put("maxBias", biasList.get(biasList.size() - 1));
+                    model.put("avgBias", new Sql2oStatisticsDao(sql2o).avgBIAS(biasList));
+
+                    model.put("dailyAvgBias", dailyAvgBias);
+                    model.put("dailyAvgDates", dailyAvgDates);
+
+                } else {
+                    model.put("failedFind", "true");
+                }
+            }
+            else{
+                model.put("existinguser", false);
+                res.redirect("/");
+            }
+
+            res.status(200);
+            res.type("text/html");
+            ModelAndView mdl = new ModelAndView(model, "public/templates/statsBIAS.vm");
             return new VelocityTemplateEngine().render(mdl);
         });
 
