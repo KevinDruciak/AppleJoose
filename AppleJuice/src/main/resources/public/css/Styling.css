@@ -575,5 +575,10 @@ p {
 
 }
 
+div[id$="license"] {
+    display: none !important;
+}
+
+
 
 
