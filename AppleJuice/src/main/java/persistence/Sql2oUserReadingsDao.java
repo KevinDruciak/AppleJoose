@@ -72,6 +72,7 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
                     "WHERE readingID = :readingID";
             con.createQuery(sql)
                     .addParameter("dateRead", userReadings.getDateRead())
+                    .addParameter("readingID", userReadings.getReadingID())
                     .executeUpdate();
             return true;
         }
@@ -86,6 +87,20 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
                     .addParameter("readingID", readingID)
+                    .executeAndFetch(UserReadings.class);
+        }
+        catch (Sql2oException ex) {
+            throw new DaoException();
+        }
+    }
+
+    @Override
+    public List<UserReadings> find(int articleID, int userID) throws DaoException {
+        String sql = "SELECT DISTINCT * FROM UserReadings WHERE articleID = :articleID AND userID = :userID ORDER BY dateRead DESC";
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .addParameter("articleID", articleID)
+                    .addParameter("userID", userID)
                     .executeAndFetch(UserReadings.class);
         }
         catch (Sql2oException ex) {
