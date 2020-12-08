@@ -102,4 +102,19 @@ public class Sql2oArticleDao implements ArticleDao {
             throw new DaoException();
         }
     }
+
+    @Override
+    public List<Article> find(String url) throws DaoException {
+        String sql = "SELECT * FROM Articles WHERE url = :url";
+        System.out.println("query about to be made");
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .addParameter("url", url)
+                    .executeAndFetch(Article.class);
+        }
+        catch (Sql2oException ex) {
+            System.out.println(ex.toString());
+            throw new DaoException();
+        }
+    }
 }
