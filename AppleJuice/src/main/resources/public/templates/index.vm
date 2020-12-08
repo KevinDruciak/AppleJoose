@@ -9,7 +9,7 @@
     <a id="userstats" href="/userstats"><i class="fas fa-user"></i> User Statistics</a>
     <a id="genstats" href="/genstats"><i class="fas fa-chart-bar"></i> General Statistics</a>
     <a id="about" href="/about"><i class="fas fa-info-circle"></i> About</a>
-    <a id="signout" href="/signout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <a id="signout" href="/" style="display:none;" onclick="deleteAllCookies()">Logout</a>
 </div>
 
 <div id="main2">
