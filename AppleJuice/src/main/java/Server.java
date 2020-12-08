@@ -509,6 +509,7 @@ public class Server {
                     Get news source from extracted url host name
                      */
                     String newsSource = new URL(url).getHost();
+                    System.out.println("Source: " + newsSource);
                     newsSource = newsSource.replace("www.", "");
                     newsSource = newsSource.replace(".com", "");
                     if (newsSource == null) {
