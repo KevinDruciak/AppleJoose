@@ -536,7 +536,7 @@ p {
     top: 0;
     right: 10px;
     font-size: 30px;
-    margin-left: 50px;
+    margin-left: 60px;
     display: block;
 }
 
@@ -569,6 +569,10 @@ p {
 .selected:hover {
     background: rgba(0, 0, 0, 0.2);
 
+}
+
+div[id$="license"] {
+    display: none !important;
 }
 
 
