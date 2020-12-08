@@ -726,6 +726,9 @@ public class Server {
             }
         }
 
+        result.add(avgBiases);
+        result.add(dates);
+
         return result;
     }
 
