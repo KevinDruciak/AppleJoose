@@ -17,5 +17,5 @@
     "scripts": ["./javaScript/background.js"]
   },
   "manifest_version": 2,
-  "permissions": ["tabs", "cookies"]
+  "permissions": ["tabs"]
 }
