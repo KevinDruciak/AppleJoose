@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Server {
 
-    static boolean LOCAL = true; //set FALSE if deploying/running on heroku, TRUE if testing locally
+    static boolean LOCAL = false; //set FALSE if deploying/running on heroku, TRUE if testing locally
     static Connection conn;
     static Statement st;
 
@@ -665,6 +665,98 @@ public class Server {
 
 
     //HELPER METHODS
+
+    /**
+     * Calculates the avgBias rating for specified user or all users in the database over a
+     * given time frame, at specified intervals of time
+     * @param sql2o Sql2o
+     * @param user User, if null then avg. will be calculated for all users in the database
+     * @param timeFrame Long, time frame for avg. in seconds, if null then calculate from beginning of time
+     * @param timeInterval Long, time interval for avg. to be calculated over, if null then default to daily
+     * @return List of 2 Lists of Floats, one will be of the avg.bias ratings at specific intervals and the other
+     * will be a 1-to-1 list of the times corresponding to those bias ratings.
+     */
+    public static List<List<Long>> getPastAvgBias(Sql2o sql2o, User user, Long timeFrame, Long timeInterval) {
+        List<List<Long>> result = null;
+        List<Long> avgBiases = null;
+        List<Long> dates = null;
+        Long startTime;
+        Sql2oUserReadingsDao userReadingsDao = new Sql2oUserReadingsDao(sql2o);
+        Sql2oStatisticsDao statisticsDao = new Sql2oStatisticsDao(sql2o);
+        Sql2oArticleDao articleDao = new Sql2oArticleDao(sql2o);
+        Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+
+        if (timeInterval == null) {
+            timeInterval = Long.valueOf(24*60*60);
+        }
+
+        if (user == null) {
+            List<User> uList = userDao.listAll();
+            List<UserReadings> urList = userReadingsDao.listAll();
+            if (timeFrame == null) {
+                startTime = ((new Date().getTime())/ 1000) - urList.get(0).getDateRead();
+            } else {
+                startTime = ((new Date().getTime())/ 1000) - timeFrame;
+            }
+
+            for (int i = 0; i < timeFrame / timeInterval; i++) {
+                int allUsersBias = 0;
+                int numUsers = 0;
+                for (User u: uList) {
+                    if (getUserBias(u, startTime, (timeInterval + timeInterval * i), articleDao, userReadingsDao) == -1000)
+                    allUsersBias += Long.valueOf(getUserBias(u, startTime, (timeInterval + timeInterval * i), articleDao, userReadingsDao));
+                    numUsers++;
+                }
+                avgBiases.add(Long.valueOf(allUsersBias/numUsers));
+                dates.add(startTime + (timeInterval * i));
+            }
+
+        } else {
+            List<UserReadings> urList = userReadingsDao.getAllUserReadings(user.getUserID());
+            Collections.reverse(urList);
+            if (timeFrame == null) {
+                startTime = ((new Date().getTime())/ 1000) - urList.get(0).getDateRead();
+            } else {
+                startTime = ((new Date().getTime())/ 1000) - timeFrame;
+            }
+
+            for (int i = 0; i < timeFrame / timeInterval; i++) {
+                avgBiases.add(Long.valueOf(getUserBias(user, startTime, (timeInterval + timeInterval * i), articleDao, userReadingsDao)));
+                dates.add(startTime + (timeInterval * i));
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Calculates the avgBias rating for specified user within given time window
+     * @param user User
+     * @param StartTime Long
+     * @param timeInterval Long
+     * @return integer biasRating for user between given dates or -1000 if the StartTime is older than
+     * the given users oldest article;
+     */
+    public static int getUserBias(User user, Long StartTime, Long timeInterval, Sql2oArticleDao articleDao, Sql2oUserReadingsDao userReadingsDao) {
+        List<UserReadings> urList = userReadingsDao.getAllUserReadings(user.getUserID());
+        Collections.reverse(urList);
+
+        if (urList.get(0).getDateRead() > StartTime) {
+            return -1000;
+        }
+
+        int biasTot = 0;
+        int numArticles = 0;
+        for (UserReadings ur : urList) {
+            if (ur.getDateRead() >= StartTime && ur.getDateRead() < (StartTime + timeInterval)) {
+                List<Article> artList = articleDao.find(ur.getArticleID());
+                Article a = extractFromArtsList(artList);
+                biasTot += a.getBiasRating();
+                numArticles++;
+            }
+        }
+        return biasTot/numArticles;
+    }
 
     public static String extractText(String url) {
         URL urlObj = null;

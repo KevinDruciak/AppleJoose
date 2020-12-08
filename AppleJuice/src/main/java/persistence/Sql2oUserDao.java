@@ -72,7 +72,7 @@ public class Sql2oUserDao implements UserDao {
 
     @Override
     public List<User> listAll() throws DaoException {
-        String sql = "SELECT * FROM Users";
+        String sql = "SELECT * FROM Users ORDER BY userID";
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql).executeAndFetch(User.class);
         }

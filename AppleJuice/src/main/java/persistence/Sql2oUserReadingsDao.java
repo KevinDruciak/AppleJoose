@@ -42,7 +42,7 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
 
     @Override
     public List<UserReadings> listAll() {
-        String sql = "SELECT * FROM UserReadings";
+        String sql = "SELECT * FROM UserReadings ORDER BY dateRead";
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql).executeAndFetch(UserReadings.class);
         }
@@ -110,7 +110,7 @@ public class Sql2oUserReadingsDao implements UserReadingsDao {
 
     @Override
     public List<UserReadings> getAllUserReadings(int userID) throws DaoException {
-        String sql = "SELECT * FROM UserReadings WHERE userID = :userID";
+        String sql = "SELECT * FROM UserReadings WHERE userID = :userID ORDER BY dateRead DESC";
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
                     .addParameter("userID", userID)
