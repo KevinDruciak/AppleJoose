@@ -240,7 +240,7 @@ public class Server {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
                 if (userDao.find(username) != null) {
 
-                    //BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.find(username).getUserPassword());
+                    //BCrypt.Result result = BCrypt.verifier().verify(password.toCharArray(), userDao.find(username).getUserPassword());
                     //if (userDao.getPassword(userDao.find(user)).equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))) {
 
                     if (userDao.find(username).getUserPassword().equals(password)) {
@@ -517,19 +517,40 @@ public class Server {
 
                     int biasRating = politicalBiasAPICall(articleExtract);
                     System.out.println("API call passed");
-                    String topic = req.queryParams("topic");
+                    String topic = req.queryParams("topic").toUpperCase();
+                    topic = topic.substring(1).toLowerCase();
                     int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
                     long currentDate = (new Date().getTime())/ 1000;
 
-
                     Sql2oArticleDao articleDao = new Sql2oArticleDao(sql2o);
                     Article article = new Article(url, title, newsSource, biasRating, topic, numWords);
-                    articleDao.add(article);
-                    System.out.println(article.toString());
-                    System.out.println("new article added to DB");
-                    UserReadings userReading = new UserReadings(article.getArticleID(), u.getUserID(), currentDate);
-                    new Sql2oUserReadingsDao(sql2o).add(userReading);
-                    System.out.println("new UReading added to DB");
+                    try {
+                        articleDao.add(article);
+                        System.out.println(article.toString());
+                        System.out.println("new article added to DB");
+                    } catch (DaoException de) {
+                        List<Article> artList = articleDao.find(url);
+                        article = extractFromArtsList(artList);
+                    }
+
+                    Sql2oUserReadingsDao userReadingsDao = new Sql2oUserReadingsDao(sql2o);
+                    if (userReadingsDao.find(article.getArticleID(), u.getUserID()).size() == 0) {
+                        UserReadings userReading = new UserReadings(article.getArticleID(), u.getUserID(), currentDate);
+                        userReadingsDao.add(userReading);
+                        System.out.println("new UReading added to DB");
+                    } else {
+                        List<UserReadings> urList = userReadingsDao.find(article.getArticleID(), u.getUserID());
+                        UserReadings ur = extractFromURList(urList);
+                        if (SameDay(currentDate, ur.getDateRead())) {
+                            ur.setDateRead(currentDate);
+                            userReadingsDao.update(ur);
+                        } else {
+                            UserReadings userReading = new UserReadings(article.getArticleID(), u.getUserID(), currentDate);
+                            userReadingsDao.add(userReading);
+                            System.out.println("new UReading added to DB");
+                        }
+                    }
+
                     List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(u.getUserID());
                     Statistics stats = extractFromStatsList(statsList);
                     System.out.println("user stats found");
@@ -714,7 +735,6 @@ public class Server {
     }
 
 
-
     public static int politicalBiasAPICall(String text) throws IOException {
         int biasRating = 100;
 
@@ -760,5 +780,13 @@ public class Server {
             }
         }
         return wordCount;
+    }
+
+    public static boolean SameDay(long currentDate, long dateRead) {
+        long secondsInDay = 24*60*60;
+        if (currentDate - dateRead > secondsInDay) {
+            return false;
+        }
+        return true;
     }
 }

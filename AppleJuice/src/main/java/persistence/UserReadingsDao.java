@@ -44,6 +44,13 @@ public interface UserReadingsDao {
     List<UserReadings> find(int readingID) throws DaoException;
 
     /**
+     * Finds instance of user readings in database
+     * If sql query is successfully executed, true is returned
+     * If something goes wrong with query execution, DaoException is thrown.
+     */
+    List<UserReadings> find(int articleID, int userID) throws DaoException;
+
+    /**
      * Returns a list of all the articles that a particular user has read
      * If sql query is successfully executed, true is returned
      * If something goes wrong with query execution, DaoException is thrown.
