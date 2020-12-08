@@ -14,6 +14,9 @@
     <div id="divSubmit">
         <input type="submit" value="Enter" class="submit" />
     </div>
+    <div>
+        <a href="/" class="SignUpbutton" >Back to Dashboard</a>
+    </div>
 </form>
 
 <script src="../js/passUrl.js"></script>
