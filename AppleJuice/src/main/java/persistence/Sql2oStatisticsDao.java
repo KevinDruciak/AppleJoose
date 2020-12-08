@@ -169,4 +169,25 @@ public class Sql2oStatisticsDao implements StatisticsDao {
         return average / biasList.size();
     }
 
+    public int statsSize() throws DaoException {
+        String sql = "SELECT COUNT(*) AS count FROM Statistics";
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql).executeAndFetchFirst(Integer.class);
+        }
+        catch (Sql2oException ex) {
+            throw new DaoException();
+        }
+    }
+
+    public int getBiasRatingUser(int userID) throws DaoException {
+        String sql = "SELECT biasRating FROM Statistics WHERE userID = :userID";
+        try (Connection con = sql2o.open()) {
+            return con.createQuery(sql).addParameter("userID", userID)
+                    .executeAndFetchFirst(Integer.class);
+        }
+        catch (Sql2oException ex) {
+            throw new DaoException();
+        }
+    }
+
 }
