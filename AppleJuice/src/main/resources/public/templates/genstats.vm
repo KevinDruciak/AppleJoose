@@ -1,0 +1,184 @@
+#set($title = "General Statistics" )
+#parse("public/templates/top.vm")
+<!html--->
+<div id="mySidebar" class="sidebar">
+    <a id="sbbutton" href="javascript:void(0)" class="sidebarbutton" onclick="toggle()">&gt;</a>
+    <a id="dashboard" href="/" style="display:none;">Dashboard</a>
+    ##<a id="userstats" href="/userstats" style="display:none;">User Statistics</a>
+    <a id="genstats" href="/genstats" style="display:none;">General Statistics</a>
+    <a id="about" href="/about" style="display:none;">About</a>
+    <a id="signout" href="/" style="display:none;" onclick="deleteAllCookies()">Logout</a>
+</div>
+
+<style>
+    body {
+        color: #005EFF;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #news-chart {
+        height: 75%;
+        width: 80%;
+        ##margin: 0 auto;
+        display: inline-block;
+        transition: margin-left .5s; /* If you want a transition effect */
+        padding: 0;
+        margin-left: 50px;
+    }
+
+    #topics-chart {
+        height: 75%;
+        width: 80%;
+        ##margin: 0 auto;
+        display: inline-block;
+        transition: margin-left .5s; /* If you want a transition effect */
+        padding: 0;
+        margin-left: 50px;
+    }
+
+    #bias-chart {
+        height: 75%;
+        width: 80%;
+        ##margin: 0 auto;
+        transition: margin-left .5s; /* If you want a transition effect */
+        padding: 0;
+        margin-left: 50px;
+    }
+</style>
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+
+
+
+##<div id="main2">
+##    <script src="../js/sidebar.js"></script>
+##</div>
+
+<script src="../js/sidebar.js"></script>
+
+<var id="topics" style="font-size:0px">$topics</var>
+<div id="topics-chart"></div>
+<script src="../js/topics.js"></script>
+
+<var id="news" style="font-size:0px">$news</var>
+<div id="news-chart"></div>
+<script src="../js/news.js"></script>
+
+<var id="y" style="font-size:0px">$dailyAvgBias</var>
+<var id="x" style="font-size:0px">$dailyAvgDates</var>
+<div id="bias-chart"></div>
+<script src="../js/bias.js"></script>
+
+##    <script>
+##        ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+##
+##        let data = document.getElementById("topics")
+##        let data2 = []
+##        let tempString = data.innerText.substring(1, data.innerText.length-1)
+##        let stringArray = tempString.split(", ")
+##        index = 0
+##        stringArray.forEach(myFunction);
+##        function myFunction(item, index) {
+##            let stringArray2 = item.split("=")
+##            data2.push([stringArray2[0], parseInt(stringArray2[1])])
+##        }
+##
+##        const topicChartData = {
+##            type: "bar",
+##            title: {
+##                text: "Favorite Topics For All Users",
+##                adjustLayout: true
+##            },
+##            tooltip: {
+##                text: 'Topic: %kt<br>Frequency: %v'
+##            },
+##            scaleX: {
+##                label: {
+##                    text: 'Favorite Topics'
+##                },
+##                item: {
+##                    angle: '-45'
+##                }
+##            },
+##            scaleY: {
+##                label: {
+##                    text: 'Frequency'
+##                }
+##            },
+##            series: [{
+##                values: data2
+##            }],
+##            plotarea: {
+##                margin: 'dynamic'
+##            }
+##        };
+##
+##        zingchart.render({
+##            id: "topics-chart",
+##            data: topicChartData,
+##            height: "100%",
+##            width: "100%"
+##        });
+##    </script>
+##</body>
+
+
+##<var id="news" style="font-size:0px">$news</var>
+##
+####<body>
+##<div id="news-chart" style="display:block;"></div>
+##<script src="../js/news.js"></script>
+
+##    <script>
+##            ##ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+##
+##        let newsdata = document.getElementById("news")
+##        let newsdata2 = []
+##        let newstempString = newsdata.innerText.substring(1, newsdata.innerText.length-1)
+##        let newsstringArray = newstempString.split(", ")
+##        newsindex = 0
+##        newsstringArray.forEach(newsmyFunction);
+##        function newsmyFunction(newsitem, newsindex) {
+##            let newsstringArray2 = newsitem.split("=")
+##            newsdata2.push([newsstringArray2[0], parseInt(newsstringArray2[1])])
+##        }
+##
+##        const newsChartData = {
+##            type: "bar",
+##            title: {
+##                text: "Favorite News Sources For All Users",
+##                adjustLayout: true
+##            },
+##            tooltip: {
+##                text: 'Source: %kt<br>Frequency: %v'
+##            },
+##            scaleX: {
+##                label: {
+##                    text: 'Favorite News Sources'
+##                },
+##                item: {
+##                    angle: '-45'
+##                }
+##            },
+##            scaleY: {
+##                label: {
+##                    text: 'Frequency'
+##                }
+##            },
+##            series: [{
+##                values: newsdata2
+##            }],
+##            plotarea: {
+##                margin: 'dynamic'
+##            }
+##        };
+##        zingchart.render({
+##            id: "news-chart",
+##            data: newsChartData,
+##            height: "100%",
+##            width: "100%"
+##        });
+##    </script>
+##</body>
+
