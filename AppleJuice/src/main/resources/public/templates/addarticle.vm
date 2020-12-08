@@ -1,7 +1,12 @@
 #set( $title = "TEST: Manually Add an Article" )
 #parse("public/templates/top.vm")
-
+<div>
+    <a href="/" class="BackButton" >Back to Dashboard</a>
+</div>
+<div>
+<div>
 <h1>Add an article</h1>
+</div>
 <form action="addarticle" method="post" class="content" onsubmit="return passValues();">
     <div>
         <label for="url">Article Topic:</label>
@@ -13,9 +18,6 @@
     </div>
     <div id="divSubmit">
         <input type="submit" value="Enter" class="submit" />
-    </div>
-    <div>
-        <a href="/" class="SignUpbutton" >Back to Dashboard</a>
     </div>
 </form>
 

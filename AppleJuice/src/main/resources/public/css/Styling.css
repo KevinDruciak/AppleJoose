@@ -394,6 +394,21 @@ p {
     margin-top: 32px;
 
 }
+
+
+.BackButton {
+    display: inline-block;
+    background-color: #005EFF;
+    border: 2px solid #D2E3FF;
+    border-radius: 8px;
+    color: #FFFFFF;
+    padding: 8px 24px 8px 24px;
+    text-align: left;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 18pt;
+    margin-top: 32px;
+}
+
 .SignUpbutton:hover {
     background-color: #005EFF;
     border: 2px solid #D2E3FF;
