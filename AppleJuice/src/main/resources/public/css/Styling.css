@@ -535,9 +535,13 @@ p {
     position: absolute;
     top: 0;
     right: 10px;
-    font-size: 30px;
+    font-size: 24px;
     margin-left: 50px;
     display: block;
+}
+
+.sidebar .sidebarbutton:hover {
+    background: rgba(0, 0, 0, 0);
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
