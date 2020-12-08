@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Server {
 
-    static boolean LOCAL = true; //set FALSE if deploying/running on heroku, TRUE if testing locally
+    static boolean LOCAL = false; //set FALSE if deploying/running on heroku, TRUE if testing locally
     static Connection conn;
     static Statement st;
 
@@ -538,7 +538,7 @@ public class Server {
                     int biasRating = politicalBiasAPICall(articleExtract);
                     System.out.println("API call passed");
                     String topic = req.queryParams("topic").toUpperCase();
-                    topic = topic.substring(1).toLowerCase();
+                    topic = topic.substring(0, 1) + topic.substring(1).toLowerCase();
                     int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
                     long currentDate = (new Date().getTime())/ 1000;
 
