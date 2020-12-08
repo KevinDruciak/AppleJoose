@@ -2,9 +2,9 @@ window.urls = [];
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse){
 
     let req = new XMLHttpRequest();
-    req.open("POST", "http://localhost:7000/chromeaddarticle", true);
+    req.open("POST", "http://localhost:7000/addarticle", true);
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    var response = req.send("username=Connor&url=" + request.url + "&topic=Weather");
+    var response = req.send("url=" + request.url + "&topic=NA");
     window.urls.push(request.url);
 
 });
