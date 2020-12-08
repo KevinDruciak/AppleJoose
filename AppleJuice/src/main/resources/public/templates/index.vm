@@ -4,12 +4,12 @@
 #if($existinguser)
 
 <div id="mySidebar" class="sidebar">
-    <a id="sbbutton" href="javascript:void(0)" class="sidebarbutton" onclick="toggle()">&gt;</a>
-    <a id="dashboard" href="/" style="display:none;">Dashboard</a>
-    //<a id="userstats" href="/userstats" style="display:none;">User Statistics</a>
-    <a id="genstats" href="/genstats" style="display:none;">General Statistics</a>
-    <a id="about" href="/about" style="display:none;">About</a>
-    <a id="signout" href="/signout" style="display:none;">Logout</a>
+    <a id="sbbutton" href="javascript:void(0)" class="sidebarbutton" onclick="toggle()"><i class="fas fa-bars"></i></a>
+    <a id="dashboard" href="/" class="selected"><i class="fas fa-home"></i> Dashboard</a>
+    <a id="userstats" href="/userstats"><i class="fas fa-user"></i> User Statistics</a>
+    <a id="genstats" href="/genstats"><i class="fas fa-chart-bar"></i> General Statistics</a>
+    <a id="about" href="/about"><i class="fas fa-info-circle"></i> About</a>
+    <a id="signout" href="/signout"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>
 
 <div id="main2">

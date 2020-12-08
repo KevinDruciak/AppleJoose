@@ -185,7 +185,7 @@ p {
 
 .quickArticlesWrap {
     overflow-x: auto;
-    margin: 16px 32px;
+    margin: 16px;
 }
 
 .quickArticles {
@@ -467,6 +467,22 @@ p {
     margin-block-end: 8px;
 }
 
+.fa, .fas {
+    font-weight: 100;
+}
+
+.addArt {
+    margin-left: 32px;
+    width: max-content;
+    position: relative;
+    height: 300px;
+}
+
+.addArt .submit {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
 
 
 
@@ -498,17 +514,20 @@ p {
 
 /* The sidebar links */
 .sidebar a {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 18pt;
     padding: 8px 8px 8px 32px;
     text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
+    color: #FFFFFF;
+    display: none;
     transition: 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidebar a:hover {
-    color: #f1f1f1;
+    color: #FFFFFF;
+    background: rgba(0, 0, 0, 0.2);
 }
 
 /* Position and style the close button (top right corner) */
@@ -516,8 +535,9 @@ p {
     position: absolute;
     top: 0;
     right: 10px;
-    font-size: 36px;
+    font-size: 30px;
     margin-left: 50px;
+    display: block;
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
@@ -532,4 +552,23 @@ p {
     .sidebar {padding-top: 15px;}
     .sidebar a {font-size: 18px;}
 }
+
+.selected {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 18pt;
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    color: #FFFFFF;
+    display: none;
+    transition: 0.3s;
+    background: #002d69;
+}
+
+.selected:hover {
+    background: rgba(0, 0, 0, 0.2);
+
+}
+
+
 

@@ -7,7 +7,7 @@ function toggle() {
         document.getElementById("mySidebar").style.width = "50px";
         document.getElementById("main2").style.marginLeft = "50px";
         var str1 = document.getElementById("sbbutton").innerHTML;
-        document.getElementById("sbbutton").innerHTML = str1.replace("&lt;", "&gt;");
+        document.getElementById("sbbutton").innerHTML = str1.replace("<i class=\"fas fa-bars\"></i> &lt;", "<i class=\"fas fa-bars\"></i>");
 
         str1 = document.getElementById("dashboard").innerHTML;
         document.getElementById("dashboard").style.display = "none";//.innerHTML = str1.replace("Dashboard", " ");
@@ -29,7 +29,7 @@ function toggle() {
         document.getElementById("mySidebar").style.width = "250px";
         document.getElementById("main2").style.marginLeft = "250px";
         var str2 = document.getElementById("sbbutton").innerHTML;
-        document.getElementById("sbbutton").innerHTML = str2.replace("&gt;", "&lt;");
+        document.getElementById("sbbutton").innerHTML = str2.replace("<i class=\"fas fa-bars\"></i>", "<i class=\"fas fa-bars\"></i> &lt;");
 
         str2 = document.getElementById("dashboard").innerHTML;
         document.getElementById("dashboard").style.display = "block";//.innerHTML = "Dashboard";

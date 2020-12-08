@@ -1,31 +1,41 @@
-#set( $title = "TEST: Manually Add an Article" )
+#set( $title = "Add an Article" )
 #parse("public/templates/top.vm")
+
 <div id="mySidebar" class="sidebar">
-    <a id="sbbutton" href="javascript:void(0)" class="sidebarbutton" onclick="toggle()">&gt;</a>
-    <a id="dashboard" href="/" style="display:none;">Dashboard</a>
-    //<a id="userstats" href="/userstats" style="display:none;">User Statistics</a>
-    <a id="genstats" href="/genstats" style="display:none;">General Statistics</a>
-    <a id="about" href="/about" style="display:none;">About</a>
-    <a id="signout" href="/signout" style="display:none;">Logout</a>
+    <a id="sbbutton" href="javascript:void(0)" class="sidebarbutton" onclick="toggle()"><i class="fas fa-bars"></i></a>
+    <a id="dashboard" href="/"><i class="fas fa-home"></i> Dashboard</a>
+    <a id="userstats" href="/userstats"><i class="fas fa-user"></i> User Statistics</a>
+    <a id="genstats" href="/genstats"><i class="fas fa-chart-bar"></i> General Statistics</a>
+    <a id="about" href="/about"><i class="fas fa-info-circle"></i> About</a>
+    <a id="signout" href="/signout"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>
 
 <div id="main2">
     <script src="../js/sidebar.js"></script>
 
     <h1>Add an article</h1>
-    <form action="addarticle" method="post" class="content" onsubmit="return passValues();">
-        <div>
-            <label for="url">Article Topic:</label>
-            <input type="text" placeholder="topic" name="topic" id="topic" />
-        </div>
-        <div>
-            <label for="url">Article Url:</label>
-            <input type="text" placeholder="url" name="url" id="url" />
-        </div>
-        <div id="divSubmit">
-            <input type="submit" value="Enter" class="submit" />
-        </div>
-    </form>
+    <div class="addArt">
+        <form action="addarticle" method="post" class="content" onsubmit="return passValues();">
+
+            <p>
+                <label for="url">Article Topic:</label>
+            </p>
+            <p>
+                <input type="text" placeholder="topic" name="topic" id="topic" />
+            </p>
+            <p>
+                <label for="url">Article Url:</label>
+            </p>
+            <p>
+                <input type="text" placeholder="url" name="url" id="url" />
+            </p>
+            </p>
+                <div id="divSubmit">
+                    <input type="submit" value="Enter" class="submit" />
+                </div>
+            </p>
+        </form>
+    </div>
 </div>
 <script src="../js/passUrl.js"></script>
 #parse("public/templates/bottom.vm")
