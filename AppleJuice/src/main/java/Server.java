@@ -13,6 +13,7 @@ import model.UserReadings;
 import okhttp3.*;
 
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.io.IOException;
@@ -132,6 +133,8 @@ public class Server {
     static ArrayList<Float> dailyAvgBias = new ArrayList<>();
     static ArrayList<String> dailyAvgDates = new ArrayList<>();
 //    static int tempDate = 0;
+    static Map<Integer, ArrayList<Integer>> userDailyAvgBias = new HashMap<>();
+    static Map<Integer, ArrayList<String>> userDailyAvgDates = new HashMap<>();
 
     private static void updateDailyAvgBias(Sql2o stats) {
         try {
@@ -141,20 +144,35 @@ public class Server {
                 return;
             }
 
+            //DAILY AVG BIAS/DATES FOR ALL USERS
             float dailyAvg = sql2oStats.avgBIAS(sql2oStats.listBIAS());
             dailyAvgBias.add(dailyAvg);
-            dailyAvgDates.add(LocalDate.now().toString());
 
-//            dailyAvgBias.add((float) Math.random());
-//            dailyAvgDates.add(Integer.toString(tempDate));
-//            tempDate++;
+            Date date = new Date();
+            SimpleDateFormat form = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
+            form.setTimeZone(TimeZone.getTimeZone("EST"));
+            dailyAvgDates.add(form.format(date));
 
-            for (float i : dailyAvgBias) {
-                System.out.println("TEST DAILY AVG BIAS: " + i);
+            //DAILY AVG BIAS/DATES FOR SPECIFIC USERS
+            int statsSIZE = sql2oStats.statsSize();
+            for (int i = 1; i <= statsSIZE; i++) {
+                if (userDailyAvgBias.get(i) == null) {
+                    ArrayList<Integer> tempAvgBias = new ArrayList<>();
+                    ArrayList<String> tempAvgDates = new ArrayList<>();
+                    tempAvgBias.add(sql2oStats.getBiasRatingUser(i));
+                    tempAvgDates.add(form.format(date));
+                    userDailyAvgBias.put(i, tempAvgBias);
+                    userDailyAvgDates.put(i, tempAvgDates);
+                }
+                else {
+                    userDailyAvgBias.get(i).add(sql2oStats.getBiasRatingUser(i));
+                    userDailyAvgDates.get(i).add(form.format(date));
+                }
             }
 
         } catch (NullPointerException e) {
             //do nothing
+            System.out.println(e);
         }
     }
 
@@ -204,21 +222,21 @@ public class Server {
                     "FOREIGN KEY (userID) REFERENCES Users(userID) ON DELETE CASCADE)";
             st.execute(sql);
 
-            sql = "INSERT INTO Users(userID, userName, userPassword, userStatsID)" +
-                    " VALUES (1, 'Politics', 'adminPassword', 1);";
-            st.execute(sql);
-
-            sql = "INSERT INTO Statistics (id, biasRating, biasName,favNewsSource," +
-                    " favTopic, execSummary, userID) VALUES (1, 0, 'Minimal Bias'," +
-                    " 'CNN', 'Politics', 'ADMIN SUMMARY', 1);";
-            st.execute(sql);
+//            sql = "INSERT INTO Users(userID, userName, userPassword, userStatsID)" +
+//                    " VALUES (1, 'Politics', 'adminPassword', 1);";
+//            st.execute(sql);
+//
+//            sql = "INSERT INTO Statistics (id, biasRating, biasName,favNewsSource," +
+//                    " favTopic, execSummary, userID) VALUES (1, 0, 'Minimal Bias'," +
+//                    " 'CNN', 'Politics', 'ADMIN SUMMARY', 1);";
+//            st.execute(sql);
 
             sql2o = getSql2oLOCAL();
         }
 
         staticFiles.location("/public");
 
-        //
+        //Daily average bias rating runnable task
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -227,8 +245,8 @@ public class Server {
         };
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.DAYS);
-//        scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
+//        scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
 
         post("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
@@ -413,12 +431,15 @@ public class Server {
                     model.put("biasName", stats.getBiasName());
 
                     ArrayList<Integer> biasList = new Sql2oStatisticsDao(sql2o).listBIAS();
-                    model.put("minBias", biasList.get(0));
-                    model.put("maxBias", biasList.get(biasList.size() - 1));
-                    model.put("avgBias", new Sql2oStatisticsDao(sql2o).avgBIAS(biasList));
+//                    model.put("minBias", biasList.get(0));
+//                    model.put("maxBias", biasList.get(biasList.size() - 1));
+//                    model.put("avgBias", new Sql2oStatisticsDao(sql2o).avgBIAS(biasList));
+//                    model.put("dailyAvgBias", dailyAvgBias);
+//                    model.put("dailyAvgDates", dailyAvgDates);
 
-                    model.put("dailyAvgBias", dailyAvgBias);
-                    model.put("dailyAvgDates", dailyAvgDates);
+                    model.put("avgBias", new Sql2oStatisticsDao(sql2o).avgBIAS(biasList));
+                    model.put("dailyAvgBias", userDailyAvgBias.get(userID));
+                    model.put("dailyAvgDates", userDailyAvgDates.get(userID));
 
                 } else {
                     model.put("failedFind", "true");

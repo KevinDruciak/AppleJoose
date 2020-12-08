@@ -6,20 +6,10 @@
 </p>
 <br />
 
-<p class="linkIntro">Your bias rating is: $biasRating</p>
+<p class="linkIntro">Your current average bias rating is: $biasRating</p>
 <br />
-<p class="linkIntro">The most liberal bias rating is: $minBias</p>
+<p class="linkIntro">The average bias rating across all users is: $avgBias</p>
 <br />
-<p class="linkIntro">The most conservative bias rating is: $maxBias</p>
-<br />
-<p class="linkIntro">The average bias rating is: $avgBias</p>
-<br />
-
-##<p>
-##    testing for daily avg bias: $dailyAvgBias
-##</p>
-##<br>
-
 
 ##GRAPH
     <meta charset="utf-8">
@@ -72,7 +62,7 @@
         const chartOneData = {
             type: "line",
             title: {
-                text: "Daily Average Bias Ratings",
+                text: "Average Bias Ratings",
                 adjustLayout: true
             },
             tooltip: {
