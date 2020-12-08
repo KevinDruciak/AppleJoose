@@ -257,7 +257,6 @@ public class Server {
                         List<UserReadings> readings = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(userID);
                         List<Article> articles = new ArrayList<>();
 
-
                         if (readings != null) {
                             for (UserReadings read : readings) {
                                 List<Article> list  = new Sql2oArticleDao(sql2o).find(read.getArticleID());
@@ -619,6 +618,7 @@ public class Server {
                     data.put(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic(), freq);
                 }
             }
+            Sql2oArticleDao a = new Sql2oArticleDao(sql2o);
 
             model.put("data", data);
             model.put("type", "topic");
@@ -650,6 +650,45 @@ public class Server {
             res.type("text/html");
             res.status(200);
             return new ModelAndView(model, "public/templates/newsStats.vm");
+        }, new VelocityTemplateEngine());
+
+        //favNews route; displays fav News stats
+        get("/genstats", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+
+            if(req.cookie("username") != null) {
+                Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
+
+                Map<String, Integer> news = new HashMap<>();
+                List<User> users = new Sql2oUserDao(sql2o).listAll();
+                for (User user : users) {
+                    Integer freq = news.get(sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource());
+                    freq = (freq == null) ? 1 : ++freq;
+                    if (!sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource().equals("N/A")) {
+                        news.put(sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource(), freq);
+                    }
+                }
+                model.put("news", news);
+
+                Map<String, Integer> topics = new HashMap<>();
+                for (User user : users) {
+                    Integer freq = topics.get(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic());
+                    freq = (freq == null) ? 1 : ++freq;
+                    if (!sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic().equals("N/A")) {
+                        topics.put(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic(), freq);
+                    }
+                }
+                model.put("topics", topics);
+                model.put("dailyAvgBias", dailyAvgBias);
+                model.put("dailyAvgDates", dailyAvgDates);
+            } else {
+                model.put("existinguser", false);
+                res.redirect("/");
+            }
+
+            res.type("text/html");
+            res.status(200);
+            return new ModelAndView(model, "public/templates/genstats.vm");
         }, new VelocityTemplateEngine());
 
         //delstats route; delete a user's stats

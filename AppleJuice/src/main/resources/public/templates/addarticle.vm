@@ -3,10 +3,10 @@
 <div id="mySidebar" class="sidebar">
     <a id="sbbutton" href="javascript:void(0)" class="sidebarbutton" onclick="toggle()">&gt;</a>
     <a id="dashboard" href="/" style="display:none;">Dashboard</a>
-    //<a id="userstats" href="/userstats" style="display:none;">User Statistics</a>
+    ##<a id="userstats" href="/userstats" style="display:none;">User Statistics</a>
     <a id="genstats" href="/genstats" style="display:none;">General Statistics</a>
     <a id="about" href="/about" style="display:none;">About</a>
-    <a id="signout" href="/signout" style="display:none;">Logout</a>
+    <a id="signout" href="/" style="display:none;" onclick="deleteAllCookies()">Logout</a>
 </div>
 
 <div id="main2">
