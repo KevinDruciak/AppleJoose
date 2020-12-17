@@ -606,9 +606,13 @@ public class Server {
                         else if(url.contains("entertainment")){
                             topic = "Entertainment";
                         }
+                        else if(url.contains("weather")){
+                            topic = "Weather";
+                        }
                         else {
                             //If no matches to above categories within URL, use API to extract custom topic
                             topic = articleTopicExtractionAPICall(articleExtract);
+                            topic = topic.substring(0, 1).toUpperCase() + topic.substring(1).toLowerCase();
                         }
                     } else {
                         topic = topic.substring(0, 1) + topic.substring(1).toLowerCase();
