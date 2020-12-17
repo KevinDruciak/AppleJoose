@@ -22,7 +22,7 @@
                 <label for="url">Article Topic:</label>
             </p>
             <p>
-                <input type="text" placeholder="topic" name="topic" id="topic" />
+                <input type="text" placeholder="Topic" name="topic" id="topic" />
             </p>
             <p>
                 <label for="url">Article Url:</label>
