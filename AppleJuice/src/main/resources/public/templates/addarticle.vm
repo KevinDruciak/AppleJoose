@@ -16,7 +16,8 @@
 
     <h1>Add an article</h1>
     #if($invalidSource)
-        <h2>Invalid Source</h2>
+        <h4 style="margin-left: 80px; color: #cd0808">Invalid Source</h4>
+        <br />
     #end
     <div class="addArt">
         <form action="addarticle" method="post" class="content" onsubmit="return passValues();">

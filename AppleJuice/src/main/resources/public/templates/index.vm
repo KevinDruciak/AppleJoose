@@ -108,19 +108,16 @@
                     <p class="info" style="margin-block-end: 0">Your Bias Rating is the average bias score of</p>
                     <p class="info" style="margin-block-end: 0">your read articles. This value extends from</p>
                     <p class="info">-42 (far left) to 42 (far right).</p>
-                    <br />
                 </div>
                 <div id="2" style="display: none">
                     <p class="boldInfo">Type of Bias:</p>
                     <p class="info" style="margin-block-end: 0">Your Type of Bias is a classification of</p>
                     <p class="info">your Bias Rating. </p>
-                    <br />
                 </div>
                 <div id="3" style="display: none">
                     <p class="boldInfo">Favorite News Source:</p>
                     <p class="info" style="margin-block-end: 0">Your Favorite News Source is your most</p>
                     <p class="info">visited news source.</p>
-                    <br />
                 </div>
                 <div id="4" style="display: none">
                     <p class="boldInfo">Favorite Topic:</p>
