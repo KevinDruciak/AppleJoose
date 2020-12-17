@@ -1,0 +1,56 @@
+#set($title = "statsNEWS page" )
+#parse("public/templates/top.vm")
+
+<div id="mySidebar" class="sidebar">
+    <a id="sbbutton" href="javascript:void(0)" class="sidebarbutton" onclick="toggle()"><i class="fas fa-bars"></i></a>
+    <a id="dashboard" href="/"><i class="fas fa-home"></i> Dashboard</a>
+    <a id="userstats" href="/userstats"><i class="fas fa-user"></i> User Statistics</a>
+    <a id="genstats" href="/genstats" class="selected"><i class="fas fa-chart-bar"></i> General Statistics</a>
+    <a id="about" href="/about"><i class="fas fa-info-circle"></i> About</a>
+    <a id="signout" href="/" style="display:none;" onclick="deleteAllCookies()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
+
+
+<script src="../js/sidebar.js"></script>
+##<br />
+##<div id="main2">
+##    <p class="linkIntro">Your current average bias rating is: $biasRating</p>
+##    <br />
+##    <p class="linkIntro">The average bias rating across all users is: $avgBias</p>
+##</div>
+##<br />
+
+##GRAPH
+<meta charset="utf-8">
+<title>Favorite News Sources</title>
+
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<style>
+    body {
+        height: 100vh;
+        display: block;
+        /*justify-content: center;*/
+        /*align-items: center;*/
+    }
+
+    #chart-two {
+        height: 75%;
+        width: 80%;
+        ##margin: 0 auto;
+        transition: margin-left .5s; /* If you want a transition effect */
+        padding: 0;
+        margin-left: 50px;
+    }
+</style>
+
+<p>
+    <var id="data" style="font-size:0px">$data</var>
+</p>
+<br />
+
+<div id="chart-two"></div>
+<p>
+    <script src="../js/individualNews.js"></script>
+</p>
+
+#parse("public/templates/bottom.vm")

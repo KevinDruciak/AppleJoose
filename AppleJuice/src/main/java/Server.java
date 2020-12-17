@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Server {
 
-    static boolean LOCAL = false; //set FALSE if deploying/running on heroku, TRUE if testing locally
+    static boolean LOCAL = true; //set FALSE if deploying/running on heroku, TRUE if testing locally
     static Connection conn;
     static Statement st;
 
@@ -132,7 +132,7 @@ public class Server {
 
     static ArrayList<Float> dailyAvgBias = new ArrayList<>();
     static ArrayList<String> dailyAvgDates = new ArrayList<>();
-//    static int tempDate = 0;
+    //    static int tempDate = 0;
     static Map<Integer, ArrayList<Integer>> userDailyAvgBias = new HashMap<>();
     static Map<Integer, ArrayList<String>> userDailyAvgDates = new HashMap<>();
 
@@ -628,42 +628,19 @@ public class Server {
         //favTopic route; displays fav Topic stats
         get("/favTopic", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
+            Sql2oArticleDao sql2oArticleDao = new Sql2oArticleDao(sql2o);
+            Sql2oUserReadingsDao sql2oUserReadingsDao = new Sql2oUserReadingsDao(sql2o);
 
             Map<String, Integer> data = new HashMap<>();
 
-            List<User> users = new Sql2oUserDao(sql2o).listAll();
-            for (User user : users) {
-                Integer freq = data.get(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic());
+            String username = req.cookie("username");
+            User user = new Sql2oUserDao(sql2o).find(username);
+            List<UserReadings> readings = sql2oUserReadingsDao.getAllUserReadings(user.getUserID());
+            for (UserReadings reading : readings) {
+                Article temp = sql2oArticleDao.find(reading.getArticleID()).get(0);
+                Integer freq = data.get(temp.getTopic());
                 freq = (freq == null) ? 1 : ++freq;
-                if (!sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic().equals("N/A")) {
-                    data.put(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic(), freq);
-                }
-            }
-            Sql2oArticleDao a = new Sql2oArticleDao(sql2o);
-
-            model.put("data", data);
-            model.put("type", "topic");
-            //String results = new Gson().toJson(sql2oStatsDao.find(u.getUserID()));
-            res.type("text/html");
-            res.status(200);
-            return new ModelAndView(model, "public/templates/newsStats.vm");
-        }, new VelocityTemplateEngine());
-
-        //favNews route; displays fav News stats
-        get("/favNews", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
-
-            Map<String, Integer> data = new HashMap<>();
-
-            List<User> users = new Sql2oUserDao(sql2o).listAll();
-            for (User user : users) {
-                Integer freq = data.get(sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource());
-                freq = (freq == null) ? 1 : ++freq;
-                if (!sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource().equals("N/A")) {
-                    data.put(sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource(), freq);
-                }
+                data.put(temp.getTopic(), freq);
             }
 
             model.put("data", data);
@@ -671,7 +648,33 @@ public class Server {
 
             res.type("text/html");
             res.status(200);
-            return new ModelAndView(model, "public/templates/newsStats.vm");
+            return new ModelAndView(model, "public/templates/statsTOPICS.vm");
+        }, new VelocityTemplateEngine());
+
+        //favNews route; displays fav News stats
+        get("/favNews", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            Sql2oArticleDao sql2oArticleDao = new Sql2oArticleDao(sql2o);
+            Sql2oUserReadingsDao sql2oUserReadingsDao = new Sql2oUserReadingsDao(sql2o);
+
+            Map<String, Integer> data = new HashMap<>();
+
+            String username = req.cookie("username");
+            User user = new Sql2oUserDao(sql2o).find(username);
+            List<UserReadings> readings = sql2oUserReadingsDao.getAllUserReadings(user.getUserID());
+            for (UserReadings reading : readings) {
+                Article temp = sql2oArticleDao.find(reading.getArticleID()).get(0);
+                Integer freq = data.get(temp.getNewsSource());
+                freq = (freq == null) ? 1 : ++freq;
+                data.put(temp.getNewsSource(), freq);
+            }
+
+            model.put("data", data);
+            model.put("type", "news");
+
+            res.type("text/html");
+            res.status(200);
+            return new ModelAndView(model, "public/templates/statsNEWS.vm");
         }, new VelocityTemplateEngine());
 
         //favNews route; displays fav News stats

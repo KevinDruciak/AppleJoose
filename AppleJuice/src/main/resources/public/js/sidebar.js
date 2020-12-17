@@ -21,6 +21,10 @@ function toggle() {
             document.getElementById("bias-chart").style.marginLeft = "50px";
         } else if (document.getElementById("title").innerText === "statsBIAS page") {
             document.getElementById("chart-one").style.marginLeft = "50px";
+        } else if (document.getElementById("title").innerText === "statsNEWS page") {
+            document.getElementById("chart-two").style.marginLeft = "50px";
+        } else if (document.getElementById("title").innerText === "statsTOPICS page") {
+            document.getElementById("chart-three").style.marginLeft = "50px";
         }
         if (document.getElementById("main2") !== null) {
             document.getElementById("main2").style.marginLeft = "50px";
@@ -54,6 +58,10 @@ function toggle() {
 
         } else if (document.getElementById("title").innerText === "statsBIAS page") {
             document.getElementById("chart-one").style.marginLeft = "250px";
+        } else if (document.getElementById("title").innerText === "statsNEWS page") {
+            document.getElementById("chart-two").style.marginLeft = "250px";
+        } else if (document.getElementById("title").innerText === "statsTOPICS page") {
+            document.getElementById("chart-three").style.marginLeft = "250px";
         }
         if (document.getElementById("main2") !== null) {
             document.getElementById("main2").style.marginLeft = "250px";
