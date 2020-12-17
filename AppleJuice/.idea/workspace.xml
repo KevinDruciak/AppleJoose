@@ -29,13 +29,13 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="65d9d39c-4a16-4f9d-9fd6-cac93b5b8616" name="Default Changelist" comment="Dynamic Login / Signup page,&#10;Making the design more consistent with the rest of the site.">
+    <list default="true" id="65d9d39c-4a16-4f9d-9fd6-cac93b5b8616" name="Default Changelist" comment="zingchart finesse">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/public/js/individualBias.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/fileContent/fileContent.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/6.3/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.3/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.3/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
@@ -44,14 +44,18 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AppleJuice.db" beforeDir="false" afterPath="$PROJECT_DIR$/AppleJuice.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/Server.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/exception/DaoException.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/exception/DaoException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/model/Article.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/model/Article.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/model/Statistics.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/model/Statistics.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/persistence/ArticleDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/persistence/ArticleDao.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oArticleDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oArticleDao.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oStatisticsDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oStatisticsDao.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oUserDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/persistence/Sql2oUserDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/persistence/StatisticsDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/persistence/StatisticsDao.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/persistence/Sql2oUserReadingsDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/persistence/Sql2oUserReadingsDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/templates/ArticleCards.vm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/templates/ArticleCards.vm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/public/templates/index.vm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/templates/index.vm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/js/sidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/js/sidebar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/templates/statsBIAS.vm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/templates/statsBIAS.vm" afterDir="false" />
     </list>
     <list id="66551b8f-28e8-4fa0-a986-c470daae24be" name="small change to server and continued improvement on Statisitcs class and DAO" comment="small change to server and continued improvement on Statisitcs class and DAO&#10;&#10;(cherry picked from commit 465851aae54cddfb680c4533e33c3fcc2348b4c3)">
       <changelist_data name="joaokawase" email="jkawase1@jhu.edu" date="1604546001000" />
@@ -137,6 +141,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../homeworks/hw3/MyBooksApp" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="show.migrate.to.gradle.popup" value="false" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
@@ -361,28 +366,32 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1220" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1602027671683" />
-    <state width="1788" height="492" key="GridCell.Tab.0.bottom" timestamp="1607042495287">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="173" key="GridCell.Tab.0.bottom" timestamp="1608168694172">
+      <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
+    <state width="1877" height="173" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1608168694172" />
     <state width="1788" height="492" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495287" />
     <state width="1398" height="231" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1601984862964" />
-    <state width="1788" height="492" key="GridCell.Tab.0.center" timestamp="1607042495287">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="173" key="GridCell.Tab.0.center" timestamp="1608168694172">
+      <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
+    <state width="1877" height="173" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1608168694172" />
     <state width="1788" height="492" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495287" />
     <state width="1398" height="231" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1601984862963" />
-    <state width="1788" height="492" key="GridCell.Tab.0.left" timestamp="1607042495286">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="173" key="GridCell.Tab.0.left" timestamp="1608168694172">
+      <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
+    <state width="1877" height="173" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1608168694172" />
     <state width="1788" height="492" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495286" />
     <state width="1398" height="231" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1601984862963" />
-    <state width="1788" height="492" key="GridCell.Tab.0.right" timestamp="1607042495287">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="173" key="GridCell.Tab.0.right" timestamp="1608168694172">
+      <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1869" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602039074570" />
+    <state width="1877" height="173" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1608168694172" />
     <state width="1788" height="492" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1607042495287" />
     <state width="1398" height="231" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1601984862963" />
     <state width="1788" height="492" key="GridCell.Tab.1.bottom" timestamp="1607042495287">
