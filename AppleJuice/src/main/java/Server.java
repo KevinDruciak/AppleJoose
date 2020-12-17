@@ -1,5 +1,7 @@
 import at.favre.lib.crypto.bcrypt.BCrypt;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import exception.DaoException;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
 import de.l3s.boilerpipe.document.TextDocument;
@@ -258,7 +260,6 @@ public class Server {
             try {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
                 if (userDao.find(username) != null) {
-
                     BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.find(username).getUserPassword());
                     if (result.verified /*userDao.find(username).getUserPassword().equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))*/) {
 
@@ -540,7 +541,11 @@ public class Server {
                     int biasRating = politicalBiasAPICall(articleExtract);
                     System.out.println("API call passed");
                     String topic = req.queryParams("topic").toUpperCase();
-                    topic = topic.substring(0, 1) + topic.substring(1).toLowerCase();
+                    if (topic.equals("NA")) {
+                        topic = articleTopicExtractionAPICall(articleExtract);
+                    } else {
+                        topic = topic.substring(0, 1) + topic.substring(1).toLowerCase();
+                    }
                     int numWords = countWords(articleExtract); //use countWords method to get numWords from Extracted text
                     long currentDate = (new Date().getTime())/ 1000;
 
@@ -641,7 +646,9 @@ public class Server {
                 Article temp = sql2oArticleDao.find(reading.getArticleID()).get(0);
                 Integer freq = data.get(temp.getTopic());
                 freq = (freq == null) ? 1 : ++freq;
-                data.put(temp.getTopic(), freq);
+                if (!temp.getTopic().equals("error")) {
+                    data.put(temp.getTopic(), freq);
+                }
             }
 
             model.put("data", data);
@@ -700,7 +707,7 @@ public class Server {
                 for (User user : users) {
                     Integer freq = topics.get(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic());
                     freq = (freq == null) ? 1 : ++freq;
-                    if (!sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic().equals("N/A")) {
+                    if (!sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic().equals("N/A") && !sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic().equals("error")) {
                         topics.put(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic(), freq);
                     }
                 }
@@ -799,6 +806,37 @@ public class Server {
         return null;
     }
 
+    public static String articleTopicExtractionAPICall(String text) throws IOException {
+        StringBuilder topic = new StringBuilder();
+        OkHttpClient httpclient = new OkHttpClient();
+        RequestBody body = new FormBody.Builder()
+                .add("key", "aa112fd283b4a1c4dcde3040bb2a15bb")
+                .add("lang", "en")
+                .add("tt", "c")
+                .add("txt", text)
+                .build();
+        Request postRequest = new Request.Builder()
+                .url("https://api.meaningcloud.com/topics-2.0")
+                .post(body)
+                .build();
+        try {
+            Response response = httpclient.newCall(postRequest).execute();
+            Gson g = new Gson();
+            Object temp = g.fromJson(response.body().string(), Object.class);
+            String json = temp.toString();
+            int index = json.indexOf("form=") + 5;
+            if (index == 4) {
+               return "error";
+            }
+            while (json.charAt(index) != ',') {
+                topic.append(Character.toString(json.charAt(index)));
+                index++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return topic.toString();
+    }
 
     public static int politicalBiasAPICall(String text) throws IOException {
         int biasRating = 100;
