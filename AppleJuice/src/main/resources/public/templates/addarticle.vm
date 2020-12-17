@@ -15,6 +15,9 @@
     <script src="../js/sidebar.js"></script>
 
     <h1>Add an article</h1>
+    #if($invalidSource)
+        <h2>Invalid Source</h2>
+    #end
     <div class="addArt">
         <form action="addarticle" method="post" class="content" onsubmit="return passValues();">
 

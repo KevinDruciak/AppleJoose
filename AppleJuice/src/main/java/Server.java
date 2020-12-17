@@ -551,12 +551,6 @@ public class Server {
                 try {
                     User u = new Sql2oUserDao(sql2o).find(username);
                     String url = req.queryParams("url"); //chrome.history api call
-                    String articleExtract = extractText(url); //extracts article text as well as title and other info
-                    String[] parsedText = articleExtract.split("\\r?\\n");
-                    /*
-                    Get title from extracted text which is almost always first line
-                    */
-                    String title = parsedText[0];
 
                     /*
                     Get news source from extracted url host name
@@ -567,11 +561,28 @@ public class Server {
                     Iterator it = jo.keySet().iterator();
                     while(it.hasNext()){
                         String key = (String) it.next();
-                        if(url.startsWith(key)){
+                        if(url.startsWith(key) && !url.equals(key)){
                             newsSource = (String) jo.get(key);
                             break;
                         }
                     }
+
+                    //If not in list of recognized news sources, do not add article.
+                    if(newsSource.equals("")){
+                        System.out.println("Invalid Source!");
+                        res.status(201);
+                        res.type("text/html");
+                        model.put("invalidSource", true);
+                        ModelAndView mdl = new ModelAndView(model, "public/templates/addarticle.vm");
+                        return new VelocityTemplateEngine().render(mdl);
+                    }
+
+                    String articleExtract = extractText(url); //extracts article text as well as title and other info
+                    String[] parsedText = articleExtract.split("\\r?\\n");
+                    /*
+                    Get title from extracted text which is almost always first line
+                    */
+                    String title = parsedText[0];
 
                     int biasRating = politicalBiasAPICall(articleExtract);
                     System.out.println("API call passed");
