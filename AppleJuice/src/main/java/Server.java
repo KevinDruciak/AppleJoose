@@ -772,6 +772,13 @@ public class Server {
             res.type("application/json");
             return new Gson().toJson(userID);
         });
+
+        get("/about", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/about.vm");
+        }, new VelocityTemplateEngine());
     }
 
 
