@@ -1,4 +1,4 @@
-/* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
+/* Set the width of the sidebar to 260px and the left margin of the page content to 260px */
 
 let isOpen = false;
 
@@ -52,21 +52,21 @@ function toggle() {
         isOpen = false;
     } else {
         if (document.getElementById("title").innerText === "General Statistics") {
-            document.getElementById("news-chart").style.marginLeft = "250px";
-            document.getElementById("topics-chart").style.marginLeft = "250px";
-            document.getElementById("bias-chart").style.marginLeft = "250px";
+            document.getElementById("news-chart").style.marginLeft = "260px";
+            document.getElementById("topics-chart").style.marginLeft = "260px";
+            document.getElementById("bias-chart").style.marginLeft = "260px";
 
         } else if (document.getElementById("title").innerText === "statsBIAS page") {
-            document.getElementById("chart-one").style.marginLeft = "250px";
+            document.getElementById("chart-one").style.marginLeft = "260px";
         } else if (document.getElementById("title").innerText === "statsNEWS page") {
-            document.getElementById("chart-two").style.marginLeft = "250px";
+            document.getElementById("chart-two").style.marginLeft = "260px";
         } else if (document.getElementById("title").innerText === "statsTOPICS page") {
-            document.getElementById("chart-three").style.marginLeft = "250px";
+            document.getElementById("chart-three").style.marginLeft = "260px";
         }
         if (document.getElementById("main2") !== null) {
-            document.getElementById("main2").style.marginLeft = "250px";
+            document.getElementById("main2").style.marginLeft = "260px";
         }
-        document.getElementById("mySidebar").style.width = "250px";
+        document.getElementById("mySidebar").style.width = "260px";
         var str2 = document.getElementById("sbbutton").innerHTML;
         document.getElementById("sbbutton").innerHTML = str2.replace("<i class=\"fas fa-bars\"></i>", "<i class=\"fas fa-bars\"></i> &lt;");
 

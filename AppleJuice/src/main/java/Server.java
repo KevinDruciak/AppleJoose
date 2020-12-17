@@ -551,12 +551,6 @@ public class Server {
                 try {
                     User u = new Sql2oUserDao(sql2o).find(username);
                     String url = req.queryParams("url"); //chrome.history api call
-                    String articleExtract = extractText(url); //extracts article text as well as title and other info
-                    String[] parsedText = articleExtract.split("\\r?\\n");
-                    /*
-                    Get title from extracted text which is almost always first line
-                    */
-                    String title = parsedText[0];
 
                     /*
                     Get news source from extracted url host name
@@ -567,11 +561,28 @@ public class Server {
                     Iterator it = jo.keySet().iterator();
                     while(it.hasNext()){
                         String key = (String) it.next();
-                        if(url.startsWith(key)){
+                        if(url.startsWith(key) && !url.equals(key)){
                             newsSource = (String) jo.get(key);
                             break;
                         }
                     }
+
+                    //If not in list of recognized news sources, do not add article.
+                    if(newsSource.equals("")){
+                        System.out.println("Invalid Source!");
+                        res.status(201);
+                        res.type("text/html");
+                        model.put("invalidSource", true);
+                        ModelAndView mdl = new ModelAndView(model, "public/templates/addarticle.vm");
+                        return new VelocityTemplateEngine().render(mdl);
+                    }
+
+                    String articleExtract = extractText(url); //extracts article text as well as title and other info
+                    String[] parsedText = articleExtract.split("\\r?\\n");
+                    /*
+                    Get title from extracted text which is almost always first line
+                    */
+                    String title = parsedText[0];
 
                     int biasRating = politicalBiasAPICall(articleExtract);
                     System.out.println("API call passed");
@@ -595,9 +606,13 @@ public class Server {
                         else if(url.contains("entertainment")){
                             topic = "Entertainment";
                         }
+                        else if(url.contains("weather")){
+                            topic = "Weather";
+                        }
                         else {
                             //If no matches to above categories within URL, use API to extract custom topic
                             topic = articleTopicExtractionAPICall(articleExtract);
+                            topic = topic.substring(0, 1).toUpperCase() + topic.substring(1).toLowerCase();
                         }
                     } else {
                         topic = topic.substring(0, 1) + topic.substring(1).toLowerCase();
@@ -790,6 +805,11 @@ public class Server {
                 model.put("topics", topics);
                 model.put("dailyAvgBias", dailyAvgBias);
                 model.put("dailyAvgDates", dailyAvgDates);
+
+                ArrayList<Integer> biasList = new Sql2oStatisticsDao(sql2o).listBIAS();
+                model.put("minBias", biasList.get(0));
+                model.put("maxBias", biasList.get(biasList.size() - 1));
+                model.put("avgBias", new Sql2oStatisticsDao(sql2o).avgBIAS(biasList));
             } else {
                 model.put("existinguser", false);
                 res.redirect("/");
@@ -808,6 +828,13 @@ public class Server {
             res.type("application/json");
             return new Gson().toJson(userID);
         });
+
+        get("/about", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+            res.status(200);
+            res.type("text/html");
+            return new ModelAndView(model, "public/templates/about.vm");
+        }, new VelocityTemplateEngine());
     }
 
 

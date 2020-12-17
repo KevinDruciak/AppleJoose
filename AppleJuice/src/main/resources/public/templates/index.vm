@@ -1,18 +1,6 @@
 #set($title = "Welcome Page" )
 #parse("public/templates/top.vm")
 
-###if ($incorrectPassword)
-##    <script>
-##    alert("Incorrect password!");
-##    </script>
-###end
-##
-###if ($noUserFound)
-##<script>
-##    alert("Username does not match any existing accounts!");
-##</script>
-###end
-
 <!html--->
 #if($existinguser)
 
