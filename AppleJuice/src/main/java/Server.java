@@ -805,6 +805,11 @@ public class Server {
                 model.put("topics", topics);
                 model.put("dailyAvgBias", dailyAvgBias);
                 model.put("dailyAvgDates", dailyAvgDates);
+
+                ArrayList<Integer> biasList = new Sql2oStatisticsDao(sql2o).listBIAS();
+                model.put("minBias", biasList.get(0));
+                model.put("maxBias", biasList.get(biasList.size() - 1));
+                model.put("avgBias", new Sql2oStatisticsDao(sql2o).avgBIAS(biasList));
             } else {
                 model.put("existinguser", false);
                 res.redirect("/");
