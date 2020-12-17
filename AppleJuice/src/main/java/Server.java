@@ -270,42 +270,42 @@ public class Server {
                     if (result.verified /*userDao.find(username).getUserPassword().equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))*/) {
 
                         //if (userDao.find(username).getUserPassword().equals(password)) {
-                            model.put("existinguser", "true");
-                            model.put("username", username);
-                            res.cookie("username", username);
-                            res.cookie("password", password); //set this only if success
+                        model.put("existinguser", "true");
+                        model.put("username", username);
+                        res.cookie("username", username);
+                        res.cookie("password", password); //set this only if success
 
-                            int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
-                            List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
-                            Statistics stats = extractFromStatsList(statsList);
+                        int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
+                        List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
+                        Statistics stats = extractFromStatsList(statsList);
 
-                            // Get 5 most recent user readings and retrieve articles by ID
-                            List<UserReadings> readings = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(userID);
-                            List<Article> articles = new ArrayList<>();
+                        // Get 5 most recent user readings and retrieve articles by ID
+                        List<UserReadings> readings = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(userID);
+                        List<Article> articles = new ArrayList<>();
 
-                            if (readings != null) {
-                                for (UserReadings read : readings) {
-                                    List<Article> list = new Sql2oArticleDao(sql2o).find(read.getArticleID());
-                                    Article article = extractFromArtsList(list);
-                                    articles.add(article);
-                                }
+                        if (readings != null) {
+                            for (UserReadings read : readings) {
+                                List<Article> list = new Sql2oArticleDao(sql2o).find(read.getArticleID());
+                                Article article = extractFromArtsList(list);
+                                articles.add(article);
                             }
+                        }
 
-                            // Put articles in most recent first order
-                            Collections.reverse(articles);
+                        // Put articles in most recent first order
+                        Collections.reverse(articles);
 
-                            if (userID > 0) {
-                                model.put("added", "true");
-                                model.put("biasRating", stats.getBiasRating());
-                                model.put("biasName", stats.getBiasName());
-                                model.put("favNews", stats.getFavNewsSource());
-                                model.put("favTopic", stats.getFavTopic());
-                                model.put("execSummary", stats.getExecSummary());
-                                model.put("Articles", articles);
+                        if (userID > 0) {
+                            model.put("added", "true");
+                            model.put("biasRating", stats.getBiasRating());
+                            model.put("biasName", stats.getBiasName());
+                            model.put("favNews", stats.getFavNewsSource());
+                            model.put("favTopic", stats.getFavTopic());
+                            model.put("execSummary", stats.getExecSummary());
+                            model.put("Articles", articles);
 
-                            } else {
-                                model.put("failedFind", "true");
-                            }
+                        } else {
+                            model.put("failedFind", "true");
+                        }
                     } else {
                         model.put("incorrectPassword", "true");
                     }
@@ -474,11 +474,19 @@ public class Server {
 
         // users route; return list of users as JSON
         get("/users", (req, res) -> {
-            Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
-            String results = new Gson().toJson(userDao.listAll());
-            res.type("application/json");
-            res.status(200);
-            return results;
+            if(req.cookie("username") != null) {
+                Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+                User admin = userDao.find(req.cookie("username"));
+                if (admin.getUserName().equals("admin")) {
+                    String results = new Gson().toJson(userDao.listAll());
+                    res.type("application/json");
+                    res.status(200);
+
+                    return results;
+                }
+            }
+            res.redirect("/");
+            return 1;
         });
 
         //adduser route; add a new user
@@ -505,11 +513,19 @@ public class Server {
 
         //articles route; return list of articles as JSON
         get("/articles", (req, res) -> {
-            Sql2oArticleDao article = new Sql2oArticleDao(sql2o);
-            String results = new Gson().toJson(article.listAll());
-            res.type("text/html");
-            res.status(200);
-            return results;
+            if(req.cookie("username") != null) {
+                Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+                User admin = userDao.find(req.cookie("username"));
+                if (admin.getUserName().equals("admin")) {
+                    Sql2oArticleDao article = new Sql2oArticleDao(sql2o);
+                    String results = new Gson().toJson(article.listAll());
+                    res.type("text/html");
+                    res.status(200);
+                    return results;
+                }
+            }
+            res.redirect("/");
+            return 1;
         });
 
         //addArticle route;
@@ -661,38 +677,52 @@ public class Server {
 
         //stats route; return all user stats
         get("/stats", (req, res) -> {
-            String username = req.cookie("username");
-            User u = new Sql2oUserDao(sql2o).find(username);
-            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
+            if(req.cookie("username") != null) {
+                Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
+                User admin = userDao.find(req.cookie("username"));
+                if (admin.getUserName().equals("admin")) {
+                    String username = req.cookie("username");
+                    User u = new Sql2oUserDao(sql2o).find(username);
+                    Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
 
-            String results = new Gson().toJson(sql2oStatsDao.find(u.getUserID()));
-            res.type("text/html");
-            res.status(200);
-            return results;
+                    String results = new Gson().toJson(sql2oStatsDao.find(u.getUserID()));
+                    res.type("text/html");
+                    res.status(200);
+                    return results;
+                }
+            }
+            res.redirect("/");
+            return 1;
         });
 
         //favTopic route; displays fav Topic stats
         get("/favTopic", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            Sql2oArticleDao sql2oArticleDao = new Sql2oArticleDao(sql2o);
-            Sql2oUserReadingsDao sql2oUserReadingsDao = new Sql2oUserReadingsDao(sql2o);
+            if(req.cookie("username") != null) {
 
-            Map<String, Integer> data = new HashMap<>();
+                Sql2oArticleDao sql2oArticleDao = new Sql2oArticleDao(sql2o);
+                Sql2oUserReadingsDao sql2oUserReadingsDao = new Sql2oUserReadingsDao(sql2o);
 
-            String username = req.cookie("username");
-            User user = new Sql2oUserDao(sql2o).find(username);
-            List<UserReadings> readings = sql2oUserReadingsDao.getAllUserReadings(user.getUserID());
-            for (UserReadings reading : readings) {
-                Article temp = sql2oArticleDao.find(reading.getArticleID()).get(0);
-                Integer freq = data.get(temp.getTopic());
-                freq = (freq == null) ? 1 : ++freq;
-                if (!temp.getTopic().equals("error")) {
-                    data.put(temp.getTopic(), freq);
+                Map<String, Integer> data = new HashMap<>();
+
+                String username = req.cookie("username");
+                User user = new Sql2oUserDao(sql2o).find(username);
+                List<UserReadings> readings = sql2oUserReadingsDao.getAllUserReadings(user.getUserID());
+                for (UserReadings reading : readings) {
+                    Article temp = sql2oArticleDao.find(reading.getArticleID()).get(0);
+                    Integer freq = data.get(temp.getTopic());
+                    freq = (freq == null) ? 1 : ++freq;
+                    if (!temp.getTopic().equals("error")) {
+                        data.put(temp.getTopic(), freq);
+                    }
                 }
-            }
 
-            model.put("data", data);
-            model.put("type", "news");
+                model.put("data", data);
+                model.put("type", "news");
+            } else {
+                model.put("existinguser", false);
+                res.redirect("/");
+            }
 
             res.type("text/html");
             res.status(200);
@@ -702,23 +732,29 @@ public class Server {
         //favNews route; displays fav News stats
         get("/favNews", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            Sql2oArticleDao sql2oArticleDao = new Sql2oArticleDao(sql2o);
-            Sql2oUserReadingsDao sql2oUserReadingsDao = new Sql2oUserReadingsDao(sql2o);
+            if(req.cookie("username") != null) {
 
-            Map<String, Integer> data = new HashMap<>();
+                Sql2oArticleDao sql2oArticleDao = new Sql2oArticleDao(sql2o);
+                Sql2oUserReadingsDao sql2oUserReadingsDao = new Sql2oUserReadingsDao(sql2o);
 
-            String username = req.cookie("username");
-            User user = new Sql2oUserDao(sql2o).find(username);
-            List<UserReadings> readings = sql2oUserReadingsDao.getAllUserReadings(user.getUserID());
-            for (UserReadings reading : readings) {
-                Article temp = sql2oArticleDao.find(reading.getArticleID()).get(0);
-                Integer freq = data.get(temp.getNewsSource());
-                freq = (freq == null) ? 1 : ++freq;
-                data.put(temp.getNewsSource(), freq);
+                Map<String, Integer> data = new HashMap<>();
+
+                String username = req.cookie("username");
+                User user = new Sql2oUserDao(sql2o).find(username);
+                List<UserReadings> readings = sql2oUserReadingsDao.getAllUserReadings(user.getUserID());
+                for (UserReadings reading : readings) {
+                    Article temp = sql2oArticleDao.find(reading.getArticleID()).get(0);
+                    Integer freq = data.get(temp.getNewsSource());
+                    freq = (freq == null) ? 1 : ++freq;
+                    data.put(temp.getNewsSource(), freq);
+                }
+
+                model.put("data", data);
+                model.put("type", "news");
+            } else {
+                model.put("existinguser", false);
+                res.redirect("/");
             }
-
-            model.put("data", data);
-            model.put("type", "news");
 
             res.type("text/html");
             res.status(200);
@@ -866,7 +902,7 @@ public class Server {
             String json = temp.toString();
             int index = json.indexOf("form=") + 5;
             if (index == 4) {
-               return "error";
+                return "error";
             }
             while (json.charAt(index) != ',') {
                 topic.append(Character.toString(json.charAt(index)));
