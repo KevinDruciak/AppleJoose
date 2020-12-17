@@ -19,7 +19,10 @@ function toggle() {
             document.getElementById("news-chart").style.marginLeft = "50px";
             document.getElementById("topics-chart").style.marginLeft = "50px";
             document.getElementById("bias-chart").style.marginLeft = "50px";
-        } else {
+        } else if (document.getElementById("title").innerText === "statsBIAS page") {
+            document.getElementById("chart-one").style.marginLeft = "50px";
+        }
+        if (document.getElementById("main2") !== null) {
             document.getElementById("main2").style.marginLeft = "50px";
         }
         document.getElementById("mySidebar").style.width = "50px";
@@ -49,7 +52,10 @@ function toggle() {
             document.getElementById("topics-chart").style.marginLeft = "250px";
             document.getElementById("bias-chart").style.marginLeft = "250px";
 
-        } else {
+        } else if (document.getElementById("title").innerText === "statsBIAS page") {
+            document.getElementById("chart-one").style.marginLeft = "250px";
+        }
+        if (document.getElementById("main2") !== null) {
             document.getElementById("main2").style.marginLeft = "250px";
         }
         document.getElementById("mySidebar").style.width = "250px";
