@@ -51,7 +51,7 @@ import org.json.simple.parser.*;
 
 public class Server {
 
-    static boolean LOCAL = true; //set FALSE if deploying/running on heroku, TRUE if testing locally
+    static boolean LOCAL = false; //set FALSE if deploying/running on heroku, TRUE if testing locally
     static Connection conn;
     static Statement st;
 
