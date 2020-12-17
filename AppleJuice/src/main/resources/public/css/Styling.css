@@ -50,6 +50,7 @@ h5 {
     margin-left: 20px;
     width: 100%;
     display: inline-block;
+    height: max-content;
 }
 
 .mainHalf {

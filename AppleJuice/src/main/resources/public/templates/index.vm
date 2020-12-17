@@ -54,34 +54,91 @@
                     }
                 </style>
             #end
+
             <p class="linkIntro">Your bias rating is: </p>
-            <a href="/statsBIAS" class="buttonBigNews">$biasRating</a>
+            <a href="/statsBIAS" class="buttonBigNews" onmouseover="display1()" onmouseout="hide1()">$biasRating</a>
             <br />
             <p class="linkIntro">This type of bias is: </p>
-            <a href="/statsBIAS" class="buttonBigNews">$biasName</a>
+            <a href="/statsBIAS" class="buttonBigNews" onmouseover="display2()" onmouseout="hide2()">$biasName</a>
             <br />
             <p class="linkIntro">Your favorite news source is: </p>
-            <a href="/favNews" class="buttonBigNews">$favNews</a>
+            <a href="/favNews" class="buttonBigNews" onmouseover="display3()" onmouseout="hide3()">$favNews</a>
             <br />
             <p class="linkIntro">Your favorite topic is: </p>
-            <a href="/favTopic" class="buttonBigNews">$favTopic</a>
+            <a href="/favTopic" class="buttonBigNews" onmouseover="display4()" onmouseout="hide4()">$favTopic</a>
+            <script>
+                function display1() {
+                    document.getElementById("metrics").style.display = "block"
+                    document.getElementById("1").style.display = "block"
+                }
+
+                function display2() {
+                    document.getElementById("metrics").style.display = "block"
+                    document.getElementById("2").style.display = "block"
+                }
+
+                function display3() {
+                    document.getElementById("metrics").style.display = "block"
+                    document.getElementById("3").style.display = "block"
+                }
+
+                function display4() {
+                    document.getElementById("metrics").style.display = "block"
+                    document.getElementById("4").style.display = "block"
+                }
+
+                function hide1() {
+                    document.getElementById("metrics").style.display = "none"
+                    document.getElementById("1").style.display = "none"
+                }
+
+                function hide2() {
+                    document.getElementById("metrics").style.display = "none"
+                    document.getElementById("2").style.display = "none"
+                }
+
+                function hide3() {
+                    document.getElementById("metrics").style.display = "none"
+                    document.getElementById("3").style.display = "none"
+                }
+
+                function hide4() {
+                    document.getElementById("metrics").style.display = "none"
+                    document.getElementById("4").style.display = "none"
+                }
+
+
+            </script>
         </div>
-        <div class="mainHalf">
+        <div id="metrics" class="mainHalf" style="display: none">
             <div class="boxed">
                 <p class="infoHeader">Explanation of metrics</p>
                 <br />
-                <p class="boldInfo">Bias rating:</p>
-                <p class="info" style="margin-block-end: 0">the average score of all of your read articles</p>
-                <p class="info">rated from -42 (far left) to 42 (far right)</p>
-                <br />
-                <p class="boldInfo">Type of bias:</p>
-                <p class="info">the relative meaning of your bias rating</p>
-                <br />
-                <p class="boldInfo">Favorite news source:</p>
-                <p class="info">your most frequently visited news source</p>
-                <br />
-                <p class="boldInfo">Favorite topic:</p>
-                <p class="info">your most frequently viewed news topic</p>
+                ##                Your Bias Rating is the average bias score of your read articles. This value extends from -42 (far left) to 42 (far right).
+                <div id="1" style="display: none">
+                    <p class="boldInfo">Bias Rating:</p>
+                    <p class="info" style="margin-block-end: 0">Your Bias Rating is the average bias score of</p>
+                    <p class="info" style="margin-block-end: 0">your read articles. This value extends from</p>
+                    <p class="info">-42 (far left) to 42 (far right).</p>
+                    <br />
+                </div>
+                <div id="2" style="display: none">
+                    <p class="boldInfo">Type of Bias:</p>
+                    <p class="info" style="margin-block-end: 0">Your Type of Bias is a classification of</p>
+                    <p class="info">your Bias Rating. </p>
+                    <br />
+                </div>
+                <div id="3" style="display: none">
+                    <p class="boldInfo">Favorite News Source:</p>
+                    <p class="info" style="margin-block-end: 0">Your Favorite News Source is your most</p>
+                    <p class="info">visited news source.</p>
+                    <br />
+                </div>
+                <div id="4" style="display: none">
+                    <p class="boldInfo">Favorite Topic:</p>
+                    <p class="info" style="margin-block-end: 0">Your Favorite Topic is your most visited</p>
+                    <p class="info">topic. You read many articles of this type.</p>
+                </div>
             </div>
         </div>
     </div>
