@@ -552,7 +552,6 @@ public class Server {
                     while(it.hasNext()){
                         String key = (String) it.next();
                         if(url.startsWith(key)){
-                            System.out.println("FOUND!");
                             newsSource = (String) jo.get(key);
                             break;
                         }
@@ -562,7 +561,28 @@ public class Server {
                     System.out.println("API call passed");
                     String topic = req.queryParams("topic").toUpperCase();
                     if (topic.equals("NA")) {
-                        topic = articleTopicExtractionAPICall(articleExtract);
+                        if(url.contains("politics")){
+                            topic = "Politics";
+                        }
+                        else if(url.contains("business")){
+                            topic = "Business";
+                        }
+                        else if(url.contains("opinion")){
+                            topic = "Opinion";
+                        }
+                        else if(url.contains("sports")){
+                            topic = "Sport";
+                        }
+                        else if(url.contains("health")){
+                            topic = "Health";
+                        }
+                        else if(url.contains("entertainment")){
+                            topic = "Entertainment";
+                        }
+                        else {
+                            //If no matches to above categories within URL, use API to extract custom topic
+                            topic = articleTopicExtractionAPICall(articleExtract);
+                        }
                     } else {
                         topic = topic.substring(0, 1) + topic.substring(1).toLowerCase();
                     }
