@@ -1,3 +1,4 @@
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
 import exception.DaoException;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
@@ -81,7 +82,7 @@ public class Server {
             st.execute(sql);
 
             sql = "CREATE TABLE IF NOT EXISTS Users (userID serial PRIMARY KEY, " +
-                    "userName VARCHAR(50) UNIQUE, userPassword VARCHAR(50), userStatsID INTEGER UNIQUE);";
+                    "userName VARCHAR(50) UNIQUE, userPassword VARCHAR(64), userStatsID INTEGER UNIQUE);";
             st.execute(sql);
 
             sql = "CREATE TABLE IF NOT EXISTS Statistics (id serial PRIMARY KEY, biasRating INT, " +
@@ -258,50 +259,50 @@ public class Server {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
                 if (userDao.find(username) != null) {
 
-                    //BCrypt.Result result = BCrypt.verifier().verify(password.toCharArray(), userDao.find(username).getUserPassword());
-                    //if (userDao.getPassword(userDao.find(user)).equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))) {
+                    BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.find(username).getUserPassword());
+                    if (result.verified /*userDao.find(username).getUserPassword().equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))*/) {
 
-                    if (userDao.find(username).getUserPassword().equals(password)) {
-                        model.put("existinguser", "true");
-                        model.put("username", username);
-                        res.cookie("username", username);
-                        res.cookie("password", password); //set this only if success
+                        //if (userDao.find(username).getUserPassword().equals(password)) {
+                            model.put("existinguser", "true");
+                            model.put("username", username);
+                            res.cookie("username", username);
+                            res.cookie("password", password); //set this only if success
 
-                        int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
-                        List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
-                        Statistics stats = extractFromStatsList(statsList);
+                            int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
+                            List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
+                            Statistics stats = extractFromStatsList(statsList);
 
-                        // Get 5 most recent user readings and retrieve articles by ID
-                        List<UserReadings> readings = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(userID);
-                        List<Article> articles = new ArrayList<>();
+                            // Get 5 most recent user readings and retrieve articles by ID
+                            List<UserReadings> readings = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(userID);
+                            List<Article> articles = new ArrayList<>();
 
-                        if (readings != null) {
-                            for (UserReadings read : readings) {
-                                List<Article> list  = new Sql2oArticleDao(sql2o).find(read.getArticleID());
-                                Article article = extractFromArtsList(list);
-                                articles.add(article);
+                            if (readings != null) {
+                                for (UserReadings read : readings) {
+                                    List<Article> list = new Sql2oArticleDao(sql2o).find(read.getArticleID());
+                                    Article article = extractFromArtsList(list);
+                                    articles.add(article);
+                                }
                             }
-                        }
 
-                        // Put articles in most recent first order
-                        Collections.reverse(articles);
+                            // Put articles in most recent first order
+                            Collections.reverse(articles);
 
-                        if (userID > 0) {
-                            model.put("added", "true");
-                            model.put("biasRating", stats.getBiasRating());
-                            model.put("biasName", stats.getBiasName());
-                            model.put("favNews", stats.getFavNewsSource());
-                            model.put("favTopic", stats.getFavTopic());
-                            model.put("execSummary", stats.getExecSummary());
-                            model.put("Articles", articles);
+                            if (userID > 0) {
+                                model.put("added", "true");
+                                model.put("biasRating", stats.getBiasRating());
+                                model.put("biasName", stats.getBiasName());
+                                model.put("favNews", stats.getFavNewsSource());
+                                model.put("favTopic", stats.getFavTopic());
+                                model.put("execSummary", stats.getExecSummary());
+                                model.put("Articles", articles);
 
+                            } else {
+                                model.put("failedFind", "true");
+                            }
                         } else {
-                            model.put("failedFind", "true");
+                            model.put("invalidLogin", "true");
                         }
-                    } else {
-                        model.put("invalidLogin", "true");
                     }
-                }
             } catch (DaoException e) {
                 System.out.println("could not add new user stats");
                 model.put("invalidLogin", "true");
@@ -390,8 +391,8 @@ public class Server {
                     System.out.println("no user found, creating new one");
                     model.put("userExists", "false");
                     model.put("added", "true");
-                    //String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-                    User user = new User(username, password);
+                    String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+                    User user = new User(username, bcryptHash);
                     int userID = new Sql2oUserDao(sql2o).add(user);
 
                     Statistics stats = new Statistics(0, "Neutral Bias",
