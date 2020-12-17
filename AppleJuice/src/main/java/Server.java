@@ -43,7 +43,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-
+import java.io.FileReader;
+import java.util.Iterator;
+import java.util.Map;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
 
 public class Server {
 
@@ -541,12 +545,17 @@ public class Server {
                     /*
                     Get news source from extracted url host name
                      */
-                    String newsSource = new URL(url).getHost();
-                    System.out.println("Source: " + newsSource);
-                    newsSource = newsSource.replace("www.", "");
-                    newsSource = newsSource.replace(".com", "");
-                    if (newsSource == null) {
-                        newsSource = "News Source could not be identified";
+                    String newsSource = "";
+                    Object obj = new JSONParser().parse(new FileReader("./src/main/resources/sources.json"));
+                    JSONObject jo = (JSONObject) obj;
+                    Iterator it = jo.keySet().iterator();
+                    while(it.hasNext()){
+                        String key = (String) it.next();
+                        if(url.startsWith(key)){
+                            System.out.println("FOUND!");
+                            newsSource = (String) jo.get(key);
+                            break;
+                        }
                     }
 
                     int biasRating = politicalBiasAPICall(articleExtract);
