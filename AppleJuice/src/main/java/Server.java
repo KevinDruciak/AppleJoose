@@ -41,6 +41,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+
+
 public class Server {
 
     static boolean LOCAL = true; //set FALSE if deploying/running on heroku, TRUE if testing locally
@@ -246,8 +248,8 @@ public class Server {
         };
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-//        scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
-        scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
+//        scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
 
         post("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
@@ -299,10 +301,13 @@ public class Server {
                             } else {
                                 model.put("failedFind", "true");
                             }
-                        } else {
-                            model.put("invalidLogin", "true");
-                        }
+                    } else {
+                        model.put("incorrectPassword", "true");
                     }
+                }
+                else {
+                    model.put("noUserFound", "true");
+                }
             } catch (DaoException e) {
                 System.out.println("could not add new user stats");
                 model.put("invalidLogin", "true");
@@ -400,6 +405,12 @@ public class Server {
                             " Neutral Bias. Your favorite news source is N/A." +
                             " Your favorite topic to read about is N/A", userID);
                     int idStats = new Sql2oStatisticsDao(sql2o).add(stats);
+
+                    model.put("existinguser", "true");
+                    model.put("username", username);
+                    res.cookie("username", username);
+                    //res.cookie("password", password); //set this only if success
+                    res.redirect("/");
                 }
             }
             catch (DaoException e) {
