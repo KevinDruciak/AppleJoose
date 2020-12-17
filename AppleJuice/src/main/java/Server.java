@@ -51,6 +51,36 @@ import org.json.simple.parser.*;
 
 public class Server {
 
+    static String sources = "{\n" +
+            "  \"https://www.buzzfeednews.com/\": \"Buzzfeed\",\n" +
+            "  \"https://www.washingtonpost.com/\": \"Washington Post\",\n" +
+            "  \"https://www.nytimes.com/\": \"New York Times\",\n" +
+            "  \"https://www.chicagotribune.com/\": \"Chicago Tribune\",\n" +
+            "  \"https://www.latimes.com/\": \"LA Times\",\n" +
+            "  \"https://www.usatoday.com/\": \"USA Today\",\n" +
+            "  \"https://www.cnn.com/\": \"CNN\",\n" +
+            "  \"https://abcnews.go.com/\": \"ABC\",\n" +
+            "  \"https://www.msnbc.com/\": \"MSNBC\",\n" +
+            "  \"https://www.cbsnews.com/\": \"CBS\",\n" +
+            "  \"https://www.npr.org/\": \"NPR\",\n" +
+            "  \"https://www.cnbc.com/\": \"CNBC\",\n" +
+            "  \"https://www.nbcnews.com/\": \"NBC\",\n" +
+            "  \"https://www.foxnews.com/\": \"Fox\",\n" +
+            "  \"https://www.usnews.com/\": \"US News\",\n" +
+            "  \"https://www.cnsnews.com/\": \"CNS\",\n" +
+            "  \"https://www.csmonitor.com/\": \"Christian Science Monitor\",\n" +
+            "  \"https://www.cursor.org/\": \"Cursor\",\n" +
+            "  \"https://www.breitbart.com/\": \"Breitbart\",\n" +
+            "  \"https://www.newser.com/\": \"Newser\",\n" +
+            "  \"https://www.worldpoliticsreview.com/\": \"World Politics Review\",\n" +
+            "  \"https://slate.com/\": \"Slate\",\n" +
+            "  \"https://www.huffpost.com/\": \"Huffington Post\",\n" +
+            "  \"https://www.mediaite.com/\": \"Mediaite\",\n" +
+            "  \"https://www.thedailybeast.com/\": \"Daily Beast\",\n" +
+            "  \"https://www.truthdig.com/\": \"TruthDig\",\n" +
+            "  \"https://www.theguardian.com/\": \"The Guardian\",\n" +
+            "  \"https://www.theatlantic.com/\": \"The Atlantic\"\n" +
+            "}";
     static boolean LOCAL = false; //set FALSE if deploying/running on heroku, TRUE if testing locally
     static Connection conn;
     static Statement st;
@@ -556,7 +586,7 @@ public class Server {
                     Get news source from extracted url host name
                      */
                     String newsSource = "";
-                    Object obj = new JSONParser().parse(new FileReader("./src/main/resources/sources.json"));
+                    Object obj = new JSONParser().parse(sources);//new FileReader("./src/main/resources/sources.json"));
                     JSONObject jo = (JSONObject) obj;
                     Iterator it = jo.keySet().iterator();
                     while(it.hasNext()){
