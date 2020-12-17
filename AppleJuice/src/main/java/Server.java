@@ -556,6 +556,7 @@ public class Server {
                     Get news source from extracted url host name
                      */
                     String newsSource = "";
+                    System.out.println("Working Directory = " + System.getProperty("user.dir"));
                     Object obj = new JSONParser().parse(new FileReader("./src/main/resources/sources.json"));
                     JSONObject jo = (JSONObject) obj;
                     Iterator it = jo.keySet().iterator();
