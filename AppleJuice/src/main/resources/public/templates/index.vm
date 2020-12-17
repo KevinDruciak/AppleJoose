@@ -1,5 +1,18 @@
 #set($title = "Welcome Page" )
 #parse("public/templates/top.vm")
+
+###if ($incorrectPassword)
+##    <script>
+##    alert("Incorrect password!");
+##    </script>
+###end
+##
+###if ($noUserFound)
+##<script>
+##    alert("Username does not match any existing accounts!");
+##</script>
+###end
+
 <!html--->
 #if($existinguser)
 
@@ -78,6 +91,12 @@
     <form action="/" method="post" class="content" onsubmit="return validateUsername();">
         <div class="Q1Box">
             <p class="boxHeader">Login to Apple Joose</p>
+            #if ($incorrectPassword)
+                <h5>Incorrect password!</h5>
+            #end
+            #if ($noUserFound)
+                <h5>Invalid username!</h5>
+            #end
             <p>
                 <label for="username">Username</label>
             </p>

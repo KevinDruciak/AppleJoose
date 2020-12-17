@@ -1,4 +1,4 @@
-#set($title = "statsBIAS page" )
+#set($title = "statsTOPICS page" )
 #parse("public/templates/top.vm")
 
 <div id="mySidebar" class="sidebar">
@@ -12,20 +12,17 @@
 
 
 <script src="../js/sidebar.js"></script>
-##<p>
-##    <a href="/" class="SignUpbutton">Back to Dashboard</a>
-##</p>
-<br />
-<div id="main2">
-    <p class="linkIntro">Your current average bias rating is: $biasRating</p>
-    <br />
-    <p class="linkIntro">The average bias rating across all users is: $avgBias</p>
-</div>
-<br />
+##<br />
+##<div id="main2">
+##    <p class="linkIntro">Your current average bias rating is: $biasRating</p>
+##    <br />
+##    <p class="linkIntro">The average bias rating across all users is: $avgBias</p>
+##</div>
+##<br />
 
 ##GRAPH
 <meta charset="utf-8">
-<title>Bias Rating Stats</title>
+<title>Favorite Topics</title>
 
 <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 <style>
@@ -36,7 +33,7 @@
         /*align-items: center;*/
     }
 
-    #chart-one {
+    #chart-three {
         height: 75%;
         width: 80%;
         ##margin: 0 auto;
@@ -47,14 +44,13 @@
 </style>
 
 <p>
-    <var id="y" style="font-size:0px">$dailyAvgBias</var>
-    <var id="x" style="font-size:0px">$dailyAvgDates</var>
+    <var id="data" style="font-size:0px">$data</var>
 </p>
 <br />
 
-<div id="chart-one"></div>
+<div id="chart-three"></div>
 <p>
-    <script src="../js/individualBias.js"></script>
+    <script src="../js/individualTopics.js"></script>
 </p>
 
 #parse("public/templates/bottom.vm")

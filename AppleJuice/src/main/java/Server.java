@@ -1,3 +1,4 @@
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
 import exception.DaoException;
 import de.l3s.boilerpipe.BoilerpipeProcessingException;
@@ -40,9 +41,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+
+
 public class Server {
 
-    static boolean LOCAL = false; //set FALSE if deploying/running on heroku, TRUE if testing locally
+    static boolean LOCAL = true; //set FALSE if deploying/running on heroku, TRUE if testing locally
     static Connection conn;
     static Statement st;
 
@@ -81,7 +84,7 @@ public class Server {
             st.execute(sql);
 
             sql = "CREATE TABLE IF NOT EXISTS Users (userID serial PRIMARY KEY, " +
-                    "userName VARCHAR(50) UNIQUE, userPassword VARCHAR(50), userStatsID INTEGER UNIQUE);";
+                    "userName VARCHAR(50) UNIQUE, userPassword VARCHAR(64), userStatsID INTEGER UNIQUE);";
             st.execute(sql);
 
             sql = "CREATE TABLE IF NOT EXISTS Statistics (id serial PRIMARY KEY, biasRating INT, " +
@@ -132,7 +135,7 @@ public class Server {
 
     static ArrayList<Float> dailyAvgBias = new ArrayList<>();
     static ArrayList<String> dailyAvgDates = new ArrayList<>();
-//    static int tempDate = 0;
+    //    static int tempDate = 0;
     static Map<Integer, ArrayList<Integer>> userDailyAvgBias = new HashMap<>();
     static Map<Integer, ArrayList<String>> userDailyAvgDates = new HashMap<>();
 
@@ -245,8 +248,8 @@ public class Server {
         };
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-//        scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
-        scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
+//        scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
 
         post("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
@@ -258,49 +261,52 @@ public class Server {
                 Sql2oUserDao userDao = new Sql2oUserDao(sql2o);
                 if (userDao.find(username) != null) {
 
-                    //BCrypt.Result result = BCrypt.verifier().verify(password.toCharArray(), userDao.find(username).getUserPassword());
-                    //if (userDao.getPassword(userDao.find(user)).equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))) {
+                    BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), userDao.find(username).getUserPassword());
+                    if (result.verified /*userDao.find(username).getUserPassword().equals(BCrypt.withDefaults().hashToString(12, password.toCharArray()))*/) {
 
-                    if (userDao.find(username).getUserPassword().equals(password)) {
-                        model.put("existinguser", "true");
-                        model.put("username", username);
-                        res.cookie("username", username);
-                        res.cookie("password", password); //set this only if success
+                        //if (userDao.find(username).getUserPassword().equals(password)) {
+                            model.put("existinguser", "true");
+                            model.put("username", username);
+                            res.cookie("username", username);
+                            res.cookie("password", password); //set this only if success
 
-                        int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
-                        List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
-                        Statistics stats = extractFromStatsList(statsList);
+                            int userID = (new Sql2oUserDao(sql2o).find(username)).getUserID();
+                            List<Statistics> statsList = new Sql2oStatisticsDao(sql2o).find(userID);
+                            Statistics stats = extractFromStatsList(statsList);
 
-                        // Get 5 most recent user readings and retrieve articles by ID
-                        List<UserReadings> readings = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(userID);
-                        List<Article> articles = new ArrayList<>();
+                            // Get 5 most recent user readings and retrieve articles by ID
+                            List<UserReadings> readings = new Sql2oUserReadingsDao(sql2o).getAllUserReadings(userID);
+                            List<Article> articles = new ArrayList<>();
 
-                        if (readings != null) {
-                            for (UserReadings read : readings) {
-                                List<Article> list  = new Sql2oArticleDao(sql2o).find(read.getArticleID());
-                                Article article = extractFromArtsList(list);
-                                articles.add(article);
+                            if (readings != null) {
+                                for (UserReadings read : readings) {
+                                    List<Article> list = new Sql2oArticleDao(sql2o).find(read.getArticleID());
+                                    Article article = extractFromArtsList(list);
+                                    articles.add(article);
+                                }
                             }
-                        }
 
-                        // Put articles in most recent first order
-                        Collections.reverse(articles);
+                            // Put articles in most recent first order
+                            Collections.reverse(articles);
 
-                        if (userID > 0) {
-                            model.put("added", "true");
-                            model.put("biasRating", stats.getBiasRating());
-                            model.put("biasName", stats.getBiasName());
-                            model.put("favNews", stats.getFavNewsSource());
-                            model.put("favTopic", stats.getFavTopic());
-                            model.put("execSummary", stats.getExecSummary());
-                            model.put("Articles", articles);
+                            if (userID > 0) {
+                                model.put("added", "true");
+                                model.put("biasRating", stats.getBiasRating());
+                                model.put("biasName", stats.getBiasName());
+                                model.put("favNews", stats.getFavNewsSource());
+                                model.put("favTopic", stats.getFavTopic());
+                                model.put("execSummary", stats.getExecSummary());
+                                model.put("Articles", articles);
 
-                        } else {
-                            model.put("failedFind", "true");
-                        }
+                            } else {
+                                model.put("failedFind", "true");
+                            }
                     } else {
-                        model.put("invalidLogin", "true");
+                        model.put("incorrectPassword", "true");
                     }
+                }
+                else {
+                    model.put("noUserFound", "true");
                 }
             } catch (DaoException e) {
                 System.out.println("could not add new user stats");
@@ -390,8 +396,8 @@ public class Server {
                     System.out.println("no user found, creating new one");
                     model.put("userExists", "false");
                     model.put("added", "true");
-                    //String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-                    User user = new User(username, password);
+                    String bcryptHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+                    User user = new User(username, bcryptHash);
                     int userID = new Sql2oUserDao(sql2o).add(user);
 
                     Statistics stats = new Statistics(0, "Neutral Bias",
@@ -399,6 +405,12 @@ public class Server {
                             " Neutral Bias. Your favorite news source is N/A." +
                             " Your favorite topic to read about is N/A", userID);
                     int idStats = new Sql2oStatisticsDao(sql2o).add(stats);
+
+                    model.put("existinguser", "true");
+                    model.put("username", username);
+                    res.cookie("username", username);
+                    //res.cookie("password", password); //set this only if success
+                    res.redirect("/");
                 }
             }
             catch (DaoException e) {
@@ -628,42 +640,19 @@ public class Server {
         //favTopic route; displays fav Topic stats
         get("/favTopic", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
+            Sql2oArticleDao sql2oArticleDao = new Sql2oArticleDao(sql2o);
+            Sql2oUserReadingsDao sql2oUserReadingsDao = new Sql2oUserReadingsDao(sql2o);
 
             Map<String, Integer> data = new HashMap<>();
 
-            List<User> users = new Sql2oUserDao(sql2o).listAll();
-            for (User user : users) {
-                Integer freq = data.get(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic());
+            String username = req.cookie("username");
+            User user = new Sql2oUserDao(sql2o).find(username);
+            List<UserReadings> readings = sql2oUserReadingsDao.getAllUserReadings(user.getUserID());
+            for (UserReadings reading : readings) {
+                Article temp = sql2oArticleDao.find(reading.getArticleID()).get(0);
+                Integer freq = data.get(temp.getTopic());
                 freq = (freq == null) ? 1 : ++freq;
-                if (!sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic().equals("N/A")) {
-                    data.put(sql2oStatsDao.find(user.getUserID()).get(0).getFavTopic(), freq);
-                }
-            }
-            Sql2oArticleDao a = new Sql2oArticleDao(sql2o);
-
-            model.put("data", data);
-            model.put("type", "topic");
-            //String results = new Gson().toJson(sql2oStatsDao.find(u.getUserID()));
-            res.type("text/html");
-            res.status(200);
-            return new ModelAndView(model, "public/templates/newsStats.vm");
-        }, new VelocityTemplateEngine());
-
-        //favNews route; displays fav News stats
-        get("/favNews", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            Sql2oStatisticsDao sql2oStatsDao = new Sql2oStatisticsDao(sql2o);
-
-            Map<String, Integer> data = new HashMap<>();
-
-            List<User> users = new Sql2oUserDao(sql2o).listAll();
-            for (User user : users) {
-                Integer freq = data.get(sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource());
-                freq = (freq == null) ? 1 : ++freq;
-                if (!sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource().equals("N/A")) {
-                    data.put(sql2oStatsDao.find(user.getUserID()).get(0).getFavNewsSource(), freq);
-                }
+                data.put(temp.getTopic(), freq);
             }
 
             model.put("data", data);
@@ -671,7 +660,33 @@ public class Server {
 
             res.type("text/html");
             res.status(200);
-            return new ModelAndView(model, "public/templates/newsStats.vm");
+            return new ModelAndView(model, "public/templates/statsTOPICS.vm");
+        }, new VelocityTemplateEngine());
+
+        //favNews route; displays fav News stats
+        get("/favNews", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            Sql2oArticleDao sql2oArticleDao = new Sql2oArticleDao(sql2o);
+            Sql2oUserReadingsDao sql2oUserReadingsDao = new Sql2oUserReadingsDao(sql2o);
+
+            Map<String, Integer> data = new HashMap<>();
+
+            String username = req.cookie("username");
+            User user = new Sql2oUserDao(sql2o).find(username);
+            List<UserReadings> readings = sql2oUserReadingsDao.getAllUserReadings(user.getUserID());
+            for (UserReadings reading : readings) {
+                Article temp = sql2oArticleDao.find(reading.getArticleID()).get(0);
+                Integer freq = data.get(temp.getNewsSource());
+                freq = (freq == null) ? 1 : ++freq;
+                data.put(temp.getNewsSource(), freq);
+            }
+
+            model.put("data", data);
+            model.put("type", "news");
+
+            res.type("text/html");
+            res.status(200);
+            return new ModelAndView(model, "public/templates/statsNEWS.vm");
         }, new VelocityTemplateEngine());
 
         //favNews route; displays fav News stats

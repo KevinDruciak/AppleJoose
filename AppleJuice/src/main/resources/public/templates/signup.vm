@@ -24,17 +24,16 @@
 #if ($added)
     <div class="Q1Box">
         <p class="boxHeader">Account created successfully!</p>
-        <a href="/" class="SignUpbutton"> < Back to login</a>
+        <a href="/" class="SignUpbutton"> < Continue</a>
     </div>
 #else
-
-#if ($userExists)
-<h1>Username already taken!</h1> ##change css to make this red/smaller
-#end
 
 <form action="/signup" method="post" class="content" onsubmit="return validateSignup();">
     <div class="Q1Box">
         <p class="boxHeader">Create Your Account</p>
+        #if ($userExists)
+            <h5>Username already taken!</h5>
+        #end
         <p>
             <label for="username">Username</label>
         </p>
