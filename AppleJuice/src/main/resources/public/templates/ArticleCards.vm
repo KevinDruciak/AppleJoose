@@ -1,7 +1,4 @@
 <h3>Your most recent articles</h3>
-<p>
-    <a href="/addarticle" class="buttonDev">[ Manually add an article ]</a>
-</p>
 <div class="quickArticlesWrap">
 <div class="quickArticles">
     #if($Articles.size() != 0)
@@ -23,7 +20,7 @@
                 <div class="bottom-wrap">
                 <p class="newsSourceSm" style="background-color:$color2;color:$color1;border: 2px solid  $color1">$Article.getNewsSource()</p>
                 <p class="artScore" style="background-color:$color2;color:$color1;border: 2px solid  $color1">$Article.getBiasRating()</p>
-                <a href="$Article.getUrl()" class="articleLink">View Article <i class="fas fa-external-link-alt"></i> </a>
+                <a href="$Article.getUrl()" target="_blank" class="articleLink">View Article <i class="fas fa-external-link-alt"></i> </a>
                 </div>
             </div>
 
@@ -34,3 +31,7 @@
 
 </div>
 </div>
+
+<p>
+    <a href="/addarticle" class="buttonDev">[ Manually add an article ]</a>
+</p>

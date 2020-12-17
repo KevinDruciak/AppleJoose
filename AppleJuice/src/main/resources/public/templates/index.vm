@@ -29,43 +29,63 @@
     <script src="../js/sidebar.js"></script>
 
     <div class="main">
-        <h1>Hello $username,</h1>
-        ## Account Color Variables
-        #if($biasRating == 0)
-            <style>
-                :root {
-                    --color1: black;
-                    --color2: #acacac;
-                }
-            </style>
-        #elseif($biasRating < 0)
-            <style>
-                :root {
-                    --color1: #005EFF;
-                    --color2: #D2E3FF;
-                }
-            </style>
-        #else
-            <style>
-                :root {
-                    --color1: #ffcccc;
-                    --color2: #ff0000;
-                }
-            </style>
-        #end
-
-        <p class="linkIntro">Your bias rating is: </p>
-        <a href="/statsBIAS" class="buttonBigNews">$biasRating</a>
-        <br />
-        <p class="linkIntro">This type of bias is: </p>
-        <a href="/statsBIAS" class="buttonBigNews">$biasName</a>
-        <br />
-        <p class="linkIntro">Your favorite news source is: </p>
-        <a href="/favNews" class="buttonBigNews">$favNews</a>
-        <br />
-        <p class="linkIntro">Your favorite topic is: </p>
-        <a href="/favTopic" class="buttonBigNews">$favTopic</a>
-
+        <div class="mainHalf">
+            <h1>Hello $username,</h1>
+            ## Account Color Variables
+            #if($biasRating == 0)
+                <style>
+                    :root {
+                        --color1: black;
+                        --color2: #acacac;
+                    }
+                </style>
+            #elseif($biasRating < 0)
+                <style>
+                    :root {
+                        --color1: #005EFF;
+                        --color2: #D2E3FF;
+                    }
+                </style>
+            #else
+                <style>
+                    :root {
+                        --color1: #ffcccc;
+                        --color2: #ff0000;
+                    }
+                </style>
+            #end
+            <p class="linkIntro">Your bias rating is: </p>
+            <a href="/statsBIAS" class="buttonBigNews">$biasRating</a>
+            <br />
+            <p class="linkIntro">This type of bias is: </p>
+            <a href="/statsBIAS" class="buttonBigNews">$biasName</a>
+            <br />
+            <p class="linkIntro">Your favorite news source is: </p>
+            <a href="/favNews" class="buttonBigNews">$favNews</a>
+            <br />
+            <p class="linkIntro">Your favorite topic is: </p>
+            <a href="/favTopic" class="buttonBigNews">$favTopic</a>
+        </div>
+        <div class="mainHalf">
+            <div class="boxed">
+                <p class="infoHeader">Explanation of metrics</p>
+                <br />
+                <p class="boldInfo">Bias rating:</p>
+                <p class="info" style="margin-block-end: 0">the average score of all of your read articles</p>
+                <p class="info">rated from -42 (far left) to 42 (far right)</p>
+                <br />
+                <p class="boldInfo">Type of bias:</p>
+                <p class="info">the relative meaning of your bias rating</p>
+                <br />
+                <p class="boldInfo">Favorite news source:</p>
+                <p class="info">your most frequently visited news source</p>
+                <br />
+                <p class="boldInfo">Favorite topic:</p>
+                <p class="info">your most frequently viewed news topic</p>
+            </div>
+        </div>
+    </div>
+    <div class="main" style="width: available">
         #parse("public/templates/ArticleCards.vm")
     </div>
 #else

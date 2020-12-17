@@ -47,8 +47,14 @@ h5 {
 }
 
 .main {
-    /*margin-left: 260px;*/
     margin-left: 20px;
+    width: 100%;
+    display: inline-block;
+}
+
+.mainHalf {
+    width: max-content;
+    float: left;
 }
 
 .sidebar {
@@ -73,7 +79,6 @@ h5 {
     font-size: 24pt;
     text-align: center;
     border-radius: 8px;
-
 }
 
 .sidebar > p {
@@ -195,13 +200,13 @@ p {
 
 .quickArticlesWrap {
     overflow-x: auto;
-    margin: 16px;
+    margin: 16px 24px;
 }
 
 .quickArticles {
     align-items: flex-start;
     height: fit-content;
-    margin-bottom: 32px;
+    margin-bottom: 8px;
     display: table;
     border-spacing: 16px;
 }
@@ -235,6 +240,11 @@ p {
     margin: 8px;
     display: inline-block;
     word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 .artScore {
@@ -268,14 +278,7 @@ p {
 .buttonDev:hover {
     background-color: #009229;
     border: 2px solid #cde5ce;
-    border-radius: 8px;
     color: #cde5ce;
-    padding: 8px 12px 8px 12px;
-    text-align: center;
-    font-family: "consolas", monospace;
-    font-size: 12pt;
-    margin-left: 24px;
-    display: inline-block;
 }
 
 .articleLink {
@@ -559,6 +562,7 @@ p {
     transition: margin-left .5s; /* If you want a transition effect */
     padding: 0;
     margin-left: 50px;
+    overflow: hidden;
 }
 
 
@@ -590,5 +594,39 @@ div[id$="license"] {
 }
 
 
+
+/* info stuff */
+
+.boxed {
+    margin: 48px 16px 48px 48px;
+    background: rgba(70, 133, 253, 0.1);
+    border: 2px solid #005EFF;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.info {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 14pt;
+    color: #353535;
+    text-align: left;
+}
+
+.infoHeader {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 18pt;
+    color: #353535;
+    text-align: left;
+}
+
+.boldInfo {
+    font-family: "Segoe UI", sans-serif;
+    font-style: normal;
+    font-size: 18pt;
+    color: #005EFF;
+    text-align: left;
+}
 
 
